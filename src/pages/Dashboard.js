@@ -17,7 +17,15 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function Dashboard() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box
+      sx={{
+        width: "100%",
+        marginTop: 3,
+        boxShadow: 0,
+        animation: "fadeIn 0.5s ease-in-out",
+        transition: "box-shadow 1s ease-in-out",
+      }}
+    >
       <Grid container spacing={1}>
         <Grid item xs>
           <Item
@@ -28,7 +36,7 @@ export default function Dashboard() {
             <Typography variant="h6" gutterBottom>
               Total active users
             </Typography>
-            <Typography variant="h3" gutterBottom>
+            <Typography variant="h4" gutterBottom>
               51,234
             </Typography>
           </Item>
@@ -42,7 +50,7 @@ export default function Dashboard() {
             <Typography variant="h6" gutterBottom>
               Total inactive users
             </Typography>
-            <Typography variant="h3" gutterBottom>
+            <Typography variant="h4" gutterBottom>
               1,234
             </Typography>
           </Item>
@@ -56,7 +64,7 @@ export default function Dashboard() {
             <Typography variant="h6" gutterBottom>
               Upcoming Products
             </Typography>
-            <Typography variant="h3" gutterBottom>
+            <Typography variant="h4" gutterBottom>
               1,234
             </Typography>
           </Item>
@@ -70,7 +78,7 @@ export default function Dashboard() {
             <Typography variant="h6" gutterBottom>
               Completed Products
             </Typography>
-            <Typography variant="h3" gutterBottom>
+            <Typography variant="h4" gutterBottom>
               1,234
             </Typography>
           </Item>
@@ -84,7 +92,7 @@ export default function Dashboard() {
             <Typography variant="h6" gutterBottom>
               Total Vendors
             </Typography>
-            <Typography variant="h3" gutterBottom>
+            <Typography variant="h4" gutterBottom>
               1,234
             </Typography>
           </Item>

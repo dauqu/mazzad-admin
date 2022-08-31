@@ -17,6 +17,7 @@ import Posts from "./pages/Posts";
 import Bids from "./pages/Bids";
 import Info from "./pages/Info";
 import Account from "./pages/Account";
+import Notifications from "./pages/Notifications";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/invoice" element={<Posts />} />
           <Route path="/bids" element={<Bids />} />
           <Route path="/info" element={<Info />} />
+          <Route path="/notifications" element={<Notifications />} />
         </Route>
       </Routes>
     </div>

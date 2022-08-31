@@ -103,10 +103,19 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -3,
+    top: 13,
+    padding: "0 4px",
+  },
+}));
+
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const location = useLocation();
+  const [countNotifications, setCountNotifications] = React.useState(1);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -174,7 +183,7 @@ export default function MiniDrawer() {
               marginRight: 10,
             }}
           >
-            {/* <StyledBadge
+            <StyledBadge
               badgeContent={countNotifications}
               color="error"
               to="/notifications"
@@ -182,7 +191,7 @@ export default function MiniDrawer() {
               sx={{ color: "#ffffff" }}
             >
               <NotificationsTwoToneIcon />
-            </StyledBadge> */}
+            </StyledBadge>
           </IconButton>
 
           <Typography
@@ -284,7 +293,7 @@ export default function MiniDrawer() {
           </div> */}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 2, pt: 8 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 1, pt: 5 }}>
         <DrawerHeader />
         <Outlet />
       </Box>
