@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -30,6 +29,10 @@ import Snackbar from "@mui/material/Snackbar";
 import CloseIcon from "@mui/icons-material/Close";
 import MuiAlert from "@mui/material/Alert";
 import LinearProgress from "@mui/material/LinearProgress";
+import { useNavigate } from "react-router-dom";
+import AppBar from "@mui/material/AppBar";
+import AddIcon from "@mui/icons-material/Add";
+import { Divider } from "@mui/material";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -224,6 +227,8 @@ export default function Tags() {
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
+
   //Get all categories
   function getCategoryData() {
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/tags`).then((response) => {
@@ -357,257 +362,51 @@ export default function Tags() {
 
   return (
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
-      <Grid container spacing={1}>
-        {/* StartSubmit Form */}
-        <Grid item xs={3}>
-          <Item sx={{ boxShadow: 0, borderRadius: 1 }}>
-            <Stack sx={{ width: "100%" }} spacing={2}>
-              {/* <Typography>{server_alert}</Typography> */}
-              <Snackbar
-                open={open}
-                autoHideDuration={3000}
-                resumeHideDuration={3000}
-                action={action}
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                onClose={handleClose}
-              >
-                <Alert
-                  onClose={handleClose}
-                  severity={status}
-                  sx={{ width: "100%" }}
-                >
-                  {server_alert}
-                </Alert>
-              </Snackbar>
-            </Stack>
-            <form>
-              <TextField
-                hiddenLabel
-                id="filled-hidden-label-small"
-                size="small"
-                value={name}
-                placeholder="Category Name"
-                variant="filled"
-                onChange={(e) => setName(e.target.value)}
-                sx={{
-                  width: "100%",
-                  marginTop: 1,
-                  backgroundColor: "#333",
-                  borderRadius: 1,
-                  ":after" : {
-                    display: "none"
-                  }
-                }}
-                inputProps={{
-                  style: { color: "white" },
-                }}
-              />
+      <AppBar position="static">
+        <Toolbar variant="dense" sx={{ background: "#333" }}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            onClick={() => navigate("/add-page")}
+          >
+            {/* <CloseIcon /> */}
+            <AddIcon />
+          </IconButton>
+          <Typography variant="h6" color="inherit" component="div">
+            Static Pages
+          </Typography>
+          <Divider sx={{ flexGrow: 1 }} />
+        </Toolbar>
+      </AppBar>
 
-              <TextField
-                hiddenLabel
-                multiline
-                value={description}
-                variant="filled"
-                size="small"
-                placeholder="Description"
-                onChange={(e) => setDescription(e.target.value)}
-                sx={{
-                  width: "100%",
-                  marginTop: 1,
-                  backgroundColor: "#333",
-                  borderRadius: 1,
-                }}
-                inputProps={{
-                  style: { color: "white" },
-                }}
-              />
-
-              <Grid item xs={12}>
-                <Item
-                  sx={{
-                    boxShadow: 0,
-                    borderRadius: 0,
-                    marginTop: 5,
-                    marginLeft: 0,
-                  }}
-                >
-                  <Button
-                    sx={{
-                      mr: 2,
-                      display: { xs: "none", md: "flex" },
-                      borderRadius: 0,
-                      background: "#333333",
-                    }}
-                    size="small"
-                    variant="contained"
-                    onClick={createPost}
-                  >
-                    Add New Category
-                  </Button>
-                </Item>
-              </Grid>
-            </form>
-          </Item>
-        </Grid>
-        {/* End Submit form */}
-        {/* Start Table of Post */}
-        <Grid item xs={9}>
-          <Paper sx={{ boxShadow: 0, borderRadius: 1 }}>
-            {loading ? (
-              <Grid
-                container
-                spacing={2}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  marginTop: 0,
-                  paddingBottom: 4,
-                  paddingTop: 2,
-                  paddingLeft: 2,
-                  paddingRight: 2,
-                }}
-              >
-                <Grid item xs={12}>
-                  <LinearProgress />
-                </Grid>
-              </Grid>
-            ) : (
-              <Item
-                sx={{ boxShadow: 0, borderRadius: 1, background: "#1A2027" }}
-              >
-                <Paper
-                  sx={{
-                    width: "100%",
-                    mb: 2,
-                    boxShadow: 0,
-                    borderRadius: 1,
-                    zIndex: 1,
-                  }}
-                >
-                  <EnhancedTableToolbar numSelected={selected.length} />
-                  <TableContainer
-                    sx={{ background: "#1A2027", color: "#ffffff" }}
-                  >
-                    <Table
-                      sx={{ minWidth: 750 }}
-                      aria-labelledby="tableTitle"
-                      size="small"
-                    >
-                      <EnhancedTableHead
-                        numSelected={selected.length}
-                        order={order}
-                        orderBy={orderBy}
-                        onSelectAllClick={handleSelectAllClick}
-                        onRequestSort={handleRequestSort}
-                        rowCount={rows.length}
-                      />
-                      <TableBody>
-                        {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.slice().sort(getComparator(order, orderBy)) */}
-                        {stableSort(rows, getComparator(order, orderBy))
-                          .slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                          .reverse()
-                          .map((row, index) => {
-                            const isItemSelected = isSelected(row._id);
-                            const labelId = `enhanced-table-checkbox-${index}`;
-
-                            return (
-                              <TableRow
-                                hover
-                                onClick={(event) => handleClick(event, row._id)}
-                                role="checkbox"
-                                aria-checked={isItemSelected}
-                                tabIndex={-1}
-                                key={row._id}
-                                selected={isItemSelected}
-                                sx={{
-                                  color: "#ffffff",
-                                  backgroundColor: "#1A2027",
-                                }}
-                              >
-                                <TableCell padding="checkbox">
-                                  <Checkbox
-                                    color="primary"
-                                    checked={isItemSelected}
-                                    inputProps={{
-                                      "aria-labelledby": labelId,
-                                    }}
-                                    sx={{ color: "#ffffff" }}
-                                  />
-                                </TableCell>
-
-                                <TableCell
-                                  component="th"
-                                  id={labelId}
-                                  scope="row"
-                                  padding="none"
-                                >
-                                  <Typography
-                                    sx={{
-                                      overflow: "hidden",
-                                      whiteSpace: "nowrap",
-                                      maxWidth: "20ch",
-                                      textOverflow: "ellipsis",
-                                      color: "#ffffff",
-                                    }}
-                                  >
-                                    {row.name}
-                                  </Typography>
-                                </TableCell>
-
-                                <TableCell align="left">
-                                  <Typography
-                                    sx={{
-                                      overflow: "hidden",
-                                      whiteSpace: "nowrap",
-                                      maxWidth: "50ch",
-                                      textOverflow: "ellipsis",
-                                      color: "#ffffff",
-                                    }}
-                                  >
-                                    {row.description}
-                                  </Typography>
-                                </TableCell>
-
-                                <TableCell align="left">
-                                  <Typography
-                                    sx={{
-                                      overflow: "hidden",
-                                      whiteSpace: "nowrap",
-                                      maxWidth: "20ch",
-                                      textOverflow: "ellipsis",
-                                      color: "#ffffff",
-                                    }}
-                                  >
-                                    {row.createdAt.slice(0, 10)}
-                                  </Typography>
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                  <TablePagination
-                    rowsPerPageOptions={[15, 30, 40]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    sx={{ background: "#1A2027", color: "#ffffff" }}
-                  />
-                </Paper>
-              </Item>
-            )}
-          </Paper>
-          {/* End Table */}
-        </Grid>
-      </Grid>
+      <Paper
+        sx={{
+          width: "auto",
+          height: "auto",
+          mt: 3,
+          borderRadius: "none",
+          padding: 3,
+          position: "relative",
+        }}
+      >
+        <div
+          style={{
+            width: "600px",
+            height: "100px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: 3,
+            borderBottom: "1px solid #eee",
+            background: "#333",
+            overflowY: "scroll",
+          }}
+        >
+          <h1>Hello World</h1>
+        </div>
+      </Paper>
     </Box>
   );
 }

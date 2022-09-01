@@ -6,9 +6,10 @@ import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import React, { useState } from "react";
+import * as React from "react";
 import ShieldTwoToneIcon from "@mui/icons-material/ShieldTwoTone";
 import "../styles/login.css";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -19,6 +20,8 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Login() {
+  const [isLoading, setIsLoading] = React.useState(false);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid
@@ -132,9 +135,16 @@ export default function Login() {
                   boxShadow: "none",
                   borderRadius: "50px",
                   border: "1px solid #d6d4d4",
+                  cursor: "pointer",
                 }}
+                onClick={() => setIsLoading(true)}
+                disabled={isLoading}
               >
-                Login Now !
+                {isLoading ? (
+                  <CircularProgress size={24} color="secondary" />
+                ) : (
+                  "Login Now"
+                )}
               </Button>
 
               <Typography

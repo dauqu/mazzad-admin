@@ -87,7 +87,7 @@ export default function Pages() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => navigate("/pages/create")}
+            onClick={() => navigate("/add-page")}
           >
             {/* <CloseIcon /> */}
             <AddIcon />
@@ -104,14 +104,17 @@ export default function Pages() {
           <Item
             onDoubleClick={handleClick}
             sx={{
-              height: "86vh",
+              height: "auto",
               overflowY: "scroll",
             }}
           >
             {/* Loop */}
             <Grid container spacing={1}>
               {pages.map((page) => (
-                <Grid item xs={3} key={page._id}>
+                <Grid item xs key={page._id} sx={{
+                  minWidth: "300px",
+                  maxWidth: "400px !important",
+                }}>
                   <Item
                     sx={{
                       backgroundColor: "#000",

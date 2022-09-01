@@ -180,7 +180,7 @@ export default function MiniDrawer() {
             sx={{
               color: "#ffffff",
               marginLeft: "auto",
-              marginRight: 10,
+              marginRight: 5,
             }}
           >
             <StyledBadge

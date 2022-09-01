@@ -19,6 +19,7 @@ import Info from "./pages/Info";
 import Account from "./pages/Account";
 import Notifications from "./pages/Notifications";
 import AddProduct from "./pages/add-product";
+import AddPage from "./pages/AddPage";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/add-product" element={<AddProduct />} />
           <Route path="/storage" element={<Storage />} />
           <Route path="/pages" element={<Pages />} />
+          <Route path="/add-page" element={<AddPage />} />
           <Route path="/tags" element={<Tags />} />
           <Route path="/users" element={<Users />} />
           <Route path="/settings" element={<Settings />} />
