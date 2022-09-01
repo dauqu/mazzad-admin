@@ -21,23 +21,30 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function Login() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={0} sx={{
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100%",
-        width: "100%",
-        backgroundColor: "#1A2027",
-        
-      }}>
-        <Grid item xs={3} sx={{
-          minWidth: "300px",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
+      <Grid
+        container
+        spacing={0}
+        sx={{
           justifyContent: "center",
           alignItems: "center",
+          height: "100%",
+          width: "100%",
           backgroundColor: "#1A2027",
-        }}>
+        }}
+      >
+        <Grid
+          item
+          xs={3}
+          sx={{
+            minWidth: "300px",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#1A2027",
+          }}
+        >
           <Item
             sx={{
               height: "100%",
