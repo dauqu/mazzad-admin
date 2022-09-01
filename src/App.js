@@ -18,6 +18,7 @@ import Bids from "./pages/Bids";
 import Info from "./pages/Info";
 import Account from "./pages/Account";
 import Notifications from "./pages/Notifications";
+import AddProduct from "./pages/add-product";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/add-product" element={<AddProduct />} />
           <Route path="/storage" element={<Storage />} />
           <Route path="/pages" element={<Pages />} />
           <Route path="/tags" element={<Tags />} />
