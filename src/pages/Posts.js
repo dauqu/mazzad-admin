@@ -515,7 +515,7 @@ export default function Categories() {
                 background: "#333333",
                 width: 150,
               }}
-              to={`./create`}
+              to={`/add-post`}
               component={RouterLink}
             >
               New Blogs

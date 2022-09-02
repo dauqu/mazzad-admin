@@ -10,6 +10,17 @@ import * as React from "react";
 import ShieldTwoToneIcon from "@mui/icons-material/ShieldTwoTone";
 import "../styles/login.css";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import CloseIcon from "@mui/icons-material/Close";
+import MuiAlert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+
+//Axios allow auth 
+axios.defaults.withCredentials = true;
+//Axios Header
+axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.getItem("token");
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -22,8 +33,81 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function Login() {
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const [username, setUserName] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [server_alert, setAlert] = React.useState();
+  const [status, setStatus] = React.useState();
+  const [open, setOpen] = React.useState(false);
+
+  const navigate = useNavigate();
+
+  // https://ayakart.dauqu.com/api/login
+
+  const createPost = (e) => {
+    setIsLoading(true);
+    e.preventDefault();
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
+        username: username,
+        password: password,
+      })
+      .then((res) => {
+        console.log(res);
+        setAlert(res.data.message, res);
+        setStatus(res.data.status);
+        setOpen(true);
+        //Redirect to home page if login is successful
+        navigate("/");
+        window.location.reload();
+        setIsLoading(false);
+      })
+      .catch((e) => {
+        setAlert(e.response.data.message);
+        setStatus(e.response.data.status);
+        setOpen(true);
+        setIsLoading(false);
+      });
+  };
+
+  const handleClose = (reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
+
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
   return (
     <Box sx={{ flexGrow: 1 }}>
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        resumeHideDuration={3000}
+        action={action}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity={status} sx={{ width: "100%" }}>
+          {server_alert}
+        </Alert>
+      </Snackbar>
+
       <Grid
         container
         spacing={0}
@@ -114,6 +198,8 @@ export default function Login() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                onChange={(e) => setUserName(e.target.value)}
+                value={username}
               />
               <TextField
                 variant="outlined"
@@ -125,6 +211,8 @@ export default function Login() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
               />
               <Button
                 type="submit"
@@ -137,7 +225,7 @@ export default function Login() {
                   border: "1px solid #d6d4d4",
                   cursor: "pointer",
                 }}
-                onClick={() => setIsLoading(true)}
+                onClick={(e) => createPost(e)}
                 disabled={isLoading}
               >
                 {isLoading ? (

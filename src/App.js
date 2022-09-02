@@ -20,6 +20,12 @@ import Account from "./pages/Account";
 import Notifications from "./pages/Notifications";
 import AddProduct from "./pages/add-product";
 import AddPage from "./pages/AddPage";
+import AddPost from "./pages/AddPost";
+
+
+//Axios allow auth 
+// axios.defaults.withCredentials = true;
+
 
 function App() {
   return (
@@ -42,6 +48,7 @@ function App() {
           <Route path="/support" element={<Support />} />
           <Route path="/posts" element={<Posts />} />
           <Route path="/orders" element={<Posts />} />
+          <Route path="/add-post" element={<AddPost />} />
           <Route path="/invoice" element={<Posts />} />
           <Route path="/bids" element={<Bids />} />
           <Route path="/info" element={<Info />} />
