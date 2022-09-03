@@ -33,8 +33,11 @@ import CardMedia from "@mui/material/CardMedia";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import AppBar from "@mui/material/AppBar";
+import AddIcon from "@mui/icons-material/Add";
+import { Divider } from "@mui/material";
 
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 //Html Tooltip
 const HtmlTooltip = styled(({ className, ...props }) => (
@@ -309,6 +312,7 @@ export default function Products() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   window.selected = selected;
+  const navigate = useNavigate();
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -567,6 +571,25 @@ export default function Products() {
         transition: "box-shadow 1s ease-in-out",
       }}
     >
+      <AppBar position="static">
+        <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            onClick={() => navigate("/add-post")}
+          >
+            {/* <CloseIcon /> */}
+            <AddIcon />
+          </IconButton>
+          <Typography variant="h6" color="inherit" component="div">
+            Manage Products
+          </Typography>
+          <Divider sx={{ flexGrow: 1 }} />
+        </Toolbar>
+      </AppBar>
+
       {/* Alert */}
       <Snackbar
         open={alertOpen}
@@ -585,41 +608,6 @@ export default function Products() {
         </Alert>
       </Snackbar>
 
-      <Grid container spacing={2} sx={{ marginBottom: 1 }}>
-        <Grid item xs={12}>
-          <Item sx={{ boxShadow: 0, display: "flex", background: "#1A2027" }}>
-            <Button
-              to="./../add-product"
-              component={RouterLink}
-              variant="contained"
-              size="small"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                boxShadow: 0,
-                background: "#000000",
-              }}
-            >
-              Add New Product
-            </Button>
-            <Typography sx={{ flexGrow: 1 }}></Typography>
-            {/*  */}
-            <Tooltip title="Export Products Data">
-              <IconButton
-                size="small"
-                sx={{
-                  background: "#1A2A3C",
-                  width: 30,
-                  height: 30,
-                  color: "white",
-                }}
-              >
-                <GetAppTwoToneIcon />
-              </IconButton>
-            </Tooltip>
-          </Item>
-        </Grid>
-      </Grid>
 
       {/*  */}
 

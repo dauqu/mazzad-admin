@@ -36,6 +36,10 @@ import ModeEditTwoToneIcon from "@mui/icons-material/ModeEditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import AppBar from "@mui/material/AppBar";
+import AddIcon from "@mui/icons-material/Add";
+import { Divider } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -259,6 +263,7 @@ export default function Users() {
   const [page, setPage] = React.useState(0);
   const [dense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(15);
+  const navigate = useNavigate();
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -398,25 +403,24 @@ export default function Users() {
 
   return (
     <Box sx={{ width: "100%", marginTop: 3, boxShadow: 0 }}>
-      <Grid container spacing={2} sx={{ marginBottom: 1 }}>
-        <Grid item xs={12}>
-          <Item sx={{ boxShadow: 0 }}>
-            <Button
-              onClick={handleClickOpen}
-              variant="contained"
-              size="small"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                boxShadow: 0,
-                background: "#333333",
-              }}
-            >
-              Add New User
-            </Button>
-          </Item>
-        </Grid>
-      </Grid>
+      <AppBar position="static">
+        <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            onClick={handleClickOpen}
+          >
+            {/* <CloseIcon /> */}
+            <AddIcon />
+          </IconButton>
+          <Typography variant="h6" color="inherit" component="div">
+            Users
+          </Typography>
+          <Divider sx={{ flexGrow: 1 }} />
+        </Toolbar>
+      </AppBar>
 
       {/* Show Alert */}
       <Stack sx={{ width: "100%" }} spacing={2}>
@@ -528,7 +532,15 @@ export default function Users() {
         </form>
       </Dialog>
 
-      <Paper sx={{ width: "100%", mb: 2, boxShadow: 0, background: "#1A2027" }}>
+      <Paper
+        sx={{
+          width: "100%",
+          mb: 2,
+          boxShadow: 0,
+          background: "#1A2027",
+          borderRadius: 0,
+        }}
+      >
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table

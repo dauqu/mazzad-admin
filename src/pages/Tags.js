@@ -33,6 +33,8 @@ import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
 import { Divider } from "@mui/material";
+import { tooltipClasses } from "@mui/material/Tooltip";
+import CardMedia from "@mui/material/CardMedia";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -193,7 +195,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Categories List
+          Tags List
         </Typography>
       )}
 
@@ -217,6 +219,7 @@ const EnhancedTableToolbar = (props) => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
+
 export default function Tags() {
   // const [post, setPost] = React.useState(null);
   const [name, setName] = useState("");
@@ -360,10 +363,23 @@ export default function Tags() {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
+  //Html Tooltip
+  const HtmlTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: "#f5f5f9",
+      color: "rgba(0, 0, 0, 0.87)",
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      border: "1px solid #dadde9",
+    },
+  }));
+
   return (
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
       <AppBar position="static">
-        <Toolbar variant="dense" sx={{ background: "#333" }}>
+        <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
           <IconButton
             edge="start"
             color="inherit"
@@ -375,37 +391,203 @@ export default function Tags() {
             <AddIcon />
           </IconButton>
           <Typography variant="h6" color="inherit" component="div">
-            Static Pages
+            Tags 
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
       </AppBar>
 
-      <Paper
-        sx={{
-          width: "auto",
-          height: "auto",
-          mt: 3,
-          borderRadius: "none",
-          padding: 3,
-          position: "relative",
-        }}
-      >
-        <div
-          style={{
-            width: "600px",
-            height: "100px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: 3,
-            borderBottom: "1px solid #eee",
-            background: "#333",
-            overflowY: "scroll",
-          }}
-        >
-          <h1>Hello World</h1>
-        </div>
+      <Paper sx={{ boxShadow: 0, borderRadius: 1, background: "#1A2027" }}>
+        {loading ? (
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              width: "100%",
+              height: "100%",
+              marginTop: 0,
+              paddingBottom: 4,
+              paddingTop: 2,
+              paddingLeft: 2,
+              paddingRight: 2,
+            }}
+          >
+            <Grid item xs={12}>
+              <LinearProgress />
+            </Grid>
+          </Grid>
+        ) : (
+          <Item sx={{ boxShadow: 0, borderRadius: 1 }}>
+            <Paper
+              sx={{
+                width: "100%",
+                mb: 2,
+                boxShadow: 0,
+                borderRadius: 1,
+                zIndex: 1,
+                background: "#1A2027",
+                color: "#ffffff",
+              }}
+            >
+              <EnhancedTableToolbar numSelected={selected.length} />
+              <TableContainer>
+                <Table
+                  sx={{ minWidth: 750 }}
+                  aria-labelledby="tableTitle"
+                  size="small"
+                >
+                  <EnhancedTableHead
+                    numSelected={selected.length}
+                    order={order}
+                    orderBy={orderBy}
+                    onSelectAllClick={handleSelectAllClick}
+                    onRequestSort={handleRequestSort}
+                    rowCount={rows.length}
+                  />
+                  <TableBody>
+                    {stableSort(rows, getComparator(order, orderBy))
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row, index) => {
+                        const isItemSelected = isSelected(row._id);
+                        const labelId = `enhanced-table-checkbox-${index}`;
+
+                        return (
+                          <TableRow
+                            hover
+                            onClick={(event) => handleClick(event, row._id)}
+                            role="checkbox"
+                            aria-checked={isItemSelected}
+                            tabIndex={-1}
+                            key={row._id}
+                            selected={isItemSelected}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                color="primary"
+                                checked={isItemSelected}
+                                inputProps={{
+                                  "aria-labelledby": labelId,
+                                }}
+                                sx={{ color: "#ffffff" }}
+                              />
+                            </TableCell>
+
+                            <TableCell
+                              component="th"
+                              id={labelId}
+                              scope="row"
+                              padding="none"
+                            >
+                              <HtmlTooltip
+                                placement="right"
+                                title={
+                                  <React.Fragment>
+                                    <CardMedia
+                                      component="img"
+                                      height="140"
+                                      image="https://source.unsplash.com/random"
+                                      alt="green iguana"
+                                    />
+                                  </React.Fragment>
+                                }
+                              >
+                                <Typography
+                                  size="small"
+                                  sx={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    maxWidth: "20ch",
+                                    textOverflow: "ellipsis",
+                                    cursor: "pointer",
+                                    color: "#ffffff",
+                                  }}
+                                >
+                                  "https://source.unsplash.com/random"
+                                </Typography>
+                              </HtmlTooltip>
+                            </TableCell>
+
+                            <TableCell
+                              component="th"
+                              id={labelId}
+                              scope="row"
+                              padding="none"
+                            >
+                              <Typography
+                                sx={{
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  maxWidth: "20ch",
+                                  textOverflow: "ellipsis",
+                                  color: "#ffffff",
+                                }}
+                              >
+                               "https://source.unsplash.com/random"
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell align="left">
+                              <Typography
+                                sx={{
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  maxWidth: "50ch",
+                                  textOverflow: "ellipsis",
+                                  color: "#ffffff",
+                                }}
+                              >
+                                "https://source.unsplash.com/random"
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell align="left">
+                              <Typography
+                                sx={{
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  maxWidth: "40ch",
+                                  textOverflow: "ellipsis",
+                                  color: "#ffffff",
+                                }}
+                              >
+                                "https://source.unsplash.com/random"
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="left">
+                              <Typography
+                                sx={{
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  maxWidth: "20ch",
+                                  textOverflow: "ellipsis",
+                                  color: "#ffffff",
+                                }}
+                              >
+                                "https://source.unsplash.com/random"
+                              </Typography>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[15, 30, 40]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                sx={{ color: "#ffffff" }}
+              />
+            </Paper>
+          </Item>
+        )}
       </Paper>
     </Box>
   );

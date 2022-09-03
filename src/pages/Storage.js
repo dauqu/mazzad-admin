@@ -20,13 +20,18 @@ import LinkOutlinedIcon from "@mui/icons-material/LinkOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import Tooltip from "@mui/material/Tooltip";
 import Box from "@mui/material/Box";
+import AppBar from "@mui/material/AppBar";
+import AddIcon from "@mui/icons-material/Add";
+import { Divider } from "@mui/material";
+import Toolbar from "@mui/material/Toolbar";
+import { useNavigate } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "center",
   color: "#fff",
-  backgroundColor: "#1A2027",
+  backgroundColor: "#0000009E",
 }));
 
 export default function Storage() {
@@ -35,6 +40,8 @@ export default function Storage() {
   const [server_alert, setAlert] = useState();
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = useState();
+
+  const navigate = useNavigate();
 
   // Files Data
   function getFileData() {
@@ -153,6 +160,35 @@ export default function Storage() {
 
   return (
     <Box sx={{ flexGrow: 1, mt: 3 }}>
+      <AppBar position="static">
+        <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            // onClick={() => navigate("/add-page")}
+          >
+            {/* <CloseIcon /> */}
+            <AddIcon>
+              <input
+                name="uploadedFile"
+                multiple
+                hidden
+                type="file"
+                onChange={onChange}
+                id="contained-button-file"
+                accept="*"
+              />
+            </AddIcon>
+          </IconButton>
+          <Typography variant="h6" color="inherit" component="div">
+            File Manager
+          </Typography>
+          <Divider sx={{ flexGrow: 1 }} />
+        </Toolbar>
+      </AppBar>
+
       <Snackbar
         open={open}
         autoHideDuration={3000}
@@ -165,9 +201,9 @@ export default function Storage() {
           {server_alert}
         </Alert>
       </Snackbar>
-
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
+      <Paper sx={{ boxShadow: 0, borderRadius: 1, background: "#1A2027", p: 1 }}>
+        <Grid container spacing={2}>
+          {/* <Grid item xs={12}>
           <Item sx={{ boxShadow: 0, display: "flex" }}>
             <label
               htmlFor="contained-button-file"
@@ -206,144 +242,150 @@ export default function Storage() {
             </label>
             <Typography sx={{ flexGrow: 1 }}></Typography>
           </Item>
-        </Grid>
+        </Grid> */}
 
-        {/* Map  */}
-        {files.map((item) => (
-          <Grid item xs>
-            <Item
-              sx={{
-                maxWidth: "350px",
-                minWidth: "200px",
-              }}
-            >
-              <Card
+          {/* Map  */}
+          {files.map((item) => (
+            <Grid item xs>
+              <Item
                 sx={{
-                  height: 250,
-                  backgroundColor: "#1A2027",
-                  boxShadow: 0,
-                  border: "1px solid #1A2027",
+                  maxWidth: "450px",
+                  minWidth: "200px",
                 }}
-                key={item.id}
               >
-                {item.file_extension === ".jpg" ||
-                item.file_extension === ".gif" ||
-                item.file_extension === ".png" ||
-                item.file_extension === ".jpeg" ||
-                item.file_extension === ".svg" ||
-                item.file_extension === ".ico" ? (
-                  <CardMedia component="img" height="150" image={item.path} />
-                ) : (
-                  <Card
-                    height="140"
-                    sx={{
-                      height: 150,
-                      boxShadow: 0,
-                      backgroundColor: "#1A2027",
-                      display: "block",
-                      justifyContent: "center",
-                      textAlign: "center",
-                      alignItems: "center",
-                      color: "#fff",
-                    }}
-                  >
-                    <InsertDriveFileIcon
+                <Card
+                  sx={{
+                    height: 250,
+                    boxShadow: 0,
+                    border: "1px solid #1A2027",
+                    background: "#0000009E",
+                  }}
+                  key={item.id}
+                >
+                  {item.file_extension === ".jpg" ||
+                  item.file_extension === ".gif" ||
+                  item.file_extension === ".png" ||
+                  item.file_extension === ".jpeg" ||
+                  item.file_extension === ".svg" ||
+                  item.file_extension === ".ico" ? (
+                    <CardMedia component="img" height="150" image={item.path} />
+                  ) : (
+                    <Card
+                      height="140"
                       sx={{
-                        width: 80,
-                        height: 80,
-                        color: "#fff",
-                        marginTop: 2,
-                      }}
-                    />
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        display: "flex",
+                        height: 150,
+                        boxShadow: 0,
+                        backgroundColor: "#1A2027",
+                        display: "block",
                         justifyContent: "center",
                         textAlign: "center",
                         alignItems: "center",
+                        color: "#fff",
                       }}
                     >
-                      {item.file_extension} file
-                    </Typography>
-                  </Card>
-                )}
+                      <InsertDriveFileIcon
+                        sx={{
+                          width: 80,
+                          height: 80,
+                          color: "#fff",
+                          marginTop: 2,
+                        }}
+                      />
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        {item.file_extension} file
+                      </Typography>
+                    </Card>
+                  )}
 
-                <CardContent>
-                  <Typography
+                  <CardContent>
+                    <Typography
+                      sx={{
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        maxWidth: "25ch",
+                        minWidth: "25ch",
+                        textOverflow: "ellipsis",
+                        justifyContent: "left",
+                        textAlign: "left",
+                        color: "#fff",
+                      }}
+                    >
+                      {item.name}
+                    </Typography>
+                  </CardContent>
+
+                  <CardActions
                     sx={{
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                      maxWidth: "25ch",
-                      minWidth: "25ch",
-                      textOverflow: "ellipsis",
-                      justifyContent: "left",
-                      textAlign: "left",
-                      color: "#fff",
+                      margin: 0,
+                      padding: 0,
+                      marginLeft: 1,
+                      marginRight: 1,
                     }}
                   >
-                    {item.name}
-                  </Typography>
-                </CardContent>
+                    <Tooltip title="View">
+                      <IconButton
+                        size="small"
+                        sx={{
+                          backgroundColor: "#00000021",
+                          color: "#fff",
+                          border: "1px solid #fff",
+                        }}
+                        onClick={onClickUrl(`${item.path}`)}
+                      >
+                        <RemoveRedEyeOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Copy Link">
+                      <IconButton
+                        size="small"
+                        sx={{
+                          backgroundColor: "#00000021",
+                          color: "#fff",
+                          border: "1px solid #fff",
+                        }}
+                        onClick={() => handleCopyClick(item)}
+                      >
+                        <LinkOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
 
-                <CardActions
-                  sx={{ margin: 0, padding: 0, marginLeft: 1, marginRight: 1 }}
-                >
-                  <Tooltip title="View">
-                    <IconButton
-                      size="small"
-                      sx={{
-                        backgroundColor: "#00000021",
-                        color: "#fff",
-                        border: "1px solid #fff",
-                      }}
-                      onClick={onClickUrl(`${item.path}`)}
-                    >
-                      <RemoveRedEyeOutlinedIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Copy Link">
-                    <IconButton
-                      size="small"
-                      sx={{
-                        backgroundColor: "#00000021",
-                        color: "#fff",
-                        border: "1px solid #fff",
-                      }}
-                      onClick={() => handleCopyClick(item)}
-                    >
-                      <LinkOutlinedIcon />
-                    </IconButton>
-                  </Tooltip>
+                    <Tooltip title="Delete">
+                      <IconButton
+                        size="small"
+                        sx={{
+                          backgroundColor: "#00000021",
+                          color: "#fff",
+                          border: "1px solid #fff",
+                        }}
+                        onClick={() => deleteOneFile(item)}
+                      >
+                        <DeleteTwoToneIcon />
+                      </IconButton>
+                    </Tooltip>
 
-                  <Tooltip title="Delete">
-                    <IconButton
-                      size="small"
-                      sx={{
-                        backgroundColor: "#00000021",
-                        color: "#fff",
-                        border: "1px solid #fff",
-                      }}
-                      onClick={() => deleteOneFile(item)}
+                    <Typography
+                      variant="caption"
+                      color="textSecondary"
+                      component="p"
+                      sx={{ marginLeft: 5, color: "#fff" }}
                     >
-                      <DeleteTwoToneIcon />
-                    </IconButton>
-                  </Tooltip>
-
-                  <Typography
-                    variant="caption"
-                    color="textSecondary"
-                    component="p"
-                    sx={{ marginLeft: 5, color: "#fff" }}
-                  >
-                    {item.size} Bytes
-                  </Typography>
-                </CardActions>
-              </Card>
-            </Item>
-          </Grid>
-        ))}
-      </Grid>
+                      {item.size} Bytes
+                    </Typography>
+                  </CardActions>
+                </Card>
+              </Item>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
     </Box>
   );
 }

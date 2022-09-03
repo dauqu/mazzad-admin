@@ -34,8 +34,11 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import AppBar from "@mui/material/AppBar";
+import AddIcon from "@mui/icons-material/Add";
+import { Divider } from "@mui/material";
 
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -433,8 +436,30 @@ export default function Categories() {
     onClose: PropTypes.func.isRequired,
   };
 
+
+  const navigate = useNavigate();
+
   return (
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
+      <AppBar position="static">
+        <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            onClick={() => navigate("/add-post")}
+          >
+            {/* <CloseIcon /> */}
+            <AddIcon />
+          </IconButton>
+          <Typography variant="h6" color="inherit" component="div">
+            Blogs & Posts
+          </Typography>
+          <Divider sx={{ flexGrow: 1 }} />
+        </Toolbar>
+      </AppBar>
+
       {/* Dialog for View Blogs */}
       <div>
         <BootstrapDialog
@@ -483,49 +508,9 @@ export default function Categories() {
       </div>
 
       <Grid container spacing={1}>
-        {/* StartSubmit Form */}
-        <Grid item xs={12}>
-          <Item sx={{ boxShadow: 0, borderRadius: 1 }}>
-            <Stack sx={{ width: "100%" }} spacing={2}>
-              {/* <Typography>{server_alert}</Typography> */}
-              <Snackbar
-                open={open}
-                autoHideDuration={3000}
-                resumeHideDuration={3000}
-                action={action}
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                onClose={handleClose}
-              >
-                <Alert
-                  onClose={handleClose}
-                  severity={status}
-                  sx={{ width: "100%" }}
-                >
-                  {server_alert}
-                </Alert>
-              </Snackbar>
-            </Stack>
-            <Button
-              variant="contained"
-              size="small"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                boxShadow: 0,
-                background: "#333333",
-                width: 150,
-              }}
-              to={`/add-post`}
-              component={RouterLink}
-            >
-              New Blogs
-            </Button>
-          </Item>
-        </Grid>
-        {/* End Submit form */}
         {/* Start Table of Post */}
         <Grid item xs={12} sx={{}}>
-          <Paper sx={{ boxShadow: 0, borderRadius: 1, background: "#1A2027" }}>
+          <Paper sx={{ boxShadow: 0, borderRadius: 0, background: "#1A2027" }}>
             {loading ? (
               <Grid
                 container
