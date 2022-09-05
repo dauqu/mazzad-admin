@@ -86,27 +86,39 @@ const headCells = [
     label: "Image",
   },
   {
-    id: "title",
+    id: "product",
     numeric: false,
     disablePadding: true,
-    label: "Title",
+    label: "Product",
   },
   {
     id: "description",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "Description",
   },
   {
     id: "category",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "Category",
+  },
+  {
+    id: "amount",
+    numeric: false,
+    disablePadding: true,
+    label: "Amount",
+  },
+  {
+    id: "user",
+    numeric: false,
+    disablePadding: true,
+    label: "User",
   },
   {
     id: "published",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "Published At",
   },
 ];
@@ -208,7 +220,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Posts List
+          Bids List
         </Typography>
       )}
 
@@ -473,7 +485,7 @@ export default function Bids() {
           </BootstrapDialogTitle>
           <DialogContent dividers>
             {/* Produv=cts Information */}
-            <Typography variant="h6">{orderById.title}</Typography>
+            <Typography variant="h6">{orderById.product}</Typography>
             <Typography variant="body2">{orderById.description}</Typography>
 
             <Typography variant="body2" sx={{ marginTop: 2 }}>
@@ -665,11 +677,51 @@ export default function Bids() {
                                       maxWidth: "40ch",
                                       textOverflow: "ellipsis",
                                       color: "#ffffff",
+                                      textTransform: "capitalize",
                                     }}
                                   >
                                     {row.category}
                                   </Typography>
                                 </TableCell>
+
+                                <TableCell
+                                  component="th"
+                                  id={labelId}
+                                  scope="row"
+                                  padding="none"
+                                >
+                                  <Typography
+                                    sx={{
+                                      overflow: "hidden",
+                                      whiteSpace: "nowrap",
+                                      maxWidth: "20ch",
+                                      textOverflow: "ellipsis",
+                                      color: "#ffffff",
+                                    }}
+                                  >
+                                    $ 13.00 - $ 15.00
+                                  </Typography>
+                                </TableCell>
+
+                                <TableCell
+                                  component="th"
+                                  id={labelId}
+                                  scope="row"
+                                  padding="none"
+                                >
+                                  <Typography
+                                    sx={{
+                                      overflow: "hidden",
+                                      whiteSpace: "nowrap",
+                                      maxWidth: "20ch",
+                                      textOverflow: "ellipsis",
+                                      color: "#ffffff",
+                                    }}
+                                  >
+                                    Harsh Singh
+                                  </Typography>
+                                </TableCell>
+
                                 <TableCell align="left">
                                   <Typography
                                     sx={{

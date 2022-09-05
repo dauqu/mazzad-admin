@@ -210,9 +210,26 @@ export default function Register() {
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
               height: "100vh",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            xs=4
+            <Typography
+              component="h1"
+              variant="h5"
+              sx={{ fontSize: "50px", fontWeight: "bold", color: "#fff" }}
+            >
+              Mazzad is a secure and easy to use web application
+            </Typography>
+            <Typography
+              component="h1"
+              variant="h5"
+              sx={{ fontSize: "50px", fontWeight: "bold", color: "#fff" }}
+            >
+              for managing auctions.
+            </Typography>
           </Item>
         </Grid>
       </Grid>
