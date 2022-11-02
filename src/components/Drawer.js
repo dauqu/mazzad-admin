@@ -241,7 +241,7 @@ export default function MiniDrawer() {
                   alignItems: "center",
                 }}
               >
-                Mazzad
+                123AUC
               </Typography>
             </DrawerHeader>
           </Toolbar>

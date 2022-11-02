@@ -39,7 +39,7 @@ function App() {
           <Route path="/categories" element={<Categories />} />
           <Route path="/products" element={<Products />} />
           <Route path="/add-product" element={<AddProduct />} />
-          <Route path="/storage" element={<Storage />} />
+          <Route path="/media" element={<Storage />} />
           <Route path="/pages" element={<Pages />} />
           <Route path="/add-page" element={<AddPage />} />
           <Route path="/tags" element={<Tags />} />
@@ -53,6 +53,8 @@ function App() {
           <Route path="/bids" element={<Bids />} />
           <Route path="/info" element={<Info />} />
           <Route path="/notifications" element={<Notifications />} />
+          {/* 404 page */}
+          <Route path="*" element={<h1>404</h1>} />
         </Route>
       </Routes>
     </div>
