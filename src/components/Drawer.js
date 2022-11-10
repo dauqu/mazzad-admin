@@ -31,7 +31,7 @@ import KeyboardDoubleArrowLeftTwoToneIcon from "@mui/icons-material/KeyboardDoub
 import NotificationsTwoToneIcon from "@mui/icons-material/NotificationsTwoTone";
 import menu_items from "./menu_items";
 
-const drawerWidth = 220;
+const drawerWidth = 250;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,

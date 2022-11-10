@@ -3,9 +3,6 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
 import axios from "axios";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -223,18 +220,16 @@ export default function Categories() {
   const [description, setDescription] = useState("");
   const [server_alert, setAlert] = useState();
   const [status, setStatus] = useState();
-  const [rows, setNews] = React.useState([]);
+  const [rows, setCategories] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   //Get all categories
-  function getCategoryData() {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/categories`)
-      .then((response) => {
-        setNews(response.data);
-      });
+  async function getCategoryData() {
+    const res = await axios.get(`http://localhost:4000/api/v1/categories`);
+    console.log(res.data);
+    setCategories(res.data);
   }
 
   React.useEffect(() => {
@@ -332,7 +327,7 @@ export default function Categories() {
     setPage(0);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
   const handleClose = (reason) => {
     if (reason === "clickaway") {
@@ -384,7 +379,7 @@ export default function Categories() {
 
       <Grid container spacing={1}>
         {/* StartSubmit Form */}
-        
+
         {/* End Submit form */}
         {/* Start Table of Post */}
         <Grid item xs>
@@ -519,7 +514,7 @@ export default function Categories() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.publishedAt.slice(0, 10)}
+                                    {row.createdAt.slice(0, 10)}
                                   </Typography>
                                 </TableCell>
                               </TableRow>
