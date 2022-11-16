@@ -189,7 +189,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Categories List
+          Auctions List
         </Typography>
       )}
 
@@ -213,7 +213,7 @@ const EnhancedTableToolbar = (props) => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
-export default function Categories() {
+export default function Companies() {
   // const [post, setPost] = React.useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -370,7 +370,7 @@ export default function Categories() {
             <AddIcon />
           </IconButton>
           <Typography variant="h6" color="inherit" component="div">
-            Categories
+            Auctions
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>

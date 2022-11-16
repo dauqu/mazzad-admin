@@ -21,6 +21,14 @@ import Notifications from "./pages/Notifications";
 import AddProduct from "./pages/add-product";
 import AddPage from "./pages/AddPage";
 import AddPost from "./pages/AddPost";
+import Auctions from "./pages/Auctions";
+import Points from "./pages/Points";
+import Services from "./pages/Services";
+import Offers from "./pages/Offers";
+import Companies from "./pages/Companies";
+import Commission from "./pages/Commission";
+import Classifications from "./pages/Classifications";
+import Search from "./pages/Search";
 
 
 //Axios allow auth 
@@ -53,8 +61,32 @@ function App() {
           <Route path="/bids" element={<Bids />} />
           <Route path="/info" element={<Info />} />
           <Route path="/notifications" element={<Notifications />} />
+
+          <Route path="/auctions" element={<Auctions />} />
+          <Route path="/points" element={<Points />} />
+
+          <Route path="/services" element={<Services />} />
+
+          <Route path="/offers" element={<Offers />} />
+
+          <Route path="/companies" element={<Companies />} />
+
+          <Route path="/commission" element={<Commission />} />
+
+          <Route path="/classifications" element={<Classifications />} />
+
+          <Route path="/search" element={<Search />} />
+
           {/* 404 page */}
-          <Route path="*" element={<h1>404</h1>} />
+          <Route path="*" element={
+            <div className="text-center" style={{
+              marginTop: "20%",
+              color: "white",
+            }}>
+              <h1 className="text-5xl font-bold">404</h1>
+              <p className="text-2xl">Page not found</p>
+            </div>
+          } />
         </Route>
       </Routes>
     </div>
