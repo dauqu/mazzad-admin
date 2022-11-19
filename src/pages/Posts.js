@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
 import axios from "axios";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -23,7 +22,6 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { visuallyHidden } from "@mui/utils";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TablePagination from "@mui/material/TablePagination";
-import Snackbar from "@mui/material/Snackbar";
 import CloseIcon from "@mui/icons-material/Close";
 import MuiAlert from "@mui/material/Alert";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -266,7 +264,7 @@ export default function Categories() {
 
   //Get all categories
   function getBlogsData() {
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/blogs`).then((response) => {
+    axios.get(`https://jsonplaceholder.typicode.com/todos`).then((response) => {
       setBlogs(response.data);
     });
   }
@@ -435,7 +433,6 @@ export default function Categories() {
     children: PropTypes.node,
     onClose: PropTypes.func.isRequired,
   };
-
 
   const navigate = useNavigate();
 
@@ -654,7 +651,7 @@ export default function Categories() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.description}
+                                    {row.title}
                                   </Typography>
                                 </TableCell>
 
@@ -668,7 +665,7 @@ export default function Categories() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.category}
+                                    {row.title}
                                   </Typography>
                                 </TableCell>
                                 <TableCell align="left">
@@ -681,7 +678,7 @@ export default function Categories() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.created_at.slice(0, 10)}
+                                    {/* {row.created_at.slice(0, 10)} */}
                                   </Typography>
                                 </TableCell>
                               </TableRow>

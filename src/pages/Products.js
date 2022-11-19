@@ -374,7 +374,7 @@ export default function Products() {
   const [category, setCategory] = React.useState([]);
   React.useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/category`)
+      .get(`https://jsonplaceholder.typicode.com/todos`)
       .then((response) => {
         setCategory(response.data);
         // setLoading(false);
@@ -480,7 +480,7 @@ export default function Products() {
   //Get Product
   const getProducts = () => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/products`)
+      .get(`https://jsonplaceholder.typicode.com/todos`)
       .then((response) => {
         setProducts(response.data);
       });
@@ -649,11 +649,11 @@ export default function Products() {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row._id)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row._id}
+                      key={row.id}
                       selected={isItemSelected}
                       sx={{ color: "#fff" }}
                     >
@@ -716,7 +716,7 @@ export default function Products() {
                         {row.title}
                       </TableCell>
                       <TableCell align="left" sx={{ color: "#fff" }}>
-                        {row.sale_price + " INR"}
+                        {/* {row.sale_price + " INR"} */}
                       </TableCell>
                       <TableCell align="left">
                         <Rating
@@ -727,30 +727,30 @@ export default function Products() {
                         />
                       </TableCell>
                       <TableCell align="left" sx={{ width: 400 }}>
-                        {row.tags.map((value) => (
+                        {/* {row.map((value) => (
                           <Chip
                             sx={{ height: 18, fontSize: 12, margin: 0.2 }}
                             color="success"
                             size="small"
-                            key={value._id}
+                            key={value.title}
                             label={value}
                           />
-                        ))}
+                        ))} */}
                       </TableCell>
                       <TableCell align="left" sx={{ color: "#fff" }}>
-                        {row.category}
+                        {row.title}
                       </TableCell>
                       <TableCell align="left" sx={{ color: "#fff" }}>
-                        {row.publishedAt.slice(0, 10)}
+                        {/* {row.publishedAt.slice(0, 10)} */}
                       </TableCell>
 
                       <TableCell align="left">
-                        <Chip
-                          label={row.status}
+                        {/* <Chip
+                          label={row.title}
                           size="small"
                           color={row.status == "active" ? "success" : "warning"}
                           sx={{ width: 80 }}
-                        />
+                        /> */}
                       </TableCell>
                     </TableRow>
                   );
