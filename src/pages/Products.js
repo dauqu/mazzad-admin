@@ -379,7 +379,7 @@ export default function Products() {
         setCategory(response.data);
       });
   }, []);
-  
+
 
   const theme = useTheme();
 
@@ -579,7 +579,7 @@ export default function Products() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => navigate("/add-post")}
+            onClick={() => navigate("/new-product")}
           >
             {/* <CloseIcon /> */}
             <AddIcon />
@@ -748,7 +748,7 @@ export default function Products() {
 
                       <TableCell align="left">
                         <Chip
-                          label="{row.status}"
+                          label="Inactive"
                           size="small"
                           color="warning"
                           sx={{ width: 80 }}

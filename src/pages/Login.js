@@ -114,9 +114,8 @@ export default function Login() {
         sx={{
           justifyContent: "center",
           alignItems: "center",
-          height: "100%",
+          height: "100vh",
           width: "100%",
-          backgroundColor: "#1A2027",
         }}
       >
         <Grid
@@ -130,6 +129,7 @@ export default function Login() {
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "#1A2027",
+            paddingTop: "5vh",
           }}
         >
           <Item
@@ -269,7 +269,7 @@ export default function Login() {
             </Box>
           </Item>
         </Grid>
-        <Grid item xs={9} className="bg-image">
+        {/* <Grid item xs={9} className="bg-image">
           <Item
             sx={{
               backgroundImage: `url("https://source.unsplash.com/random/800x600")`,
@@ -298,7 +298,7 @@ export default function Login() {
               for managing auctions.
             </Typography>
           </Item>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   );

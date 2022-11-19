@@ -18,7 +18,7 @@ import Bids from "./pages/Bids";
 import Info from "./pages/Info";
 import Account from "./pages/Account";
 import Notifications from "./pages/Notifications";
-import AddProduct from "./pages/add-product";
+import AddProduct from "./pages/AddProducts";
 import AddPage from "./pages/AddPage";
 import AddPost from "./pages/AddPost";
 import Auctions from "./pages/Auctions";
@@ -29,6 +29,7 @@ import Companies from "./pages/Companies";
 import Commission from "./pages/Commission";
 import Classifications from "./pages/Classifications";
 import Search from "./pages/Search";
+import NewCategory from "./pages/NewCategory";
 
 
 //Axios allow auth 
@@ -48,7 +49,7 @@ function App() {
           <Route path="/new-account" element={<AddProduct />} />
 
           <Route path="/categories" element={<Categories />} />
-          <Route path="/new-category" element={<AddProduct />} />
+          <Route path="/new-category" element={<NewCategory />} />
 
           <Route path="/products" element={<Products />} />
           <Route path="/new-product" element={<AddProduct />} />
