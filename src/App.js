@@ -30,6 +30,7 @@ import Commission from "./pages/Commission";
 import Classifications from "./pages/Classifications";
 import Search from "./pages/Search";
 import NewCategory from "./pages/NewCategory";
+import Invoice from "./pages/Invoice";
 
 
 //Axios allow auth 
@@ -70,8 +71,11 @@ function App() {
           <Route path="/new-post" element={<AddPost />} />
 
           <Route path="/orders" element={<Posts />} />
-          <Route path="/invoice" element={<Posts />} />
+
+          <Route path="/invoice" element={<Invoice />} />
+
           <Route path="/bids" element={<Bids />} />
+          
           <Route path="/info" element={<Info />} />
           <Route path="/notifications" element={<Notifications />} />
 

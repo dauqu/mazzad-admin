@@ -267,7 +267,7 @@ export default function Support() {
                   </AccordionSummary>
                   {item.message !== null ? (
                     <AccordionDetails>
-                      {item.message.map((subitem) => (
+                      {/* {item.message.map((subitem) => (
                         <Card
                           key={subitem._id}
                           sx={{
@@ -297,7 +297,7 @@ export default function Support() {
                             {subitem.message}
                           </Typography>
                         </Card>
-                      ))}
+                      ))} */}
 
                       <TextField
                         id="filled-multiline-static"
