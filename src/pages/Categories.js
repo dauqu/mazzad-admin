@@ -226,7 +226,7 @@ export default function Categories() {
 
   //Get all categories
   async function getCategoryData() {
-    const res = await axios.get(`https://jsonplaceholder.typicode.com/todos`);
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/categories`);
     console.log(res.data);
     setCategories(res.data);
   }
@@ -364,7 +364,7 @@ export default function Categories() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => navigate("/add-page")}
+            onClick={() => navigate("/new-category")}
           >
             {/* <CloseIcon /> */}
             <AddIcon />
@@ -485,7 +485,7 @@ export default function Categories() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.title}
+                                    {row.name}
                                   </Typography>
                                 </TableCell>
 
@@ -499,7 +499,7 @@ export default function Categories() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.title}
+                                    {row.description}
                                   </Typography>
                                 </TableCell>
 
@@ -513,7 +513,7 @@ export default function Categories() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {/* {row.createdAt.slice(0, 10)} */}
+                                    {row.createdAt.slice(0, 10)}
                                   </Typography>
                                 </TableCell>
                               </TableRow>

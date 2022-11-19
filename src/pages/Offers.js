@@ -189,7 +189,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Auctions List
+          Offers List
         </Typography>
       )}
 
@@ -226,7 +226,7 @@ export default function Offers() {
 
   //Get all categories
   async function getCategoryData() {
-    const res = await axios.get(`https://jsonplaceholder.typicode.com/todos`);
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/offers`);
     console.log(res.data);
     setCategories(res.data);
   }
@@ -240,7 +240,7 @@ export default function Offers() {
   const createPost = (e) => {
     e.preventDefault();
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/categories`, {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/offers`, {
         name,
         description,
       })
@@ -370,7 +370,7 @@ export default function Offers() {
             <AddIcon />
           </IconButton>
           <Typography variant="h6" color="inherit" component="div">
-            Auctions
+            Offers
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
@@ -485,7 +485,7 @@ export default function Offers() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.title}
+                                    {row.offeritems}
                                   </Typography>
                                 </TableCell>
 
@@ -499,7 +499,7 @@ export default function Offers() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.title}
+                                    {row.oPercent}
                                   </Typography>
                                 </TableCell>
 
@@ -513,7 +513,7 @@ export default function Offers() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {/* {row.createdAt.slice(0, 10)} */}
+                                    {row.createdAt.slice(0, 10)}
                                   </Typography>
                                 </TableCell>
                               </TableRow>

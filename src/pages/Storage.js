@@ -1,5 +1,4 @@
-import ImageList from "@mui/material/ImageList";
-import Button from "@mui/material/Button";
+
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
@@ -46,7 +45,7 @@ export default function Storage() {
   // Files Data
   function getFileData() {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/files/uploaded_files`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/storage/uploaded_files`)
       .then((response) => {
         setFiles(response.data);
       });
@@ -55,7 +54,7 @@ export default function Storage() {
   //Delete Post
   function deleteOneFile(item) {
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/files/delete`, {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/storage/delete`, {
         name: item.name,
       })
       .then((res) => {
@@ -78,14 +77,14 @@ export default function Storage() {
   //get directory data path
   React.useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/files/dir`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/storage/dir`)
       .then((response) => {
         setDir(response.data);
       });
   }, []);
 
   const onChange = (e) => {
-    let url = `${process.env.REACT_APP_BACKEND_URL}/files`;
+    let url = `${process.env.REACT_APP_BACKEND_URL}/storage`;
     let file = e.target.files[0];
     uploadFile(url, file);
     getFileData();
@@ -167,7 +166,7 @@ export default function Storage() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            // onClick={() => navigate("/add-page")}
+          // onClick={() => navigate("/add-page")}
           >
             {/* <CloseIcon /> */}
             <AddIcon>
@@ -263,11 +262,11 @@ export default function Storage() {
                   key={item.id}
                 >
                   {item.file_extension === ".jpg" ||
-                  item.file_extension === ".gif" ||
-                  item.file_extension === ".png" ||
-                  item.file_extension === ".jpeg" ||
-                  item.file_extension === ".svg" ||
-                  item.file_extension === ".ico" ? (
+                    item.file_extension === ".gif" ||
+                    item.file_extension === ".png" ||
+                    item.file_extension === ".jpeg" ||
+                    item.file_extension === ".svg" ||
+                    item.file_extension === ".ico" ? (
                     <CardMedia component="img" height="150" image={item.path} />
                   ) : (
                     <Card

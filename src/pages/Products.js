@@ -374,12 +374,13 @@ export default function Products() {
   const [category, setCategory] = React.useState([]);
   React.useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/category`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/blog`)
       .then((response) => {
         setCategory(response.data);
-        // setLoading(false);
       });
   }, []);
+  
+
   const theme = useTheme();
 
   //Product Title
@@ -677,7 +678,7 @@ export default function Products() {
                               <CardMedia
                                 component="img"
                                 height="140"
-                                image={row.featured_image}
+                                image="https://upload.wikimedia.org/wikipedia/commons/f/f9/Phoenicopterus_ruber_in_S%C3%A3o_Paulo_Zoo.jpg"
                                 alt="green iguana"
                               />
                             </React.Fragment>
@@ -694,7 +695,8 @@ export default function Products() {
                               color: "#fff",
                             }}
                           >
-                            {row.featured_image}
+                            {/* {row.featured_image} */}
+                            https://upload.wikimedia.org/wikipedia/commons/f/f9/Phoenicopterus_ruber_in_S%C3%A3o_Paulo_Zoo.jpg
                           </Typography>
                         </HtmlTooltip>
                       </TableCell>
@@ -716,18 +718,18 @@ export default function Products() {
                         {row.title}
                       </TableCell>
                       <TableCell align="left" sx={{ color: "#fff" }}>
-                        {row.sale_price + " INR"}
+                        {row.price + " USD"}
                       </TableCell>
                       <TableCell align="left">
                         <Rating
                           name="half-rating-read"
-                          value={row.all_reviews.rating}
+                          // value={row.all_reviews.rating}
                           precision={0.5}
                           readOnly
                         />
                       </TableCell>
                       <TableCell align="left" sx={{ width: 400 }}>
-                        {row.tags.map((value) => (
+                        {/* {row.tags.map((value) => (
                           <Chip
                             sx={{ height: 18, fontSize: 12, margin: 0.2 }}
                             color="success"
@@ -735,20 +737,20 @@ export default function Products() {
                             key={value._id}
                             label={value}
                           />
-                        ))}
+                        ))} */}
                       </TableCell>
                       <TableCell align="left" sx={{ color: "#fff" }}>
                         {row.category}
                       </TableCell>
                       <TableCell align="left" sx={{ color: "#fff" }}>
-                        {row.publishedAt.slice(0, 10)}
+                        {row.createdAt.slice(0, 10)}
                       </TableCell>
 
                       <TableCell align="left">
                         <Chip
-                          label={row.status}
+                          label="{row.status}"
                           size="small"
-                          color={row.status == "active" ? "success" : "warning"}
+                          color="warning"
                           sx={{ width: 80 }}
                         />
                       </TableCell>
