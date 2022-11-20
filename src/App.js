@@ -18,7 +18,7 @@ import Bids from "./pages/Bids";
 import Info from "./pages/Info";
 import Account from "./pages/Account";
 import Notifications from "./pages/Notifications";
-import AddProduct from "./pages/add-product";
+import AddProduct from "./pages/AddProducts";
 import AddPage from "./pages/AddPage";
 import AddPost from "./pages/AddPost";
 import Auctions from "./pages/Auctions";
@@ -29,6 +29,8 @@ import Companies from "./pages/Companies";
 import Commission from "./pages/Commission";
 import Classifications from "./pages/Classifications";
 import Search from "./pages/Search";
+import NewCategory from "./pages/NewCategory";
+import Invoice from "./pages/Invoice";
 
 
 //Axios allow auth 
@@ -43,22 +45,37 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<MiniDrawer />}>
           <Route path="" element={<Dashboard />} />
+
           <Route path="/account" element={<Account />} />
+          <Route path="/new-account" element={<AddProduct />} />
+
           <Route path="/categories" element={<Categories />} />
+          <Route path="/new-category" element={<NewCategory />} />
+
           <Route path="/products" element={<Products />} />
-          <Route path="/add-product" element={<AddProduct />} />
+          <Route path="/new-product" element={<AddProduct />} />
+
           <Route path="/media" element={<Storage />} />
+
           <Route path="/pages" element={<Pages />} />
-          <Route path="/add-page" element={<AddPage />} />
+          <Route path="/new-page" element={<AddPage />} />
+
           <Route path="/tags" element={<Tags />} />
+          <Route path="/new-tag" element={<AddProduct />} />
+
           <Route path="/users" element={<Users />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/support" element={<Support />} />
+
           <Route path="/posts" element={<Posts />} />
+          <Route path="/new-post" element={<AddPost />} />
+
           <Route path="/orders" element={<Posts />} />
-          <Route path="/add-post" element={<AddPost />} />
-          <Route path="/invoice" element={<Posts />} />
+
+          <Route path="/invoice" element={<Invoice />} />
+
           <Route path="/bids" element={<Bids />} />
+          
           <Route path="/info" element={<Info />} />
           <Route path="/notifications" element={<Notifications />} />
 

@@ -108,7 +108,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 export default function MiniDrawer() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const location = useLocation();
   const [countNotifications, setCountNotifications] = React.useState(1);
 

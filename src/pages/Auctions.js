@@ -226,7 +226,7 @@ export default function Auctions() {
 
   //Get all categories
   async function getCategoryData() {
-    const res = await axios.get(`https://jsonplaceholder.typicode.com/todos`);
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/bids`);
     console.log(res.data);
     setCategories(res.data);
   }
@@ -359,16 +359,15 @@ export default function Auctions() {
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
-          <IconButton
+          {/* <IconButton
             edge="start"
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
             onClick={() => navigate("/add-page")}
           >
-            {/* <CloseIcon /> */}
             <AddIcon />
-          </IconButton>
+          </IconButton> */}
           <Typography variant="h6" color="inherit" component="div">
             Auctions
           </Typography>
@@ -485,7 +484,7 @@ export default function Auctions() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.title}
+                                    {row.name}
                                   </Typography>
                                 </TableCell>
 
@@ -499,7 +498,7 @@ export default function Auctions() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.title}
+                                    {row.description}
                                   </Typography>
                                 </TableCell>
 
@@ -513,7 +512,7 @@ export default function Auctions() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {/* {row.createdAt.slice(0, 10)} */}
+                                    {row.createdAt.slice(0, 10)}
                                   </Typography>
                                 </TableCell>
                               </TableRow>

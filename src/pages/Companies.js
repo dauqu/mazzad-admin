@@ -226,7 +226,7 @@ export default function Companies() {
 
   //Get all categories
   async function getCategoryData() {
-    const res = await axios.get(`https://jsonplaceholder.typicode.com/todos`);
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/companies`);
     console.log(res.data);
     setCategories(res.data);
   }
@@ -485,7 +485,7 @@ export default function Companies() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.title}
+                                    {row.companyName}
                                   </Typography>
                                 </TableCell>
 
@@ -499,7 +499,7 @@ export default function Companies() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.title}
+                                    {row.companyEmail}
                                   </Typography>
                                 </TableCell>
 
@@ -513,7 +513,7 @@ export default function Companies() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {/* {row.createdAt.slice(0, 10)} */}
+                                    {row.createdAt.slice(0, 10)}
                                   </Typography>
                                 </TableCell>
                               </TableRow>

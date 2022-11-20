@@ -15,7 +15,6 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import Grid from "@mui/material/Grid";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { styled } from "@mui/material/styles";
@@ -606,7 +605,7 @@ export default function Users() {
                             color: "#ffffff",
                           }}
                         >
-                          {row.fname}
+                          {row.fullname}
                         </Typography>
                       </TableCell>
                       <TableCell align="left" sx={{ color: "#fff" }}>

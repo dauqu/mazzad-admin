@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import axios from "axios";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -17,25 +18,32 @@ import Typography from "@mui/material/Typography";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import Tooltip from "@mui/material/Tooltip";
-import DeleteIcon from "@mui/icons-material/Delete";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { visuallyHidden } from "@mui/utils";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TablePagination from "@mui/material/TablePagination";
 import CloseIcon from "@mui/icons-material/Close";
 import MuiAlert from "@mui/material/Alert";
 import LinearProgress from "@mui/material/LinearProgress";
+import CardMedia from "@mui/material/CardMedia";
+import RemoveRedEyeTwoToneIcon from "@mui/icons-material/RemoveRedEyeTwoTone";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Dialog from "@mui/material/Dialog";
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
 import { Divider } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "left",
-  backgroundColor: "#1A2027",
   color: "#ffffff",
+  backgroundColor: "#1A2027",
 }));
 
 function descendingComparator(a, b, orderBy) {
@@ -70,21 +78,45 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "name",
+    id: "image",
     numeric: false,
     disablePadding: true,
-    label: "Name",
+    label: "Image",
+  },
+  {
+    id: "product",
+    numeric: false,
+    disablePadding: true,
+    label: "Product",
   },
   {
     id: "description",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "Description",
+  },
+  {
+    id: "category",
+    numeric: false,
+    disablePadding: true,
+    label: "Category",
+  },
+  {
+    id: "amount",
+    numeric: false,
+    disablePadding: true,
+    label: "Amount",
+  },
+  {
+    id: "user",
+    numeric: false,
+    disablePadding: true,
+    label: "User",
   },
   {
     id: "published",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "Published At",
   },
 ];
@@ -105,7 +137,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox" sx={{ color: "#ffffff" }}>
+        <TableCell padding="checkbox">
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -129,7 +161,6 @@ function EnhancedTableHead(props) {
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
-              sx={{ color: "#ffffff" }}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -169,13 +200,11 @@ const EnhancedTableToolbar = (props) => {
               theme.palette.action.activatedOpacity
             ),
         }),
-        backgroundColor: "#1A2027",
-        color: "#ffffff",
       }}
     >
       {numSelected > 0 ? (
         <Typography
-          sx={{ flex: "1 1 100%", color: "#ffffff" }}
+          sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
           component="div"
@@ -184,25 +213,35 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: "1 1 100%", color: "#ffffff" }}
+          sx={{ flex: "1 1 100%" }}
           variant="h6"
           id="tableTitle"
           component="div"
         >
-          Offers List
+          Bids List
         </Typography>
+      )}
+
+      {numSelected === 1 ? (
+        <Tooltip title="Delete">
+          <IconButton onClick={window.viewPost} sx={{ color: "#fff" }}>
+            <RemoveRedEyeTwoToneIcon />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        ""
       )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton onClick={window.deletePost}>
-            <DeleteIcon sx={{ color: "#fff" }} />
+          <IconButton onClick={window.deletePost} sx={{ color: "#fff" }}>
+            <DeleteTwoToneIcon />
           </IconButton>
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
           <IconButton>
-            <FilterListIcon sx={{ color: "#fff" }} />
+            <FilterListIcon />
           </IconButton>
         </Tooltip>
       )}
@@ -213,57 +252,48 @@ const EnhancedTableToolbar = (props) => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
-export default function Offers() {
-  // const [post, setPost] = React.useState(null);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+
+//Html Tooltip
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "#f5f5f9",
+    color: "rgba(0, 0, 0, 0.87)",
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: "1px solid #dadde9",
+  },
+}));
+
+export default function Invoice() {
   const [server_alert, setAlert] = useState();
   const [status, setStatus] = useState();
-  const [rows, setCategories] = React.useState([]);
+  const [rows, setBlogs] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [orderById, setOrderById] = React.useState("");
 
   //Get all categories
-  async function getCategoryData() {
-    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/offers`);
-    console.log(res.data);
-    setCategories(res.data);
+  function getBlogsData() {
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/blogs`).then((response) => {
+      setBlogs(response.data);
+    });
   }
 
   React.useEffect(() => {
-    getCategoryData();
+    getBlogsData();
     setLoading(false);
   }, []);
-
-  //Post new category
-  const createPost = (e) => {
-    e.preventDefault();
-    axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/offers`, {
-        name,
-        description,
-      })
-      .then((res) => {
-        setAlert("Category successfully added", res);
-        setStatus("success");
-        getCategoryData();
-      })
-      .catch((e) => {
-        setAlert(e.response.data.message);
-        setStatus(e.response.data.status);
-      });
-    setOpen(true);
-  };
 
   //Delete category
   window.deletePost = () => {
     axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/categories/${selected}`)
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/blogs/${selected}`)
       .then((res) => {
-        setAlert("Category successfully deleted", res);
+        setAlert("Post successfully deleted", res);
         setStatus("success");
-        getCategoryData();
+        getBlogsData();
         setSelected([]);
       })
       .catch((e) => {
@@ -273,6 +303,20 @@ export default function Offers() {
     setOpen(true);
   };
 
+  //Get by id
+  function getOrderById() {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/blogs/${selected}`)
+      .then((response) => {
+        setOrderById(response.data);
+      });
+  }
+
+  window.viewPost = () => {
+    getOrderById();
+    handleClickOpenDialog();
+  };
+
   // function createData(name, description, fat, carbs, published) {
   //   return { name, description, fat, carbs, published };
   // }
@@ -280,9 +324,10 @@ export default function Offers() {
   const [orderBy, setOrderBy] = React.useState("description");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  const [dense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(15);
 
-  const handleRequestSort = (event, property) => {
+  const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -326,7 +371,7 @@ export default function Offers() {
     setPage(0);
   };
 
-  const isSelected = (_id) => selected.indexOf(_id) !== -1;
+  const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const handleClose = (reason) => {
     if (reason === "clickaway") {
@@ -337,9 +382,6 @@ export default function Offers() {
 
   const action = (
     <React.Fragment>
-      {/* <Button color="secondary" size="small" onClick={handleClose}>
-        UNDO
-      </Button> */}
       <IconButton
         size="small"
         aria-label="close"
@@ -355,6 +397,57 @@ export default function Offers() {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
+  // Dialog box
+  const [openDialog, setOpenDialog] = React.useState(false);
+
+  const handleClickOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleClickCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    "& .MuiDialogContent-root": {
+      padding: theme.spacing(2),
+    },
+    "& .MuiDialogActions-root": {
+      padding: theme.spacing(1),
+    },
+  }));
+
+  const BootstrapDialogTitle = (props) => {
+    const { children, onClose, ...other } = props;
+
+    return (
+      <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+        {children}
+        {onClose ? (
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        ) : null}
+      </DialogTitle>
+    );
+  };
+
+  BootstrapDialogTitle.propTypes = {
+    children: PropTypes.node,
+    onClose: PropTypes.func.isRequired,
+  };
+
+  const navigate = useNavigate();
+
   return (
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
       <AppBar position="static">
@@ -364,25 +457,69 @@ export default function Offers() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => navigate("/add-page")}
+            onClick={() => navigate("/add-post")}
           >
             {/* <CloseIcon /> */}
             <AddIcon />
           </IconButton>
           <Typography variant="h6" color="inherit" component="div">
-            Offers
+            Bids
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
       </AppBar>
 
-      <Grid container spacing={1}>
-        {/* StartSubmit Form */}
+      {/* Dialog for View Blogs */}
+      <div>
+        <BootstrapDialog
+          aria-labelledby="customized-dialog-title"
+          open={openDialog}
+        >
+          <BootstrapDialogTitle
+            id="customized-dialog-title"
+            onClose={handleClickCloseDialog}
+          >
+            #{orderById._id} - {orderById.publisher}
+          </BootstrapDialogTitle>
+          <DialogContent dividers>
+            {/* Produv=cts Information */}
+            <Typography variant="h6">{orderById.product}</Typography>
+            <Typography variant="body2">{orderById.description}</Typography>
 
-        {/* End Submit form */}
+            <Typography variant="body2" sx={{ marginTop: 2 }}>
+              <b>Category</b> - {orderById.category}
+            </Typography>
+
+            <Typography variant="body2">
+              <b>Published At</b> - {orderById.created_at}
+            </Typography>
+
+            <Typography variant="body2">
+              <b>Updated At</b> - {orderById.updated_at}
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Typography sx={{ flexGrow: 1 }} />
+            <Button
+              size="small"
+              variant="contained"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                boxShadow: 0,
+                background: "#333333",
+              }}
+            >
+              Save changes
+            </Button>
+          </DialogActions>
+        </BootstrapDialog>
+      </div>
+
+      <Grid container spacing={1}>
         {/* Start Table of Post */}
-        <Grid item xs>
-          <Paper sx={{ boxShadow: 0, borderRadius: 1 }}>
+        <Grid item xs={12} sx={{}}>
+          <Paper sx={{ boxShadow: 0, borderRadius: 0, background: "#1A2027" }}>
             {loading ? (
               <Grid
                 container
@@ -402,9 +539,7 @@ export default function Offers() {
                 </Grid>
               </Grid>
             ) : (
-              <Item
-                sx={{ boxShadow: 0, borderRadius: 1, background: "#1A2027" }}
-              >
+              <Item sx={{ boxShadow: 0, borderRadius: 1 }}>
                 <Paper
                   sx={{
                     width: "100%",
@@ -412,16 +547,16 @@ export default function Offers() {
                     boxShadow: 0,
                     borderRadius: 1,
                     zIndex: 1,
+                    background: "#1A2027",
+                    color: "#ffffff",
                   }}
                 >
                   <EnhancedTableToolbar numSelected={selected.length} />
-                  <TableContainer
-                    sx={{ background: "#1A2027", color: "#ffffff" }}
-                  >
+                  <TableContainer>
                     <Table
                       sx={{ minWidth: 750 }}
                       aria-labelledby="tableTitle"
-                      size="small"
+                      size={dense ? "small" : "medium"}
                     >
                       <EnhancedTableHead
                         numSelected={selected.length}
@@ -432,8 +567,6 @@ export default function Offers() {
                         rowCount={rows.length}
                       />
                       <TableBody>
-                        {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.slice().sort(getComparator(order, orderBy)) */}
                         {stableSort(rows, getComparator(order, orderBy))
                           .slice(
                             page * rowsPerPage,
@@ -454,10 +587,6 @@ export default function Offers() {
                                 tabIndex={-1}
                                 key={row._id}
                                 selected={isItemSelected}
-                                sx={{
-                                  color: "#ffffff",
-                                  backgroundColor: "#1A2027",
-                                }}
                               >
                                 <TableCell padding="checkbox">
                                   <Checkbox
@@ -476,6 +605,41 @@ export default function Offers() {
                                   scope="row"
                                   padding="none"
                                 >
+                                  <HtmlTooltip
+                                    placement="right"
+                                    title={
+                                      <React.Fragment>
+                                        <CardMedia
+                                          component="img"
+                                          height="140"
+                                          image={row.image}
+                                          alt="green iguana"
+                                        />
+                                      </React.Fragment>
+                                    }
+                                  >
+                                    <Typography
+                                      size="small"
+                                      sx={{
+                                        overflow: "hidden",
+                                        whiteSpace: "nowrap",
+                                        maxWidth: "20ch",
+                                        textOverflow: "ellipsis",
+                                        cursor: "pointer",
+                                        color: "#ffffff",
+                                      }}
+                                    >
+                                      {row.image}
+                                    </Typography>
+                                  </HtmlTooltip>
+                                </TableCell>
+
+                                <TableCell
+                                  component="th"
+                                  id={labelId}
+                                  scope="row"
+                                  padding="none"
+                                >
                                   <Typography
                                     sx={{
                                       overflow: "hidden",
@@ -485,7 +649,7 @@ export default function Offers() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.offeritems}
+                                    {row.title}
                                   </Typography>
                                 </TableCell>
 
@@ -499,7 +663,60 @@ export default function Offers() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.oPercent}
+                                    {row.description}
+                                  </Typography>
+                                </TableCell>
+
+                                <TableCell align="left">
+                                  <Typography
+                                    sx={{
+                                      overflow: "hidden",
+                                      whiteSpace: "nowrap",
+                                      maxWidth: "40ch",
+                                      textOverflow: "ellipsis",
+                                      color: "#ffffff",
+                                      textTransform: "capitalize",
+                                    }}
+                                  >
+                                    {row.category}
+                                  </Typography>
+                                </TableCell>
+
+                                <TableCell
+                                  component="th"
+                                  id={labelId}
+                                  scope="row"
+                                  padding="none"
+                                >
+                                  <Typography
+                                    sx={{
+                                      overflow: "hidden",
+                                      whiteSpace: "nowrap",
+                                      maxWidth: "20ch",
+                                      textOverflow: "ellipsis",
+                                      color: "#ffffff",
+                                    }}
+                                  >
+                                    $ 13.00 - $ 15.00
+                                  </Typography>
+                                </TableCell>
+
+                                <TableCell
+                                  component="th"
+                                  id={labelId}
+                                  scope="row"
+                                  padding="none"
+                                >
+                                  <Typography
+                                    sx={{
+                                      overflow: "hidden",
+                                      whiteSpace: "nowrap",
+                                      maxWidth: "20ch",
+                                      textOverflow: "ellipsis",
+                                      color: "#ffffff",
+                                    }}
+                                  >
+                                    Harsh Singh
                                   </Typography>
                                 </TableCell>
 
@@ -513,7 +730,7 @@ export default function Offers() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.createdAt.slice(0, 10)}
+                                    {row.created_at.slice(0, 10)}
                                   </Typography>
                                 </TableCell>
                               </TableRow>
@@ -530,7 +747,7 @@ export default function Offers() {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
-                    sx={{ background: "#1A2027", color: "#ffffff" }}
+                    sx={{ color: "#ffffff" }}
                   />
                 </Paper>
               </Item>

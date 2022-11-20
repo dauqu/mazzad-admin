@@ -264,7 +264,7 @@ export default function Categories() {
 
   //Get all categories
   function getBlogsData() {
-    axios.get(`https://jsonplaceholder.typicode.com/todos`).then((response) => {
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/blogs`).then((response) => {
       setBlogs(response.data);
     });
   }
@@ -445,7 +445,7 @@ export default function Categories() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => navigate("/add-post")}
+            onClick={() => navigate("/new-post")}
           >
             {/* <CloseIcon /> */}
             <AddIcon />
@@ -600,7 +600,7 @@ export default function Categories() {
                                         <CardMedia
                                           component="img"
                                           height="140"
-                                          image={row.image}
+                                          image={row.title}
                                           alt="green iguana"
                                         />
                                       </React.Fragment>
@@ -617,7 +617,7 @@ export default function Categories() {
                                         color: "#ffffff",
                                       }}
                                     >
-                                      {row.image}
+                                      https://upload.wikimedia.org/wikipedia/commons/f/f9/Phoenicopterus_ruber_in_S%C3%A3o_Paulo_Zoo.jpg
                                     </Typography>
                                   </HtmlTooltip>
                                 </TableCell>
@@ -651,7 +651,7 @@ export default function Categories() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.title}
+                                    {row.description}
                                   </Typography>
                                 </TableCell>
 
@@ -665,7 +665,7 @@ export default function Categories() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.title}
+                                    {row.category}
                                   </Typography>
                                 </TableCell>
                                 <TableCell align="left">
@@ -678,7 +678,7 @@ export default function Categories() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {/* {row.created_at.slice(0, 10)} */}
+                                    {row.created_at.slice(0, 10)}
                                   </Typography>
                                 </TableCell>
                               </TableRow>

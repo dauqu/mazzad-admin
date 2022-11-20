@@ -226,7 +226,7 @@ export default function Services() {
 
   //Get all categories
   async function getCategoryData() {
-    const res = await axios.get(`https://jsonplaceholder.typicode.com/todos`);
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/services`);
     console.log(res.data);
     setCategories(res.data);
   }
@@ -485,7 +485,7 @@ export default function Services() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.title}
+                                    {row.serviceName}
                                   </Typography>
                                 </TableCell>
 
@@ -499,7 +499,7 @@ export default function Services() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {row.title}
+                                    {row.serviceTitle}
                                   </Typography>
                                 </TableCell>
 
@@ -513,7 +513,7 @@ export default function Services() {
                                       color: "#ffffff",
                                     }}
                                   >
-                                    {/* {row.createdAt.slice(0, 10)} */}
+                                    {row.createdAt.slice(0, 10)}
                                   </Typography>
                                 </TableCell>
                               </TableRow>

@@ -223,21 +223,21 @@ export default function Tags() {
   const [description, setDescription] = useState("");
   const [server_alert, setAlert] = useState();
   const [status, setStatus] = useState();
-  const [rows, setNews] = React.useState([]);
+  const [rows, setTags] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
   //Get all categories
-  function getCategoryData() {
+  function getTags() {
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/tags`).then((response) => {
-      setNews(response.data);
+      setTags(response.data);
     });
   }
 
   React.useEffect(() => {
-    getCategoryData();
+    getTags();
     setLoading(false);
   }, []);
 
@@ -252,7 +252,7 @@ export default function Tags() {
       .then((res) => {
         setAlert("Category successfully added", res);
         setStatus("success");
-        getCategoryData();
+        getTags();
       })
       .catch((e) => {
         setAlert(e.response.data.message);
@@ -268,7 +268,7 @@ export default function Tags() {
       .then((res) => {
         setAlert("Category successfully deleted", res);
         setStatus("success");
-        getCategoryData();
+        getTags();
         setSelected([]);
       })
       .catch((e) => {
@@ -502,7 +502,7 @@ export default function Tags() {
                                     color: "#ffffff",
                                   }}
                                 >
-                                  "https://source.unsplash.com/random"
+                                  {row.title}
                                 </Typography>
                               </HtmlTooltip>
                             </TableCell>
@@ -522,7 +522,7 @@ export default function Tags() {
                                   color: "#ffffff",
                                 }}
                               >
-                               "https://source.unsplash.com/random"
+                               {row.description}
                               </Typography>
                             </TableCell>
 
@@ -536,34 +536,7 @@ export default function Tags() {
                                   color: "#ffffff",
                                 }}
                               >
-                                "https://source.unsplash.com/random"
-                              </Typography>
-                            </TableCell>
-
-                            <TableCell align="left">
-                              <Typography
-                                sx={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  maxWidth: "40ch",
-                                  textOverflow: "ellipsis",
-                                  color: "#ffffff",
-                                }}
-                              >
-                                "https://source.unsplash.com/random"
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="left">
-                              <Typography
-                                sx={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  maxWidth: "20ch",
-                                  textOverflow: "ellipsis",
-                                  color: "#ffffff",
-                                }}
-                              >
-                                "https://source.unsplash.com/random"
+                                {row.createdAt}
                               </Typography>
                             </TableCell>
                           </TableRow>

@@ -15,7 +15,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import MuiAlert from "@mui/material/Alert";
 import AppBar from "@mui/material/AppBar";
 import FormControl from "@mui/material/FormControl";
-import NativeSelect from "@mui/material/NativeSelect";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
@@ -160,37 +159,35 @@ export default function AddPost() {
         </Toolbar>
       </AppBar>
       <Box sx={{ p: 3, background: "#1A2027" }}>
-        <Grid container spacing={3}>
+        <Grid container spacing={0.2}>
           <Grid item xs={12}>
-            <TextField
-              id="outlined-basic"
-              hiddenLabel
-              placeholder="Title"
-              variant="filled"
-              fullWidth
-              size="small"
-              value={title}
-              sx={{ background: "#333", borderRadius: 1 }}
-              onChange={(e) => setTitle(e.target.value)}
-              inputProps={{ style: { color: "#fff" } }}
-            />
+            <TextField id="outlined-basic" placeholder="Active default" label="Status" focused={true} variant="filled" size="small" sx={{
+              width: "100%",
+              color: "#fff",
+              backgroundColor: "#f0f0f0",
+              outline: "none",
+              border: "none",
+              fontSize: "1rem",
+              placeholder: "Enter Page Title",
+              placeholderColor: "#fff",
+              marginTop: 1,
+            }} />
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              id="outlined-basic"
-              hiddenLabel
-              placeholder="Description"
-              variant="filled"
-              fullWidth
-              size="small"
-              value={description}
-              sx={{ background: "#333", borderRadius: 1 }}
-              onChange={(e) => setDescription(e.target.value)}
-              inputProps={{ style: { color: "#fff" } }}
-            />
+            <TextField id="outlined-basic" placeholder="Active default" label="Status" focused={true} variant="filled" size="small" sx={{
+              width: "100%",
+              color: "#fff",
+              backgroundColor: "#f0f0f0",
+              outline: "none",
+              border: "none",
+              fontSize: "1rem",
+              placeholder: "Enter Page Title",
+              placeholderColor: "#fff",
+              marginTop: 1,
+            }} />
           </Grid>
           <Grid item xs={12}>
-            <TextField
+            {/* <TextField
               id="outlined-basic"
               hiddenLabel
               placeholder="Content"
@@ -203,13 +200,25 @@ export default function AddPost() {
               sx={{ background: "#333", borderRadius: 1 }}
               onChange={(e) => setContent(e.target.value)}
               inputProps={{ style: { color: "#fff" } }}
-            />
+            /> */}
+
+            <TextField id="outlined-basic" multiline rows={15} placeholder="Active default" label="Status" focused={true} variant="filled" size="small" sx={{
+              width: "100%",
+              color: "#fff",
+              backgroundColor: "#f0f0f0",
+              outline: "none",
+              border: "none",
+              fontSize: "1rem",
+              placeholder: "Enter Page Title",
+              placeholderColor: "#fff",
+              marginTop: 1,
+            }} />
           </Grid>
           <Grid item xs={12}>
             <FormControl
               fullWidth
               sx={{
-                background: "#333",
+                background: "#f0f0f0",
                 textAlign: "left",
               }}
             >
@@ -217,20 +226,21 @@ export default function AddPost() {
                 defaultValue={0}
                 value={category}
                 size="small"
+                focused={true}
                 hiddenLabel
                 onChange={(e) => setCategory(e.target.value)}
                 inputProps={{
                   style: {
                     color: "#fff",
-                    backgroundColor: "#333",
+                    backgroundColor: "#f0f0f0",
                     borderRadius: 1,
                     outline: "none",
                   },
                 }}
                 sx={{
-                  backgroundColor: "#333",
+                  backgroundColor: "#f0f0f0",
                   borderRadius: 1,
-                  color: "#fff",
+                  color: "#000",
                   outline: "none",
                   border: "none",
                 }}
@@ -250,34 +260,19 @@ export default function AddPost() {
                 )}
               </Select>
             </FormControl>
-
-            {/* <Select
-                    size="small"
-                    id="demo-simple-select-filled"
-                    value={categories}
-                    onChange={e => setCategories(e.target.value)}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select> */}
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              id="outlined-basic"
-              hiddenLabel
-              placeholder="Feacher Image link"
-              variant="filled"
-              fullWidth
-              size="small"
-              sx={{ background: "#333", borderRadius: 1 }}
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              inputProps={{ style: { color: "#fff" } }}
-            />
+            <TextField id="outlined-basic" placeholder="Active default" label="Status" focused={true} variant="filled" size="small" sx={{
+              width: "100%",
+              color: "#fff",
+              backgroundColor: "#f0f0f0",
+              outline: "none",
+              border: "none",
+              fontSize: "1rem",
+              placeholder: "Enter Page Title",
+              placeholderColor: "#fff",
+              marginTop: 1,
+            }} />
           </Grid>
         </Grid>
       </Box>
