@@ -43,21 +43,21 @@ function App() {
 
 
   //Check login
-  // async function checkLogin() {
-  //   await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login/check`, {
-  //     withCredentials: true,
-  //   }).then((res) => {
-  //     if (res.islogged !== true) {
-  //       navigate("/login");
-  //     } else {
-  //       console.log("Logged in");
-  //     }
-  //   })
-  // }
+  async function checkLogin() {
+    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login/check`, {
+      withCredentials: true,
+    }).then((res) => {
+      if (res.islogged !== true) {
+        navigate("/login");
+      } else {
+        console.log("Logged in");
+      }
+    })
+  }
 
-  // React.useEffect(() => {
-  //   checkLogin();
-  // }, []);
+  React.useEffect(() => {
+    checkLogin();
+  }, []);
 
   return (
     <div className="App">
