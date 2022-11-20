@@ -30,6 +30,7 @@ import {
 import KeyboardDoubleArrowLeftTwoToneIcon from "@mui/icons-material/KeyboardDoubleArrowLeftTwoTone";
 import NotificationsTwoToneIcon from "@mui/icons-material/NotificationsTwoTone";
 import menu_items from "./menu_items";
+import axios from "axios";
 
 const drawerWidth = 250;
 
@@ -119,6 +120,7 @@ export default function MiniDrawer() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
 
   return (
     <Box sx={{ display: "flex" }}>

@@ -1,7 +1,7 @@
-import logo from "./logo.svg";
+
 import "./App.css";
 import MiniDrawer from "./components/Drawer";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Register from "./pages/Register";
@@ -31,13 +31,34 @@ import Classifications from "./pages/Classifications";
 import Search from "./pages/Search";
 import NewCategory from "./pages/NewCategory";
 import Invoice from "./pages/Invoice";
-
+import axios from "axios";
+import * as React from "react";
 
 //Axios allow auth 
 // axios.defaults.withCredentials = true;
 
 
 function App() {
+  const navigate = useNavigate();
+
+
+  //Check login
+  // async function checkLogin() {
+  //   await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login/check`, {
+  //     withCredentials: true,
+  //   }).then((res) => {
+  //     if (res.islogged !== true) {
+  //       navigate("/login");
+  //     } else {
+  //       console.log("Logged in");
+  //     }
+  //   })
+  // }
+
+  // React.useEffect(() => {
+  //   checkLogin();
+  // }, []);
+
   return (
     <div className="App">
       <Routes>
@@ -75,7 +96,7 @@ function App() {
           <Route path="/invoice" element={<Invoice />} />
 
           <Route path="/bids" element={<Bids />} />
-          
+
           <Route path="/info" element={<Info />} />
           <Route path="/notifications" element={<Notifications />} />
 

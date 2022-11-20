@@ -46,9 +46,8 @@ export default function Login() {
   const createPost = (e) => {
     setIsLoading(true);
     e.preventDefault();
-    axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
-        username: username,
+    const res = axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
+        email: username,
         password: password,
       })
       .then((res) => {
@@ -57,7 +56,7 @@ export default function Login() {
         setStatus(res.data.status);
         setOpen(true);
         //Redirect to home page if login is successful
-        navigate("/");
+        // navigate("/");
         window.location.reload();
         setIsLoading(false);
       })
@@ -66,6 +65,7 @@ export default function Login() {
         setStatus(e.response.data.status);
         setOpen(true);
         setIsLoading(false);
+        console.log(e);
       });
   };
 
