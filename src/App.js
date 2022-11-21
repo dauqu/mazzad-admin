@@ -35,12 +35,12 @@ import axios from "axios";
 import * as React from "react";
 
 //Axios allow auth 
-// axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;
 
 
 function App() {
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
 
   //Check login
   async function checkLogin() {
@@ -50,7 +50,7 @@ function App() {
       if (res.islogged !== true) {
         navigate("/login");
       } else {
-        console.log("Logged in");
+        navigate("/dashboard");
       }
     })
   }
