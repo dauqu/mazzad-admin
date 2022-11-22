@@ -46,7 +46,7 @@ export default function Login() {
   const createPost = (e) => {
     setIsLoading(true);
     e.preventDefault();
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, { withCredentials: true }, {
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
       email: username,
       password: password,
     })
