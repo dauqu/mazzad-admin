@@ -17,9 +17,9 @@ import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 
 //Axios allow auth 
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 //Axios Header
-axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.getItem("token");
+// axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.getItem("token");
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -46,10 +46,10 @@ export default function Login() {
   const createPost = (e) => {
     setIsLoading(true);
     e.preventDefault();
-    const res = axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
-        email: username,
-        password: password,
-      })
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
+      email: username,
+      password: password,
+    })
       .then((res) => {
         console.log(res);
         setAlert(res.data.message, res);
