@@ -48,8 +48,6 @@ function App() {
       console.log(res);
       if (res.data.islogged !== true) {
         navigate("/login");
-      } else {
-        navigate("/dashboard");
       }
     })
   }

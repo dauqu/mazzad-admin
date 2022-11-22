@@ -335,7 +335,7 @@ export default function Bids() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n._id);
+      const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -479,7 +479,7 @@ export default function Bids() {
             id="customized-dialog-title"
             onClose={handleClickCloseDialog}
           >
-            #{orderById._id} - {orderById.publisher}
+            #{orderById.id} - {orderById.publisher}
           </BootstrapDialogTitle>
           <DialogContent dividers>
             {/* Produv=cts Information */}
@@ -575,13 +575,13 @@ export default function Bids() {
                           .slice()
                           .reverse()
                           .map((row, index) => {
-                            const isItemSelected = isSelected(row._id);
+                            const isItemSelected = isSelected(row._d);
                             const labelId = `enhanced-table-checkbox-${index}`;
 
                             return (
                               <TableRow
                                 hover
-                                onClick={(event) => handleClick(event, row._id)}
+                                onClick={(event) => handleClick(event, row.id)}
                                 role="checkbox"
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}

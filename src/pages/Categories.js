@@ -290,7 +290,7 @@ export default function Categories() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n._id);
+      const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -326,7 +326,7 @@ export default function Categories() {
     setPage(0);
   };
 
-  const isSelected = (_id) => selected.indexOf(_id) !== -1;
+  const isSelected = (id) => selected.indexOf(id) !== -1;
 
   const handleClose = (reason) => {
     if (reason === "clickaway") {
@@ -442,17 +442,17 @@ export default function Categories() {
                           .slice()
                           .reverse()
                           .map((row, index) => {
-                            const isItemSelected = isSelected(row._id);
+                            const isItemSelected = isSelected(row.id);
                             const labelId = `enhanced-table-checkbox-${index}`;
 
                             return (
                               <TableRow
                                 hover
-                                onClick={(event) => handleClick(event, row._id)}
+                                onClick={(event) => handleClick(event, row.id)}
                                 role="checkbox"
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}
-                                key={row._id}
+                                key={row.id}
                                 selected={isItemSelected}
                                 sx={{
                                   color: "#ffffff",

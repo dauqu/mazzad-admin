@@ -56,7 +56,7 @@ export default function Login() {
         setStatus(res.data.status);
         setOpen(true);
         //Redirect to home page if login is successful
-        // navigate("/");
+        navigate("/");
         window.location.reload();
         setIsLoading(false);
       })
@@ -122,7 +122,7 @@ export default function Login() {
           item
           xs={3}
           sx={{
-            minWidth: "300px",
+            minWidth: "350px",
             height: "100%",
             display: "flex",
             flexDirection: "column",

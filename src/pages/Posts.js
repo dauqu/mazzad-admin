@@ -325,7 +325,7 @@ export default function Categories() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n._id);
+      const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -470,7 +470,7 @@ export default function Categories() {
             id="customized-dialog-title"
             onClose={handleClickCloseDialog}
           >
-            #{orderById._id} - {orderById.publisher}
+            #{orderById.id} - {orderById.publisher}
           </BootstrapDialogTitle>
           <DialogContent dividers>
             {/* Produv=cts Information */}
@@ -566,17 +566,17 @@ export default function Categories() {
                           .slice()
                           .reverse()
                           .map((row, index) => {
-                            const isItemSelected = isSelected(row._id);
+                            const isItemSelected = isSelected(row.id);
                             const labelId = `enhanced-table-checkbox-${index}`;
 
                             return (
                               <TableRow
                                 hover
-                                onClick={(event) => handleClick(event, row._id)}
+                                onClick={(event) => handleClick(event, row.id)}
                                 role="checkbox"
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}
-                                key={row._id}
+                                key={row.id}
                                 selected={isItemSelected}
                               >
                                 <TableCell padding="checkbox">
