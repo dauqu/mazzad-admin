@@ -52,8 +52,8 @@ export default function Login() {
     })
       .then((res) => {
         console.log(res);
-        setAlert(res.data.message, res);
-        setStatus(res.data.status);
+        // setAlert(res.data.message, res);
+        // setStatus(res.data.status);
         setOpen(true);
         //Redirect to home page if login is successful
         navigate("/");
@@ -61,8 +61,8 @@ export default function Login() {
         setIsLoading(false);
       })
       .catch((e) => {
-        setAlert(e.response.data.message);
-        setStatus(e.response.data.status);
+        // setAlert(e.response.data.message);
+        // setStatus(e.response.data.status);
         setOpen(true);
         setIsLoading(false);
         console.log(e);
@@ -185,7 +185,7 @@ export default function Login() {
                   mb: "20px",
                 }}
               >
-                Mazzad
+                123Auc
               </Typography>
 
               <TextField
