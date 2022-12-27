@@ -747,9 +747,9 @@ export default function Products() {
 
                       <TableCell align="left">
                         <Chip
-                          label="Inactive"
+                          label={row.status}
                           size="small"
-                          color="warning"
+                          color={row.status === "active" ? "success" : "error"}
                           sx={{ width: 80 }}
                         />
                       </TableCell>
