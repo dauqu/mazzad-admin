@@ -644,17 +644,17 @@ export default function Products() {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .reverse()
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row._id);
+                  const isItemSelected = isSelected(row.slug);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row._id)}
+                      onClick={(event) => handleClick(event, row.slug)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row._id}
+                      key={row.slug}
                       selected={isItemSelected}
                       sx={{ color: "#fff" }}
                     >
@@ -678,7 +678,7 @@ export default function Products() {
                               <CardMedia
                                 component="img"
                                 height="140"
-                                image="https://upload.wikimedia.org/wikipedia/commons/f/f9/Phoenicopterus_ruber_in_S%C3%A3o_Paulo_Zoo.jpg"
+                                image={row.image}
                                 alt="green iguana"
                               />
                             </React.Fragment>
