@@ -57,7 +57,7 @@ export default function Login() {
         setOpen(true);
         //Redirect to home page if login is successful
         navigate("/");
-        window.location.reload();
+        // window.location.reload();
         setIsLoading(false);
       })
       .catch((e) => {

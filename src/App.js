@@ -46,7 +46,7 @@ function App() {
   async function checkLogin() {
     await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login/check`).then((res) => {
       console.log(res);
-      if (res.data.islogged !== true) {
+      if (res.data.islogin !== true) {
         navigate("/login");
       }
     })
