@@ -43,10 +43,10 @@ export default function Login() {
 
   // https://ayakart.dauqu.com/api/login
 
-  const createPost = (e) => {
+  async function createPost(e) {
     setIsLoading(true);
     e.preventDefault();
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
+    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
       email: username,
       password: password,
     })

@@ -49,7 +49,10 @@ function App() {
       if (res.data.islogin !== true) {
         navigate("/login");
       }
-    })
+    }).catch((e) => {
+      console.log(e);
+      navigate("/login");
+    });
   }
 
   React.useEffect(() => {
