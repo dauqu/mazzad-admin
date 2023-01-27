@@ -404,7 +404,7 @@ export default function Products() {
   const [status, setStatus] = React.useState();
   const [alertOpen, setAlertOpen] = React.useState(false);
 
-  const [rows, setProducts] = React.useState(null);
+  const [rows, setProducts] = React.useState([]);
 
   // Set Featured Image
   const featuredImageHandleChange = (e) => {
@@ -492,7 +492,6 @@ export default function Products() {
     getProducts();
   }, []);
 
-  if (!rows) return <div>Test</div>;
 
   //Delete Product
   window.deleteProduct = () => {
