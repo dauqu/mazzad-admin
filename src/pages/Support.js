@@ -65,8 +65,8 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "left",
-  color: "#fff",
-  backgroundColor: "#1A2027",
+  // color: "#fff",
+  // backgroundColor: "#1A2027",
 }));
 
 export default function Support() {
@@ -207,7 +207,7 @@ export default function Support() {
           width: "100%",
           mb: 2,
           boxShadow: 0,
-          background: "#1A2027",
+          // background: "#1A2027",
           borderRadius: 0,
         }}
       >
@@ -218,14 +218,14 @@ export default function Support() {
                 overflow: "scroll",
                 height: "85vh",
                 borderRadius: 2,
-                background: "#1A2027",
+                // background: "#1A2027",
               }}
             >
               {support.map((item) => (
                 <Accordion
                   expanded={expanded === item._id}
                   onChange={handleChange(item._id)}
-                  sx={{ background: "#1A2027", color: "#fff" }}
+                  sx={{}}
                 >
                   <AccordionSummary
                     aria-controls="panel1d-content"
@@ -236,14 +236,14 @@ export default function Support() {
                       <Chip
                         size="small"
                         color="success"
-                        label={item.status}
+                        label="active"
                         sx={{ marginLeft: 5 }}
                       />
                     ) : (
                       <Chip
                         size="small"
                         color="error"
-                        label={item.status}
+                        label="inactive"
                         sx={{ marginLeft: 5 }}
                       />
                     )}

@@ -30,8 +30,8 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "left",
-  color: "#fff",
-  backgroundColor: "#1A2027",
+  // color: "#fff",
+  // backgroundColor: "#1A2027",
 }));
 
 const FireNav = styled(List)({
@@ -84,7 +84,7 @@ export default function CustomizedList() {
                     mr: 2,
                     display: { xs: "none", md: "flex" },
                     boxShadow: 0,
-                    background: "#333333",
+                    // background: "#333333",
                   }}
                 ></Button>
               </Item>
@@ -103,19 +103,19 @@ export default function CustomizedList() {
                     centered
                     allowScrollButtonsMobile
                   >
-                    <Tab sx={{ color: "#fff", background: "#1A2027" }}>
+                    <Tab sx={{ }}>
                       <MarkEmailUnreadTwoToneIcon sx={{ marginRight: 1 }} />
                       SMTP
                     </Tab>
-                    <Tab sx={{ color: "#fff", background: "#1A2027" }}>
+                    <Tab sx={{ }}>
                       <InsertPageBreakTwoToneIcon sx={{ marginRight: 1 }} />
                       Email Template
                     </Tab>
-                    <Tab sx={{ color: "#fff", background: "#1A2027" }}>
+                    <Tab sx={{ }}>
                       <PaymentTwoToneIcon sx={{ marginRight: 1 }} />
                       Payment
                     </Tab>
-                    <Tab sx={{ color: "#fff", background: "#1A2027" }}>
+                    <Tab sx={{}}>
                       <VpnLockTwoToneIcon sx={{ marginRight: 1 }} />
                       CORS & keys
                     </Tab>
@@ -127,7 +127,7 @@ export default function CustomizedList() {
                       <TranslateTwoToneIcon sx={{ marginRight: 1 }} />
                       Languages
                     </Tab> */}
-                    <Tab sx={{ color: "#fff", background: "#1A2027" }}>
+                    <Tab sx={{}}>
                       <DnsTwoToneIcon sx={{ marginRight: 1 }} />
                       Server Details
                     </Tab>
@@ -137,7 +137,7 @@ export default function CustomizedList() {
             </Grid>
             <Grid item xs={10}>
               {/* Tabs Panel */}
-              <Item sx={{ boxShadow: 0, color: "#333333" }}>
+              <Item sx={{ boxShadow: 0, }}>
                 <TabPanelUnstyled value={0}>
                   {/* <SMTP /> */}
                   <h1>Hello </h1>
