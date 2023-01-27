@@ -16,15 +16,12 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
-import Grid from "@mui/material/Grid";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { styled } from "@mui/material/styles";
-import Button from "@mui/material/Button";
 import Rating from "@mui/material/Rating";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import RemoveRedEyeTwoToneIcon from "@mui/icons-material/RemoveRedEyeTwoTone";
-import GetAppTwoToneIcon from "@mui/icons-material/GetAppTwoTone";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { useTheme } from "@mui/material/styles";
@@ -44,8 +41,8 @@ const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "#f5f5f9",
-    color: "rgba(0, 0, 0, 0.87)",
+    // backgroundColor: "#f5f5f9",
+    // color: "rgba(0, 0, 0, 0.87)",
     maxWidth: 220,
     fontSize: theme.typography.pxToRem(12),
     border: "1px solid #dadde9",
@@ -56,8 +53,8 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "left",
-  color: "#fff",
-  backgroundColor: "#1A2027",
+  // color: "#fff",
+  // backgroundColor: "#1A2027",
   borderRadius: "0px",
 }));
 
@@ -164,7 +161,9 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            sx={{ color: "white" }}
+            sx={{
+              // color: "white" 
+            }}
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -173,7 +172,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ color: "white" }}
+          // sx={{ color: "white" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -244,7 +243,7 @@ const EnhancedTableToolbar = (props) => {
       {numSelected === 1 ? (
         <Tooltip title="View">
           <IconButton
-            sx={{ color: "#fff" }}
+            // sx={{ color: "#fff" }}
             to={`./../view-product/${window.selected}`}
             component={RouterLink}
           >
@@ -257,7 +256,9 @@ const EnhancedTableToolbar = (props) => {
 
       {/* Edit Product */}
       {numSelected === 1 ? (
-        <Tooltip title="Edit" sx={{ color: "#fff" }}>
+        <Tooltip title="Edit"
+        // sx={{ color: "#fff" }}
+        >
           <IconButton
             to={`./../update-product/${window.selected}`}
             component={RouterLink}
@@ -271,7 +272,7 @@ const EnhancedTableToolbar = (props) => {
 
       {/* Delete Product */}
       {numSelected > 0 ? (
-        <Tooltip title="Delete" sx={{ color: "#fff" }}>
+        <Tooltip title="Delete" sx={{}}>
           <IconButton onClick={window.deleteProduct}>
             <DeleteTwoToneIcon />
           </IconButton>
@@ -617,8 +618,8 @@ export default function Products() {
           width: "100%",
           mb: 2,
           boxShadow: 0,
-          background: "#1A2027",
-          color: "#fff",
+          // background: "#1A2027",
+          // color: "#fff",
           overflow: "scroll",
         }}
       >
@@ -662,14 +663,14 @@ export default function Products() {
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
-                          sx={{ color: "#fff" }}
+                        // sx={{ color: "#fff" }}
                         />
                       </TableCell>
 
                       <TableCell
                         scope="row"
                         padding="none"
-                        sx={{ color: "#fff" }}
+                      // sx={{ color: "#fff" }}
                       >
                         <HtmlTooltip
                           placement="right"
@@ -692,7 +693,7 @@ export default function Products() {
                               maxWidth: "20ch",
                               textOverflow: "ellipsis",
                               cursor: "pointer",
-                              color: "#fff",
+                              // color: "#fff",
                             }}
                           >
                             {row.image}
@@ -711,12 +712,12 @@ export default function Products() {
                           maxWidth: "20ch",
                           minWidth: "15ch",
                           textOverflow: "ellipsis",
-                          color: "#fff",
+                          // color: "#fff",
                         }}
                       >
                         {row.title}
                       </TableCell>
-                      <TableCell align="left" sx={{ color: "#fff" }}>
+                      <TableCell align="left" sx={{}}>
                         {row.price + " USD"}
                       </TableCell>
                       <TableCell align="left">
@@ -738,10 +739,10 @@ export default function Products() {
                           />
                         ))} */}
                       </TableCell>
-                      <TableCell align="left" sx={{ color: "#fff" }}>
+                      <TableCell align="left" sx={{}}>
                         {row.category}
                       </TableCell>
-                      <TableCell align="left" sx={{ color: "#fff" }}>
+                      <TableCell align="left" sx={{}}>
                         {row.createdAt.slice(0, 10)}
                       </TableCell>
 
@@ -767,7 +768,7 @@ export default function Products() {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{ color: "#fff" }}
+        // sx={{ color: "#fff" }}
         />
       </Paper>
     </Box>

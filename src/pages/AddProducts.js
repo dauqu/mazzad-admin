@@ -18,7 +18,7 @@ import TextField from '@mui/material/TextField';
 
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#1A2027",
+  // backgroundColor: "#1A2027",
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "center",
@@ -46,7 +46,7 @@ export default function AddProduct() {
   const handleSubmit = (e) => {
     console.log("submit");
     e.preventDefault();
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/pages`, {
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/products`, {
       title: title,
       slug: slug,
       description: description,
@@ -71,7 +71,7 @@ export default function AddProduct() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => navigate("/pages")}
+            onClick={() => navigate("/products")}
           >
             <CloseIcon />
           </IconButton>
