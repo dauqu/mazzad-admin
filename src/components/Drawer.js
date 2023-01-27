@@ -258,7 +258,7 @@ export default function MiniDrawer() {
                   py: 0,
                   minHeight: 32,
                   color: "rgba(255,255,255,.8)",
-                  ":hover": { color: "#ffffff", background: "#333" },
+                  ":hover": { color: "#ffffff", background: "#0070d1" },
                 }}
                 to={item.url}
                 component={RouterLink}

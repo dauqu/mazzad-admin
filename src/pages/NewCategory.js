@@ -11,13 +11,11 @@ import { Divider } from "@mui/material";
 import axios from "axios";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-import slugify from "slugify";
 import TextField from '@mui/material/TextField';
 
 
 
 const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: "#1A2027",
     ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: "center",
@@ -59,7 +57,7 @@ export default function NewCategory() {
                         color="inherit"
                         aria-label="menu"
                         sx={{ mr: 2 }}
-                        onClick={() => navigate("/pages")}
+                        onClick={() => navigate("/categories")}
                     >
                         <CloseIcon />
                     </IconButton>
