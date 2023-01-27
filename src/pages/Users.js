@@ -44,8 +44,8 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "left",
-  color: "#fff",
-  backgroundColor: "#1A2027",
+  // color: "#fff",
+  // backgroundColor: "#1A2027",
 }));
 
 function descendingComparator(a, b, orderBy) {
@@ -139,7 +139,7 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            sx={{ color: "#fff" }}
+            sx={{}}
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -148,7 +148,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ color: "#fff" }}
+            sx={{}}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -200,7 +200,7 @@ const EnhancedTableToolbar = (props) => {
           sx={{
             flex: "1 1 100%",
             display: { xs: "none", md: "flex" },
-            color: "#fff",
+            // color: "#fff",
           }}
           color="inherit"
           variant="h6"
@@ -214,7 +214,7 @@ const EnhancedTableToolbar = (props) => {
             flex: "1 1 100%",
             mr: 2,
             display: { xs: "none", md: "flex" },
-            color: "#fff",
+            // color: "#fff",
           }}
           variant="h6"
           id="tableTitle"
@@ -226,7 +226,7 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected === 1 ? (
         <Tooltip title="Update">
-          <IconButton sx={{ color: "#fff" }}>
+          <IconButton sx={{}}>
             <ModeEditTwoToneIcon />
           </IconButton>
         </Tooltip>
@@ -235,7 +235,7 @@ const EnhancedTableToolbar = (props) => {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete" sx={{ color: "#fff" }}>
+        <Tooltip title="Delete" sx={{}}>
           <IconButton>
             <DeleteTwoToneIcon />
           </IconButton>
@@ -279,12 +279,12 @@ export default function Users() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, _id) => {
+    const selectedIndex = selected.indexOf(_id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, _id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -308,7 +308,7 @@ export default function Users() {
     setPage(0);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   // const emptyRows =
@@ -536,7 +536,7 @@ export default function Users() {
           width: "100%",
           mb: 2,
           boxShadow: 0,
-          background: "#1A2027",
+          // background: "#1A2027",
           borderRadius: 0,
         }}
       >
@@ -580,7 +580,7 @@ export default function Users() {
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
-                          sx={{ color: "#fff" }}
+                          sx={{}}
                         />
                       </TableCell>
                       <TableCell
@@ -593,7 +593,7 @@ export default function Users() {
                           whiteSpace: "nowrap",
                           maxWidth: "30ch",
                           textOverflow: "ellipsis",
-                          color: "#fff",
+                          // color: "#fff",
                         }}
                       >
                         <Typography
@@ -602,73 +602,73 @@ export default function Users() {
                             whiteSpace: "nowrap",
                             maxWidth: "30ch",
                             textOverflow: "ellipsis",
-                            color: "#ffffff",
+                            // color: "#ffffff",
                           }}
                         >
                           {row.fullname}
                         </Typography>
                       </TableCell>
-                      <TableCell align="left" sx={{ color: "#fff" }}>
+                      <TableCell align="left" sx={{}}>
                         <Typography
                           sx={{
                             overflow: "hidden",
                             whiteSpace: "nowrap",
                             maxWidth: "30ch",
                             textOverflow: "ellipsis",
-                            color: "#ffffff",
+                            // color: "#ffffff",
                           }}
                         >
                           {row.username}
                         </Typography>
                       </TableCell>
-                      <TableCell align="left" sx={{ color: "#fff" }}>
+                      <TableCell align="left" sx={{}}>
                         <Typography
                           sx={{
                             overflow: "hidden",
                             whiteSpace: "nowrap",
                             maxWidth: "30ch",
                             textOverflow: "ellipsis",
-                            color: "#ffffff",
+                            // color: "#ffffff",
                           }}
                         >
                           {row.email}
                         </Typography>
                       </TableCell>
-                      <TableCell align="left" sx={{ color: "#fff" }}>
+                      <TableCell align="left" sx={{}}>
                         <Typography
                           sx={{
                             overflow: "hidden",
                             whiteSpace: "nowrap",
                             maxWidth: "30ch",
                             textOverflow: "ellipsis",
-                            color: "#ffffff",
+                            // color: "#ffffff",
                           }}
                         >
                           {row.role}
                         </Typography>
                       </TableCell>
-                      <TableCell align="left" sx={{ color: "#fff" }}>
+                      <TableCell align="left" sx={{}}>
                         <Typography
                           sx={{
                             overflow: "hidden",
                             whiteSpace: "nowrap",
                             maxWidth: "30ch",
                             textOverflow: "ellipsis",
-                            color: "#ffffff",
+                            // color: "#ffffff",
                           }}
                         >
                           {row.phone}
                         </Typography>
                       </TableCell>
 
-                      <TableCell align="left" sx={{ color: "#fff" }}>
+                      <TableCell align="left" sx={{}}>
                         <Typography
                           sx={{
                             overflow: "hidden",
                             whiteSpace: "nowrap",
                             maxWidth: "30ch",
                             textOverflow: "ellipsis",
-                            color: "#ffffff",
+                            // color: "#ffffff",
                           }}
                         >
                           {row.createdAt.slice(0, 10)}
@@ -688,7 +688,7 @@ export default function Users() {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{ color: "#fff" }}
+          sx={{}}
         />
       </Paper>
     </Box>
