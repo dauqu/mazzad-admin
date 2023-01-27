@@ -24,8 +24,8 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "left",
-  color: "#ffffff",
-  backgroundColor: "#1A2027",
+  // color: "#ffffff",
+  // backgroundColor: "#1A2027",
 }));
 
 export default function AddPost() {
@@ -133,14 +133,14 @@ export default function AddPost() {
       {/* Alert */}
       <AppBar
         variant="dense"
-        sx={{ position: "relative", backgroundColor: "#333333" }}
+        sx={{ position: "relative" }}
       >
         <Toolbar variant="dense">
           <IconButton
             edge="start"
             color="inherit"
             aria-label="close"
-            to={`./../`}
+            to={`/posts`}
             component={RouterLink}
           >
             <CloseIcon />
@@ -158,13 +158,13 @@ export default function AddPost() {
           </Button>
         </Toolbar>
       </AppBar>
-      <Box sx={{ p: 3, background: "#1A2027" }}>
+      <Box sx={{ p: 3, }}>
         <Grid container spacing={0.2}>
           <Grid item xs={12}>
             <TextField id="outlined-basic" placeholder="Active default" label="Status" focused={true} variant="filled" size="small" sx={{
               width: "100%",
               color: "#fff",
-              backgroundColor: "#f0f0f0",
+              // backgroundColor: "#f0f0f0",
               outline: "none",
               border: "none",
               fontSize: "1rem",
@@ -177,7 +177,7 @@ export default function AddPost() {
             <TextField id="outlined-basic" placeholder="Active default" label="Status" focused={true} variant="filled" size="small" sx={{
               width: "100%",
               color: "#fff",
-              backgroundColor: "#f0f0f0",
+              // backgroundColor: "#f0f0f0",
               outline: "none",
               border: "none",
               fontSize: "1rem",
@@ -205,7 +205,7 @@ export default function AddPost() {
             <TextField id="outlined-basic" multiline rows={15} placeholder="Active default" label="Status" focused={true} variant="filled" size="small" sx={{
               width: "100%",
               color: "#fff",
-              backgroundColor: "#f0f0f0",
+              // backgroundColor: "#f0f0f0",
               outline: "none",
               border: "none",
               fontSize: "1rem",
@@ -218,7 +218,7 @@ export default function AddPost() {
             <FormControl
               fullWidth
               sx={{
-                background: "#f0f0f0",
+                // background: "#f0f0f0",
                 textAlign: "left",
               }}
             >
@@ -232,13 +232,13 @@ export default function AddPost() {
                 inputProps={{
                   style: {
                     color: "#fff",
-                    backgroundColor: "#f0f0f0",
+                    // backgroundColor: "#f0f0f0",
                     borderRadius: 1,
                     outline: "none",
                   },
                 }}
                 sx={{
-                  backgroundColor: "#f0f0f0",
+                  // backgroundColor: "#f0f0f0",
                   borderRadius: 1,
                   color: "#000",
                   outline: "none",
@@ -264,13 +264,13 @@ export default function AddPost() {
           <Grid item xs={12}>
             <TextField id="outlined-basic" placeholder="Active default" label="Status" focused={true} variant="filled" size="small" sx={{
               width: "100%",
-              color: "#fff",
-              backgroundColor: "#f0f0f0",
+              // color: "#fff",
+              // backgroundColor: "#f0f0f0",
               outline: "none",
               border: "none",
               fontSize: "1rem",
               placeholder: "Enter Page Title",
-              placeholderColor: "#fff",
+              // placeholderColor: "#fff",
               marginTop: 1,
             }} />
           </Grid>

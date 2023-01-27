@@ -44,8 +44,8 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "left",
-  color: "#ffffff",
-  backgroundColor: "#1A2027",
+  // color: "#ffffff",
+  // backgroundColor: "#1A2027",
 }));
 
 function descendingComparator(a, b, orderBy) {
@@ -136,7 +136,7 @@ function EnhancedTableHead(props) {
             inputProps={{
               "aria-label": "select all desserts",
             }}
-            sx={{ color: "#ffffff" }}
+            sx={{  }}
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -145,7 +145,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ color: "#ffffff" }}
+            sx={{  }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -214,7 +214,7 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected === 1 ? (
         <Tooltip title="Delete">
-          <IconButton onClick={window.viewPost} sx={{ color: "#fff" }}>
+          <IconButton onClick={window.viewPost} sx={{}}>
             <RemoveRedEyeTwoToneIcon />
           </IconButton>
         </Tooltip>
@@ -224,7 +224,7 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton onClick={window.deletePost} sx={{ color: "#fff" }}>
+          <IconButton onClick={window.deletePost} sx={{}}>
             <DeleteTwoToneIcon />
           </IconButton>
         </Tooltip>
@@ -248,8 +248,8 @@ const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "#f5f5f9",
-    color: "rgba(0, 0, 0, 0.87)",
+    // backgroundColor: "#f5f5f9",
+    // color: "rgba(0, 0, 0, 0.87)",
     maxWidth: 220,
     fontSize: theme.typography.pxToRem(12),
     border: "1px solid #dadde9",
@@ -442,7 +442,9 @@ export default function Categories() {
   return (
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
       <AppBar position="static">
-        <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
+        <Toolbar variant="dense" sx={{ 
+          background: "#333", color: "#fff"
+         }}>
           <IconButton
             edge="start"
             color="inherit"
@@ -498,7 +500,7 @@ export default function Categories() {
                 mr: 2,
                 display: { xs: "none", md: "flex" },
                 boxShadow: 0,
-                background: "#333333",
+                // background: "#333333",
               }}
             >
               Save changes
@@ -510,7 +512,7 @@ export default function Categories() {
       <Grid container spacing={1}>
         {/* Start Table of Post */}
         <Grid item xs={12} sx={{}}>
-          <Paper sx={{ boxShadow: 0, borderRadius: 0, background: "#1A2027" }}>
+          <Paper sx={{ boxShadow: 0, borderRadius: 0 }}>
             {loading ? (
               <Grid
                 container
@@ -538,8 +540,8 @@ export default function Categories() {
                     boxShadow: 0,
                     borderRadius: 1,
                     zIndex: 1,
-                    background: "#1A2027",
-                    color: "#ffffff",
+                    // background: "#1A2027",
+                    // color: "#ffffff",
                   }}
                 >
                   <EnhancedTableToolbar numSelected={selected.length} />

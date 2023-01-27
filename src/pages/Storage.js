@@ -29,13 +29,13 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "center",
-  color: "#fff",
-  backgroundColor: "#0000009E",
+  // color: "#fff",
+  // backgroundColor: "#0000009E",
 }));
 
 export default function Storage() {
-  const [files, setFiles] = React.useState(null);
-  const [dir, setDir] = React.useState(null);
+  const [files, setFiles] = React.useState([]);
+  const [dir, setDir] = React.useState([]);
   const [server_alert, setAlert] = useState();
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = useState();
@@ -43,8 +43,8 @@ export default function Storage() {
   const navigate = useNavigate();
 
   // Files Data
-  function getFileData() {
-    axios
+ async function getFileData() {
+  await axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/storage/uploaded_files`)
       .then((response) => {
         setFiles(response.data);
@@ -52,8 +52,8 @@ export default function Storage() {
   }
 
   //Delete Post
-  function deleteOneFile(item) {
-    axios
+ async function deleteOneFile(item) {
+   await axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/storage/delete`, {
         name: item.name,
       })
@@ -74,13 +74,16 @@ export default function Storage() {
     getFileData();
   }, []);
 
+  async function getDirectoryData() {
+   await axios.get(`${process.env.REACT_APP_BACKEND_URL}/storage/dir`)
+    .then((response) => {
+      setDir(response.data);
+    });
+  }
+
   //get directory data path
   React.useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/storage/dir`)
-      .then((response) => {
-        setDir(response.data);
-      });
+    getDirectoryData();
   }, []);
 
   const onChange = (e) => {
@@ -112,7 +115,7 @@ export default function Storage() {
       });
   };
 
-  if (!files) return null;
+  // if (!files) return null;
 
   //Copy Link on Button Click
   const handleCopyClick = (item) => {

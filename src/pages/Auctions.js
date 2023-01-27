@@ -34,8 +34,8 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "left",
-  backgroundColor: "#1A2027",
-  color: "#ffffff",
+  // backgroundColor: "#1A2027",
+  // color: "#ffffff",
 }));
 
 function descendingComparator(a, b, orderBy) {
@@ -105,7 +105,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox" sx={{ color: "#ffffff" }}>
+        <TableCell padding="checkbox" sx={{ }}>
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -114,7 +114,7 @@ function EnhancedTableHead(props) {
             inputProps={{
               "aria-label": "select all desserts",
             }}
-            sx={{ color: "#ffffff" }}
+            sx={{ }}
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -123,13 +123,13 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ color: "#ffffff" }}
+            sx={{ }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
-              sx={{ color: "#ffffff" }}
+              sx={{ }}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -169,13 +169,13 @@ const EnhancedTableToolbar = (props) => {
               theme.palette.action.activatedOpacity
             ),
         }),
-        backgroundColor: "#1A2027",
-        color: "#ffffff",
+        // backgroundColor: "#1A2027",
+        // color: "#ffffff",
       }}
     >
       {numSelected > 0 ? (
         <Typography
-          sx={{ flex: "1 1 100%", color: "#ffffff" }}
+          sx={{ flex: "1 1 100%", }}
           color="inherit"
           variant="subtitle1"
           component="div"
@@ -184,7 +184,7 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: "1 1 100%", color: "#ffffff" }}
+          sx={{ flex: "1 1 100%",  }}
           variant="h6"
           id="tableTitle"
           component="div"
@@ -196,13 +196,13 @@ const EnhancedTableToolbar = (props) => {
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton onClick={window.deletePost}>
-            <DeleteIcon sx={{ color: "#fff" }} />
+            <DeleteIcon sx={{ }} />
           </IconButton>
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
           <IconButton>
-            <FilterListIcon sx={{ color: "#fff" }} />
+            <FilterListIcon sx={{  }} />
           </IconButton>
         </Tooltip>
       )}
@@ -402,7 +402,7 @@ export default function Auctions() {
               </Grid>
             ) : (
               <Item
-                sx={{ boxShadow: 0, borderRadius: 1, background: "#1A2027" }}
+                sx={{ boxShadow: 0, borderRadius: 1, }}
               >
                 <Paper
                   sx={{
@@ -415,7 +415,7 @@ export default function Auctions() {
                 >
                   <EnhancedTableToolbar numSelected={selected.length} />
                   <TableContainer
-                    sx={{ background: "#1A2027", color: "#ffffff" }}
+                    sx={{ }}
                   >
                     <Table
                       sx={{ minWidth: 750 }}
@@ -454,8 +454,8 @@ export default function Auctions() {
                                 key={row._id}
                                 selected={isItemSelected}
                                 sx={{
-                                  color: "#ffffff",
-                                  backgroundColor: "#1A2027",
+                                  // color: "#ffffff",
+                                  // backgroundColor: "#1A2027",
                                 }}
                               >
                                 <TableCell padding="checkbox">
@@ -465,7 +465,7 @@ export default function Auctions() {
                                     inputProps={{
                                       "aria-labelledby": labelId,
                                     }}
-                                    sx={{ color: "#ffffff" }}
+                                    sx={{ }}
                                   />
                                 </TableCell>
 
@@ -481,7 +481,7 @@ export default function Auctions() {
                                       whiteSpace: "nowrap",
                                       maxWidth: "20ch",
                                       textOverflow: "ellipsis",
-                                      color: "#ffffff",
+                                      // color: "#ffffff",
                                     }}
                                   >
                                     {row.name}
@@ -495,7 +495,7 @@ export default function Auctions() {
                                       whiteSpace: "nowrap",
                                       maxWidth: "50ch",
                                       textOverflow: "ellipsis",
-                                      color: "#ffffff",
+                                      // color: "#ffffff",
                                     }}
                                   >
                                     {row.description}
@@ -509,7 +509,7 @@ export default function Auctions() {
                                       whiteSpace: "nowrap",
                                       maxWidth: "20ch",
                                       textOverflow: "ellipsis",
-                                      color: "#ffffff",
+                                      // color: "#ffffff",
                                     }}
                                   >
                                     {row.createdAt.slice(0, 10)}
@@ -529,7 +529,7 @@ export default function Auctions() {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
-                    sx={{ background: "#1A2027", color: "#ffffff" }}
+                    sx={{ }}
                   />
                 </Paper>
               </Item>
