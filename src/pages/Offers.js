@@ -26,7 +26,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import MuiAlert from "@mui/material/Alert";
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from "@mui/material/AppBar";
-import AddIcon from "@mui/icons-material/Add";
 import { Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -34,8 +33,8 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "left",
-  backgroundColor: "#1A2027",
-  color: "#ffffff",
+  // backgroundColor: "#1A2027",
+  // color: "#ffffff",
 }));
 
 function descendingComparator(a, b, orderBy) {
@@ -73,13 +72,19 @@ const headCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Name",
+    label: "Company Name",
   },
   {
     id: "description",
     numeric: false,
     disablePadding: false,
     label: "Description",
+  },
+  {
+    id: "status",
+    numeric: false,
+    disablePadding: false,
+    label: "Status",
   },
   {
     id: "published",
@@ -105,7 +110,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox" sx={{ color: "#ffffff" }}>
+        <TableCell padding="checkbox" sx={{}}>
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -114,7 +119,7 @@ function EnhancedTableHead(props) {
             inputProps={{
               "aria-label": "select all desserts",
             }}
-            sx={{ color: "#ffffff" }}
+            sx={{}}
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -123,13 +128,13 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ color: "#ffffff" }}
+            sx={{}}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
-              sx={{ color: "#ffffff" }}
+              sx={{}}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -169,13 +174,13 @@ const EnhancedTableToolbar = (props) => {
               theme.palette.action.activatedOpacity
             ),
         }),
-        backgroundColor: "#1A2027",
-        color: "#ffffff",
+        // backgroundColor: "#1A2027",
+        // color: "#ffffff",
       }}
     >
       {numSelected > 0 ? (
         <Typography
-          sx={{ flex: "1 1 100%", color: "#ffffff" }}
+          sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
           component="div"
@@ -184,25 +189,25 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: "1 1 100%", color: "#ffffff" }}
+          sx={{ flex: "1 1 100%" }}
           variant="h6"
           id="tableTitle"
           component="div"
         >
-          Offers List
+          List of Offers
         </Typography>
       )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton onClick={window.deletePost}>
-            <DeleteIcon sx={{ color: "#fff" }} />
+            <DeleteIcon sx={{}} />
           </IconButton>
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
           <IconButton>
-            <FilterListIcon sx={{ color: "#fff" }} />
+            <FilterListIcon sx={{}} />
           </IconButton>
         </Tooltip>
       )}
@@ -216,45 +221,25 @@ EnhancedTableToolbar.propTypes = {
 export default function Offers() {
   // const [post, setPost] = React.useState(null);
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [server_alert, setAlert] = useState();
   const [status, setStatus] = useState();
-  const [rows, setCategories] = React.useState([]);
+  const [rows, setCompanies] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   //Get all categories
   async function getCategoryData() {
-    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/offers`);
-    console.log(res.data);
-    setCategories(res.data);
+    const res = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/companies`
+    );
+    setCompanies(res.data);
   }
 
   React.useEffect(() => {
     getCategoryData();
     setLoading(false);
   }, []);
-
-  //Post new category
-  const createPost = (e) => {
-    e.preventDefault();
-    axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/offers`, {
-        name,
-        description,
-      })
-      .then((res) => {
-        setAlert("Category successfully added", res);
-        setStatus("success");
-        getCategoryData();
-      })
-      .catch((e) => {
-        setAlert(e.response.data.message);
-        setStatus(e.response.data.status);
-      });
-    setOpen(true);
-  };
 
   //Delete category
   window.deletePost = () => {
@@ -290,7 +275,7 @@ export default function Offers() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n._id);
+      const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -326,7 +311,7 @@ export default function Offers() {
     setPage(0);
   };
 
-  const isSelected = (_id) => selected.indexOf(_id) !== -1;
+  const isSelected = (id) => selected.indexOf(id) !== -1;
 
   const handleClose = (reason) => {
     if (reason === "clickaway") {
@@ -335,40 +320,19 @@ export default function Offers() {
     setOpen(false);
   };
 
-  const action = (
-    <React.Fragment>
-      {/* <Button color="secondary" size="small" onClick={handleClose}>
-        UNDO
-      </Button> */}
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
-  const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
-
   return (
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
-          <IconButton
+          {/* <IconButton
             edge="start"
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
             onClick={() => navigate("/add-page")}
           >
-            {/* <CloseIcon /> */}
             <AddIcon />
-          </IconButton>
+          </IconButton> */}
           <Typography variant="h6" color="inherit" component="div">
             Offers
           </Typography>
@@ -402,12 +366,10 @@ export default function Offers() {
                 </Grid>
               </Grid>
             ) : (
-              <Item
-                sx={{ boxShadow: 0, borderRadius: 1, background: "#1A2027" }}
-              >
+              <Item sx={{ boxShadow: 0, borderRadius: 1 }}>
                 <Paper
                   sx={{
-                    width: "100%",
+                    width: "auto",
                     mb: 2,
                     boxShadow: 0,
                     borderRadius: 1,
@@ -415,9 +377,7 @@ export default function Offers() {
                   }}
                 >
                   <EnhancedTableToolbar numSelected={selected.length} />
-                  <TableContainer
-                    sx={{ background: "#1A2027", color: "#ffffff" }}
-                  >
+                  <TableContainer sx={{}}>
                     <Table
                       sx={{ minWidth: 750 }}
                       aria-labelledby="tableTitle"
@@ -442,22 +402,24 @@ export default function Offers() {
                           .slice()
                           .reverse()
                           .map((row, index) => {
-                            const isItemSelected = isSelected(row._id);
+                            const isItemSelected = isSelected(row.id);
                             const labelId = `enhanced-table-checkbox-${index}`;
 
                             return (
                               <TableRow
                                 hover
-                                onClick={(event) => handleClick(event, row._id)}
+                                onClick={(event) => handleClick(event, row.id)}
                                 role="checkbox"
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}
-                                key={row._id}
+                                key={row.id}
                                 selected={isItemSelected}
-                                sx={{
-                                  color: "#ffffff",
-                                  backgroundColor: "#1A2027",
-                                }}
+                                sx={
+                                  {
+                                    // color: "#ffffff",
+                                    // backgroundColor: "#1A2027",
+                                  }
+                                }
                               >
                                 <TableCell padding="checkbox">
                                   <Checkbox
@@ -466,7 +428,7 @@ export default function Offers() {
                                     inputProps={{
                                       "aria-labelledby": labelId,
                                     }}
-                                    sx={{ color: "#ffffff" }}
+                                    sx={{}}
                                   />
                                 </TableCell>
 
@@ -482,10 +444,10 @@ export default function Offers() {
                                       whiteSpace: "nowrap",
                                       maxWidth: "20ch",
                                       textOverflow: "ellipsis",
-                                      color: "#ffffff",
+                                      // color: "#ffffff",
                                     }}
                                   >
-                                    {row.offeritems}
+                                    {row.data.name}
                                   </Typography>
                                 </TableCell>
 
@@ -496,10 +458,10 @@ export default function Offers() {
                                       whiteSpace: "nowrap",
                                       maxWidth: "50ch",
                                       textOverflow: "ellipsis",
-                                      color: "#ffffff",
+                                      // color: "#ffffff",
                                     }}
                                   >
-                                    {row.oPercent}
+                                    {row.data.description}
                                   </Typography>
                                 </TableCell>
 
@@ -510,10 +472,24 @@ export default function Offers() {
                                       whiteSpace: "nowrap",
                                       maxWidth: "20ch",
                                       textOverflow: "ellipsis",
-                                      color: "#ffffff",
+                                      // color: "#ffffff",
                                     }}
                                   >
-                                    {row.createdAt.slice(0, 10)}
+                                    {row.data.status.toUpperCase()}
+                                  </Typography>
+                                </TableCell>
+
+                                <TableCell align="left">
+                                  <Typography
+                                    sx={{
+                                      overflow: "hidden",
+                                      whiteSpace: "nowrap",
+                                      maxWidth: "20ch",
+                                      textOverflow: "ellipsis",
+                                      // color: "#ffffff",
+                                    }}
+                                  >
+                                    {row.data.createAt.slice(0, 10)}
                                   </Typography>
                                 </TableCell>
                               </TableRow>
@@ -530,7 +506,7 @@ export default function Offers() {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
-                    sx={{ background: "#1A2027", color: "#ffffff" }}
+                    sx={{}}
                   />
                 </Paper>
               </Item>
