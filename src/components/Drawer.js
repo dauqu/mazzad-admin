@@ -122,6 +122,7 @@ export default function MiniDrawer() {
                 sx={{
                     boxShadow: 0,
                     background: "rgb(247,250,252)",
+                    borderBottom: ".5px solid #d9d9d9",
                 }}
             >
                 <Toolbar variant="dense">
@@ -217,10 +218,10 @@ export default function MiniDrawer() {
                     <Toolbar
                         variant="dense"
                         sx={{
-                            // background: "#1A2027",
                             boxShadow: 0,
                             height: 40,
                             color: "#ffffff",
+                            backgroundColor: "#ffffff",
                         }}
                     >
                         <DrawerHeader
@@ -284,18 +285,17 @@ export default function MiniDrawer() {
                                     minHeight: 32,
 
                                     ":hover": {
-                                        color: "#ffffff",
-                                        background: "#00a19e",
+                                        boxShadow: "1px 2px 3px #d9d9d9",
                                     },
                                 }}
                                 to={item.url}
                                 component={RouterLink}
-                                className={location.pathname === item.url ? "active" : null}
+                                className={location.pathname === item.url ? "active " : null}
                             >
                                 <ListItemIcon sx={{
-                                    // color: "inherit",
                                     minWidth: 40,
                                     fontSize: 14,
+                                    color: location.pathname === item.url ? "#ffffff" :"#888",
                                 }}
                                 >
                                     {item.icon}
