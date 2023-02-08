@@ -34,6 +34,7 @@ import Invoice from "./pages/Invoice";
 import axios from "axios";
 import * as React from "react";
 import Profile from "./pages/Profile";
+import Tag from "./pages/Tag";
 
 //Axios allow auth 
 axios.defaults.withCredentials = true;

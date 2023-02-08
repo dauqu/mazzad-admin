@@ -2,3 +2,9 @@
     background: #00a19e !important;
     color: #ffffff !important;
 }
+
+.logo {
+    background: linear-gradient(90deg, #71f0b0, #46a8e9);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}

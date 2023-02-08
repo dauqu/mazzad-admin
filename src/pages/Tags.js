@@ -1,44 +1,63 @@
-import React, { useState } from "react";
-import { styled } from "@mui/material/styles";
+import * as React from "react";
+import PropTypes from "prop-types";
+import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import axios from "axios";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import PropTypes from "prop-types";
+import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
-import { alpha } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import Tooltip from "@mui/material/Tooltip";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import TablePagination from "@mui/material/TablePagination";
-import Snackbar from "@mui/material/Snackbar";
+import { styled } from "@mui/material/styles";
+import Rating from "@mui/material/Rating";
+import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
+import RemoveRedEyeTwoToneIcon from "@mui/icons-material/RemoveRedEyeTwoTone";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
+import { useTheme } from "@mui/material/styles";
+import Chip from "@mui/material/Chip";
+import CardMedia from "@mui/material/CardMedia";
 import MuiAlert from "@mui/material/Alert";
-import LinearProgress from "@mui/material/LinearProgress";
-import { useNavigate } from "react-router-dom";
+import Snackbar from "@mui/material/Snackbar";
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
 import { Divider } from "@mui/material";
-import { tooltipClasses } from "@mui/material/Tooltip";
-import CardMedia from "@mui/material/CardMedia";
+
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { Stack } from "@mui/system";
+
+//Html Tooltip
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    // backgroundColor: "#f5f5f9",
+    // color: "rgba(0, 0, 0, 0.87)",
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: "1px solid #dadde9",
+  },
+}));
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "left",
-  backgroundColor: "#1A2027",
-  color: "#ffffff",
+  // color: "#fff",
+  // backgroundColor: "#1A2027",
+  borderRadius: "0px",
 }));
 
 function descendingComparator(a, b, orderBy) {
@@ -73,22 +92,28 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "name",
+    id: "1",
     numeric: false,
     disablePadding: true,
     label: "Name",
   },
   {
-    id: "description",
+    id: "2",
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
     label: "Description",
   },
   {
-    id: "published",
+    id: "3",
     numeric: false,
     disablePadding: false,
     label: "Published At",
+  },
+  {
+    id: "4",
+    numeric: false,
+    disablePadding: false,
+    label: "Actions",
   },
 ];
 
@@ -108,16 +133,15 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox" sx={{ color: "#ffffff" }}>
+        <TableCell padding="checkbox">
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all desserts",
+            sx={{
+              // color: "white" 
             }}
-            sx={{ color: "#ffffff" }}
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -126,13 +150,12 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ color: "#ffffff" }}
+          // sx={{ color: "white" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
-              sx={{ color: "#ffffff" }}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -172,40 +195,70 @@ const EnhancedTableToolbar = (props) => {
               theme.palette.action.activatedOpacity
             ),
         }),
-        backgroundColor: "#1A2027",
-        color: "#ffffff",
       }}
     >
       {numSelected > 0 ? (
         <Typography
-          sx={{ flex: "1 1 100%", color: "#ffffff" }}
+          sx={{ flex: "1 1 100%", display: { xs: "none", md: "flex" } }}
           color="inherit"
-          variant="subtitle1"
+          variant="h6"
           component="div"
         >
           {numSelected} selected
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: "1 1 100%", color: "#ffffff" }}
+          sx={{ flex: "1 1 100%", mr: 2, display: { xs: "none", md: "flex" } }}
           variant="h6"
           id="tableTitle"
           component="div"
         >
-          Tags List
+          Tags Details
         </Typography>
       )}
 
+      {/* View Product */}
+      {numSelected === 1 ? (
+        <Tooltip title="View">
+          <IconButton
+            // sx={{ color: "#fff" }}
+            to={`./../view-product/${window.selected}`}
+            component={RouterLink}
+          >
+            <RemoveRedEyeTwoToneIcon />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        ""
+      )}
+
+      {/* Edit Product */}
+      {numSelected === 1 ? (
+        <Tooltip title="Edit"
+        // sx={{ color: "#fff" }}
+        >
+          <IconButton
+            to={`./../update-product/${window.selected}`}
+            component={RouterLink}
+          >
+            <EditTwoToneIcon />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        ""
+      )}
+
+      {/* Delete Product */}
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton onClick={window.deletePost}>
-            <DeleteIcon sx={{ color: "#fff" }} />
+        <Tooltip title="Delete" sx={{}}>
+          <IconButton onClick={window.deleteProduct}>
+            <DeleteTwoToneIcon />
           </IconButton>
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
           <IconButton>
-            <FilterListIcon sx={{ color: "#fff" }} />
+            <FilterListIcon />
           </IconButton>
         </Tooltip>
       )}
@@ -217,77 +270,30 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
+// Tags
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 export default function Tags() {
-  // const [post, setPost] = React.useState(null);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [server_alert, setAlert] = useState();
-  const [status, setStatus] = useState();
-  const [rows, setTags] = React.useState([]);
-  const [open, setOpen] = React.useState(false);
-  const [loading, setLoading] = useState(true);
-
-  const navigate = useNavigate();
-
-  //Get all categories
-  function getTags() {
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/tags`).then((response) => {
-      setTags(response.data);
-    });
-  }
-
-  React.useEffect(() => {
-    getTags();
-    setLoading(false);
-  }, []);
-
-  //Post new category
-  const createPost = (e) => {
-    e.preventDefault();
-    axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/tags`, {
-        name,
-        description,
-      })
-      .then((res) => {
-        setAlert("Category successfully added", res);
-        setStatus("success");
-        getTags();
-      })
-      .catch((e) => {
-        setAlert(e.response.data.message);
-        setStatus(e.response.data.status);
-      });
-    setOpen(true);
-  };
-
-  //Delete category
-  window.deletePost = () => {
-    axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/tags/${selected}`)
-      .then((res) => {
-        setAlert("Category successfully deleted", res);
-        setStatus("success");
-        getTags();
-        setSelected([]);
-      })
-      .catch((e) => {
-        setAlert(e.response.data.message);
-        setStatus(e.response.data.status);
-      });
-    setOpen(true);
-  };
-
-  // function createData(name, description, fat, carbs, published) {
-  //   return { name, description, fat, carbs, published };
-  // }
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("description");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(15);
+  const [dense] = React.useState(true);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleRequestSort = (event, property) => {
+  window.selected = selected;
+  const navigate = useNavigate();
+
+  const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -333,48 +339,217 @@ export default function Tags() {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const handleClose = (reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
     setOpen(false);
   };
 
-  const action = (
+  // Get Category
+  const [category, setCategory] = React.useState([]);
+  React.useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/blog`)
+      .then((response) => {
+        setCategory(response.data);
+      });
+  }, []);
+
+
+  const theme = useTheme();
+
+  //Product Title
+  const [productTitle, setProductTitle] = React.useState("");
+  const [productDescription, setProductDescription] = React.useState("");
+  const [productCategory, setProductCategory] = React.useState("");
+  const [productGallery, setProductGallery] = React.useState("");
+  const [featuredImage, setFeaturedImage] = React.useState("");
+  const [featuredImageFront, setFeaturedImageFront] = React.useState("");
+  const [regularPrice, setRegularPrice] = React.useState("");
+  const [salePrice, setSalePrice] = React.useState("");
+  const [reviews, setReviews] = React.useState(false);
+  const [comments, setComments] = React.useState(false);
+  const [isprivate, setPrivate] = React.useState(false);
+  const [stackStatus, setStackStatus] = React.useState("");
+  const [taxStatus, setTaxStatus] = React.useState("");
+  const [taxClass, setTaxClass] = React.useState("");
+  const [tags, setTags] = React.useState([]);
+  const [server_alert, setAlert] = React.useState();
+  const [status, setStatus] = React.useState();
+  const [alertOpen, setAlertOpen] = React.useState(false);
+
+  const [rows, setProducts] = React.useState([]);
+
+  // Set Featured Image
+  const featuredImageHandleChange = (e) => {
+    if (e.target.files) {
+      // const FeaturedImage_ = Array.from(e.target.files).map((file) =>
+      //   URL.createObjectURL(file)
+      // );
+      setFeaturedImage(e.target.files[0].name);
+    }
+    if (e.target.files) {
+      const FeaturedImage_ = Array.from(e.target.files).map((file) =>
+        URL.createObjectURL(file)
+      );
+      setFeaturedImageFront(FeaturedImage_);
+    }
+  };
+
+  console.log(featuredImage);
+
+  // Set Featured Image
+  const productGalleryHandleChange = (e) => {
+    if (e.target.files) {
+      const productGallery = Array.from(e.target.files).map((file) =>
+        URL.createObjectURL(file)
+      );
+      setProductGallery(productGallery);
+      console.log(productGallery);
+    }
+  };
+
+  const handleReviewsChange = () => {
+    setReviews(!reviews);
+  };
+
+  const handleCommentsChange = () => {
+    setComments(!comments);
+  };
+
+  const handlePrivateChange = () => {
+    setPrivate(!isprivate);
+  };
+
+  //Create Product
+  // function createPost() {
+  //   axios
+  //     .post(`${process.env.REACT_APP_BACKEND_URL}/products`, {
+  //       productTitle,
+  //       productDescription,
+  //       productCategory,
+  //       tags,
+  //       productGallery,
+  //       featuredImage,
+  //       regularPrice,
+  //       salePrice,
+  //       reviews,
+  //       comments,
+  //       isprivate,
+  //       stackStatus,
+  //       taxStatus,
+  //       taxClass,
+  //     })
+  //     .then((response) => {
+  //       setAlert("Product successfully added", response);
+  //       setStatus("success");
+  //       console.log(response.data);
+  //       getProducts();
+  //     })
+  //     .catch((e) => {
+  //       setAlert(e.response.data.message);
+  //       setStatus(e.response.data.status);
+  //     });
+  //   setAlertOpen(true);
+  // }
+
+  //Get Product
+  const getProducts = () => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/products`)
+      .then((response) => {
+        setProducts(response.data);
+      });
+  };
+
+  React.useEffect(() => {
+    getProducts();
+  }, []);
+
+
+  //Delete Product
+  window.deleteProduct = () => {
+    axios
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/products/${selected}`)
+      .then((response) => {
+        setAlert("Product successfully deleted", response);
+        setStatus("success");
+        console.log(response.data);
+        getProducts();
+        setAlertOpen(true);
+        setSelected([]);
+      })
+      .catch((e) => {
+        setAlert(e.response.data.message);
+        setStatus(e.response.data.status);
+        setAlertOpen(true);
+      });
+  };
+
+  //Edit Product
+  const editProduct = (id) => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/products/${id}`)
+      .then((response) => {
+        setProductTitle(response.data.title);
+        setProductDescription(response.data.description);
+        setProductCategory(response.data.category);
+        setProductGallery(response.data.gallery);
+        setFeaturedImage(response.data.featured_image);
+        setFeaturedImageFront(response.data.featured_image_front);
+        setRegularPrice(response.data.regular_price);
+        setSalePrice(response.data.sale_price);
+        setReviews(response.data.reviews);
+        setComments(response.data.comments);
+        setPrivate(response.data.isprivate);
+        setStackStatus(response.data.stack_status);
+        setTaxStatus(response.data.tax_status);
+        setTaxClass(response.data.tax_class);
+        setTags(response.data.tags);
+      });
+  };
+
+  const alertHandleClose = (reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertOpen(false);
+  };
+
+  const label = { inputProps: { "aria-label": "Checkbox demo" } };
+
+  // Alert
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const alertAction = (
     <React.Fragment>
-      {/* <Button color="secondary" size="small" onClick={handleClose}>
-        UNDO
-      </Button> */}
       <IconButton
         size="small"
         aria-label="close"
         color="inherit"
-        onClick={handleClose}
+        onClick={alertHandleClose}
       >
         <CloseIcon fontSize="small" />
       </IconButton>
     </React.Fragment>
   );
 
-  const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
-
-  //Html Tooltip
-  const HtmlTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-  ))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: "#f5f5f9",
-      color: "rgba(0, 0, 0, 0.87)",
-      maxWidth: 220,
-      fontSize: theme.typography.pxToRem(12),
-      border: "1px solid #dadde9",
-    },
-  }));
-
   return (
-    <Box sx={{ flexGrow: 1, marginTop: 3 }}>
+    <Box
+      sx={{
+        width: "100%",
+        marginTop: 3,
+        boxShadow: 0,
+        animation: "fadeIn 0.5s ease-in-out",
+        transition: "box-shadow 1s ease-in-out",
+      }}
+    >
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
           <IconButton
@@ -382,182 +557,169 @@ export default function Tags() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => navigate("/add-page")}
+            // onClick={() => setShowModal(true)}
           >
-            {/* <CloseIcon /> */}
             <AddIcon />
           </IconButton>
           <Typography variant="h6" color="inherit" component="div">
-            Tags 
+            Manage Tags
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
       </AppBar>
 
-      <Paper sx={{ boxShadow: 0, borderRadius: 1, background: "#1A2027" }}>
-        {loading ? (
-          <Grid
-            container
-            spacing={2}
-            sx={{
-              width: "100%",
-              height: "100%",
-              marginTop: 0,
-              paddingBottom: 4,
-              paddingTop: 2,
-              paddingLeft: 2,
-              paddingRight: 2,
-            }}
+      {/* Alert */}
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={5000}
+        resumeHideDuration={5000}
+        action={alertAction}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        onClose={alertHandleClose}
+      >
+        <Alert
+          onClose={alertHandleClose}
+          severity={status}
+          sx={{ width: "100%" }}
+        >
+          {server_alert}
+        </Alert>
+      </Snackbar>
+
+
+      {/*  */}
+
+      <Paper
+        sx={{
+          width: "100%",
+          mb: 2,
+          boxShadow: 0,
+          // background: "#1A2027",
+          // color: "#fff",
+          overflow: "scroll",
+        }}
+      >
+        <EnhancedTableToolbar numSelected={selected.length} />
+        <TableContainer>
+          <Table
+            sx={{ minWidth: 750 }}
+            aria-labelledby="tableTitle"
+            size="small"
           >
-            <Grid item xs={12}>
-              <LinearProgress />
-            </Grid>
-          </Grid>
-        ) : (
-          <Item sx={{ boxShadow: 0, borderRadius: 1 }}>
-            <Paper
-              sx={{
-                width: "100%",
-                mb: 2,
-                boxShadow: 0,
-                borderRadius: 1,
-                zIndex: 1,
-                background: "#1A2027",
-                color: "#ffffff",
-              }}
-            >
-              <EnhancedTableToolbar numSelected={selected.length} />
-              <TableContainer>
-                <Table
-                  sx={{ minWidth: 750 }}
-                  aria-labelledby="tableTitle"
-                  size="small"
-                >
-                  <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
-                    onRequestSort={handleRequestSort}
-                    rowCount={rows.length}
-                  />
-                  <TableBody>
-                    {stableSort(rows, getComparator(order, orderBy))
-                      .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                      .map((row, index) => {
-                        const isItemSelected = isSelected(row._id);
-                        const labelId = `enhanced-table-checkbox-${index}`;
+            <EnhancedTableHead
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={rows.length}
+            />
+            <TableBody>
+              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+                 rows.slice().sort(getComparator(order, orderBy)) */}
+              {stableSort(rows, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .reverse()
+                .map((row, index) => {
+                  const isItemSelected = isSelected(row.slug);
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                        return (
-                          <TableRow
-                            hover
-                            onClick={(event) => handleClick(event, row._id)}
-                            role="checkbox"
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={row._id}
-                            selected={isItemSelected}
-                          >
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputProps={{
-                                  "aria-labelledby": labelId,
-                                }}
-                                sx={{ color: "#ffffff" }}
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleClick(event, row.slug)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.slug}
+                      selected={isItemSelected}
+                      sx={{ color: "#fff" }}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                        // sx={{ color: "#fff" }}
+                        />
+                      </TableCell>
+
+                      <TableCell
+                        scope="row"
+                        padding="none"
+                      // sx={{ color: "#fff" }}
+                      >
+                        <HtmlTooltip
+                          placement="right"
+                          title={
+                            <React.Fragment>
+                              <CardMedia
+                                component="img"
+                                height="140"
+                                image={row.image}
+                                alt="green iguana"
                               />
-                            </TableCell>
+                            </React.Fragment>
+                          }
+                        >
+                          <Typography
+                            size="small"
+                            sx={{
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              maxWidth: "20ch",
+                              textOverflow: "ellipsis",
+                              cursor: "pointer",
+                              // color: "#fff",
+                            }}
+                          >
+                            {row.image}
+                          </Typography>
+                        </HtmlTooltip>
+                      </TableCell>
 
-                            <TableCell
-                              component="th"
-                              id={labelId}
-                              scope="row"
-                              padding="none"
-                            >
-                              <HtmlTooltip
-                                placement="right"
-                                title={
-                                  <React.Fragment>
-                                    <CardMedia
-                                      component="img"
-                                      height="140"
-                                      image="https://source.unsplash.com/random"
-                                      alt="green iguana"
-                                    />
-                                  </React.Fragment>
-                                }
-                              >
-                                <Typography
-                                  size="small"
-                                  sx={{
-                                    overflow: "hidden",
-                                    whiteSpace: "nowrap",
-                                    maxWidth: "20ch",
-                                    textOverflow: "ellipsis",
-                                    cursor: "pointer",
-                                    color: "#ffffff",
-                                  }}
-                                >
-                                  {row.title}
-                                </Typography>
-                              </HtmlTooltip>
-                            </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                        sx={{
+                          overflow: "hidden",
+                          whiteSpace: "nowrap",
+                          maxWidth: "20ch",
+                          minWidth: "15ch",
+                          textOverflow: "ellipsis",
+                          // color: "#fff",
+                        }}
+                      >
+                        {row.title}
+                      </TableCell>
+                      <TableCell align="left" sx={{}}>
+                        {row.price + " USD"}
+                      </TableCell>
+                      <TableCell align="left" sx={{ }}  style={{
+                      }}>
+                        <Stack direction={"row"} sx={{columnGap: "10px"}}>
 
-                            <TableCell
-                              component="th"
-                              id={labelId}
-                              scope="row"
-                              padding="none"
-                            >
-                              <Typography
-                                sx={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  maxWidth: "20ch",
-                                  textOverflow: "ellipsis",
-                                  color: "#ffffff",
-                                }}
-                              >
-                               {row.description}
-                              </Typography>
-                            </TableCell>
-
-                            <TableCell align="left">
-                              <Typography
-                                sx={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  maxWidth: "50ch",
-                                  textOverflow: "ellipsis",
-                                  color: "#ffffff",
-                                }}
-                              >
-                                {row.createdAt}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[15, 30, 40]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                sx={{ color: "#ffffff" }}
-              />
-            </Paper>
-          </Item>
-        )}
+                        <AiOutlineEdit size="18" />
+                        <AiOutlineDelete size="18" />
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[15, 30, 40]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        // sx={{ color: "#fff" }}
+        />
       </Paper>
     </Box>
   );

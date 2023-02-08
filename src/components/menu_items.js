@@ -170,6 +170,23 @@ const menu_items = [
     icon: <SupportAgentTwoToneIcon />,
     url: "/settings",
   },
+  {
+    id: "header-5",
+    name: "Settings",
+    isheader: true
+  },
+  {
+    id: "20",
+    name: "Settings",
+    icon: <SettingsTwoToneIcon />,
+    url: "/settings",
+  },
+  {
+    id: "21",
+    name: "System Info",
+    icon: <InfoTwoToneIcon />,
+    url: "/settings",
+  },
 ];
 
 export default menu_items;

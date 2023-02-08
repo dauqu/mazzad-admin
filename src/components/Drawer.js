@@ -234,12 +234,12 @@ export default function MiniDrawer() {
                             }}
                         >
                             <Typography
+                                className="logo"
                                 sx={{
-                                    justifyContent: "center",
                                     display: "flex",
-                                    textAlign: "center",
+                                    textAlign: "start",
                                     alignItems: "center",
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     fontWeight: 600,
                                 }}
                             >
