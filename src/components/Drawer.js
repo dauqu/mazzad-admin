@@ -239,7 +239,7 @@ export default function MiniDrawer() {
                                     display: "flex",
                                     textAlign: "start",
                                     alignItems: "center",
-                                    fontSize: 20,
+                                    fontSize: 18,
                                     fontWeight: 600,
                                 }}
                             >
