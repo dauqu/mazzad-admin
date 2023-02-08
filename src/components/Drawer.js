@@ -121,8 +121,7 @@ export default function MiniDrawer() {
                 open={open}
                 sx={{
                     boxShadow: 0,
-                    background: "#eeeeee",
-                    borderBottom: "1px solid #333",
+                    background: "rgb(247,250,252)",
                 }}
             >
                 <Toolbar variant="dense">
@@ -222,7 +221,6 @@ export default function MiniDrawer() {
                             boxShadow: 0,
                             height: 40,
                             color: "#ffffff",
-                            borderBottom: "1px solid #333",
                         }}
                     >
                         <DrawerHeader

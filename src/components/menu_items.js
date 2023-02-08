@@ -76,6 +76,12 @@ const menu_items = [
     url: "/auctions",
   },
   {
+    id: "18",
+    name: "Company",
+    icon: <CategoryTwoToneIcon />,
+    url: "/companies",
+  },
+  {
     id: "header-2",
     name: "Report",
     icon: <AutoAwesomeMosaicTwoToneIcon />,
