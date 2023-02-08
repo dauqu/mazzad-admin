@@ -165,7 +165,7 @@ const menu_items = [
   },
   
   {
-    id: "17",
+    id: "18",
     name: "Chatbot Settings",
     icon: <SupportAgentTwoToneIcon />,
     url: "/settings",

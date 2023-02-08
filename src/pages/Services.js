@@ -26,8 +26,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import MuiAlert from "@mui/material/Alert";
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from "@mui/material/AppBar";
-import { Divider } from "@mui/material";
+import { Dialog, DialogTitle, Divider, Stack, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+
+import {AiOutlineEdit, AiOutlineEye} from 'react-icons/ai'
+import {AiOutlineDelete} from 'react-icons/ai'
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -72,25 +75,31 @@ const headCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Company Name",
+    label: "Name",
   },
   {
-    id: "description",
+    id: "ID",
     numeric: false,
     disablePadding: false,
-    label: "Description",
+    label: "ID",
   },
   {
-    id: "status",
+    id: "Video",
     numeric: false,
     disablePadding: false,
-    label: "Status",
+    label: "Video",
   },
   {
-    id: "published",
+    id: "CreatedAt",
     numeric: false,
     disablePadding: false,
-    label: "Published At",
+    label: "Created At",
+  },
+  {
+    id: "Actions",
+    numeric: false,
+    disablePadding: false,
+    label: "Actions",
   },
 ];
 
@@ -228,7 +237,7 @@ export default function Services() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  //Get all categories
+  //Get all company
   async function getCategoryData() {
     const res = await axios.get(
       `${process.env.REACT_APP_BACKEND_URL}/companies`
@@ -258,9 +267,10 @@ export default function Services() {
     setOpen(true);
   };
 
-  // function createData(name, description, fat, carbs, published) {
-  //   return { name, description, fat, carbs, published };
-  // }
+
+  const [viewData, setViewData] = useState({});
+  const [viewModal, setViewModal] = useState(false);
+
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("description");
   const [selected, setSelected] = React.useState([]);
@@ -320,6 +330,12 @@ export default function Services() {
     setOpen(false);
   };
 
+
+  const showModal = (row) => {
+    setViewData(row);
+    setViewModal(true);
+  }
+
   return (
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
       <AppBar position="static">
@@ -339,6 +355,15 @@ export default function Services() {
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
       </AppBar>
+
+      <Dialog
+      open={viewModal}
+      onClose={() => setViewModal(false)}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      >
+        h2
+      </Dialog>
 
       <Grid container spacing={1}>
         {/* StartSubmit Form */}
@@ -399,7 +424,6 @@ export default function Services() {
                             page * rowsPerPage,
                             page * rowsPerPage + rowsPerPage
                           )
-                          .slice()
                           .reverse()
                           .map((row, index) => {
                             const isItemSelected = isSelected(row.id);
@@ -461,7 +485,7 @@ export default function Services() {
                                       // color: "#ffffff",
                                     }}
                                   >
-                                    {row.data.description}
+                                    {row.id}
                                   </Typography>
                                 </TableCell>
 
@@ -475,7 +499,7 @@ export default function Services() {
                                       // color: "#ffffff",
                                     }}
                                   >
-                                    {row.data.status.toUpperCase()}
+                                    {row.data.featured_image}
                                   </Typography>
                                 </TableCell>
 
@@ -491,6 +515,15 @@ export default function Services() {
                                   >
                                     {row.data.createAt.slice(0, 10)}
                                   </Typography>
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Stack direction={"row"} sx={{ columnGap: "10px"}}>
+                                    <AiOutlineEye size={20} onClick={() => {
+                                      showModal(row);
+                                    }} />
+                                    <AiOutlineEdit size={20} />
+                                    <AiOutlineDelete size={20} />
+                                  </Stack>
                                 </TableCell>
                               </TableRow>
                             );
