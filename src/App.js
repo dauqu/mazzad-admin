@@ -33,6 +33,7 @@ import NewCategory from "./pages/NewCategory";
 import Invoice from "./pages/Invoice";
 import axios from "axios";
 import * as React from "react";
+import Profile from "./pages/Profile";
 
 //Axios allow auth 
 axios.defaults.withCredentials = true;
@@ -114,6 +115,8 @@ function App() {
           <Route path="/classifications" element={<Classifications />} />
 
           <Route path="/search" element={<Search />} />
+
+          <Route path="/profile" element={<Profile />} />
 
           {/* 404 page */}
           <Route path="*" element={

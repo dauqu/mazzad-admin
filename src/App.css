@@ -1,4 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 .App {
+  background-color: rgb(247, 250, 252);
+  min-height: 100vh;
   text-align: center;
 }
 

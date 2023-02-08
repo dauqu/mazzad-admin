@@ -27,284 +27,319 @@ import menu_items from "./menu_items";
 const drawerWidth = 250;
 
 const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-  background: "#eeeeee",
+    width: drawerWidth,
+    transition: theme.transitions.create("width", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+    }),
+    overflowX: "hidden",
+    background: "#eeeeee",
 });
 
 const closedMixin = (theme) => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
+    transition: theme.transitions.create("width", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: "hidden",
     width: `calc(${theme.spacing(7)} + 1px)`,
-  },
-  background: "#eeeeee",
+    [theme.breakpoints.up("sm")]: {
+        width: `calc(${theme.spacing(7)} + 1px)`,
+    },
+    background: "#eeeeee",
 });
 
 const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-start",
-  padding: theme.spacing(0, 0),
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    padding: theme.spacing(0, 0),
 }));
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
+    shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
     }),
-  }),
+    ...(open && {
+        marginLeft: drawerWidth,
+        width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(["width", "margin"], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    }),
 }));
 
 const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
+    shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: "nowrap",
+    boxSizing: "border-box",
+    ...(open && {
+        ...openedMixin(theme),
+        "& .MuiDrawer-paper": openedMixin(theme),
+    }),
+    ...(!open && {
+        ...closedMixin(theme),
+        "& .MuiDrawer-paper": closedMixin(theme),
+    }),
 }));
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
-  "& .MuiBadge-badge": {
-    right: -3,
-    top: 13,
-    padding: "0 4px",
-  },
+    "& .MuiBadge-badge": {
+        right: -3,
+        top: 13,
+        padding: "0 4px",
+    },
 }));
 
 export default function MiniDrawer() {
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
-  const location = useLocation();
-  const [countNotifications, setCountNotifications] = React.useState(1);
+    const theme = useTheme();
+    const [open, setOpen] = React.useState(true);
+    const location = useLocation();
+    const [countNotifications, setCountNotifications] = React.useState(1);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
 
-  return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        open={open}
-        sx={{
-          boxShadow: 0,
-          background: "#eeeeee",
-          borderBottom: "1px solid #333",
-        }}
-      >
-        <Toolbar variant="dense">
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: "36px",
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            {open === true ? (
-              <IconButton
-                onClick={handleDrawerClose}
+    return (
+        <Box sx={{ display: "flex" }}>
+            <CssBaseline />
+            <AppBar
+                position="fixed"
+                open={open}
                 sx={{
-                  color: "#ffffff",
-                  marginLeft: 0,
+                    boxShadow: 0,
+                    background: "#eeeeee",
+                    borderBottom: "1px solid #333",
                 }}
-              >
-                <KeyboardDoubleArrowLeftTwoToneIcon />
-              </IconButton>
-            ) : (
-              ""
-            )}
-          </Typography>
-          <Typography
-            variant="h6"
-            noWrap
-            // to="/"
-            // component={RouterLink}
-            sx={{ color: "#fff", TextDecoration: "none" }}
-          >
-            {/* Dashboard */}
-          </Typography>
-          <Typography sx={{ flexGrow: 1 }}></Typography>
-          <IconButton
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleDrawerClose}
-            sx={{
-              // color: "#ffffff",
-              marginLeft: "auto",
-              marginRight: 5,
-            }}
-          >
-            <StyledBadge
-              badgeContent={countNotifications}
-              color="error"
-              to="/notifications"
-              component={RouterLink}
-              sx={{
-                color: "#ffffff",
-              }}
             >
-              <NotificationsTwoToneIcon />
-            </StyledBadge>
-          </IconButton>
+                <Toolbar variant="dense">
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={handleDrawerOpen}
+                        edge="start"
+                        sx={{
+                            marginRight: "36px",
+                            ...(open && { display: "none" }),
+                        }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" noWrap component="div">
+                        {open === true ? (
+                            <IconButton
+                                onClick={handleDrawerClose}
+                                sx={{
+                                    color: "#ffffff",
+                                    marginLeft: 0,
+                                }}
+                            >
+                                <KeyboardDoubleArrowLeftTwoToneIcon />
+                            </IconButton>
+                        ) : (
+                            ""
+                        )}
+                    </Typography>
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        // to="/"
+                        // component={RouterLink}
+                        sx={{ color: "#fff", TextDecoration: "none" }}
+                    >
+                        {/* Dashboard */}
+                    </Typography>
+                    <Typography sx={{ flexGrow: 1 }}></Typography>
+                    <IconButton
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={handleDrawerClose}
+                        sx={{
+                            // color: "#ffffff",
+                            marginLeft: "auto",
+                            marginRight: 5,
+                        }}
+                    >
+                        <StyledBadge
+                            badgeContent={countNotifications}
+                            color="error"
+                            to="/notifications"
+                            component={RouterLink}
+                            sx={{
+                                color: "#ffffff",
+                            }}
+                        >
+                            <NotificationsTwoToneIcon />
+                        </StyledBadge>
+                    </IconButton>
 
-          <Typography
-            variant="subtitle1"
-            sx={{ paddingRight: 1, cursor: "pointer" }}
-          >
-            {/* {profile.fname} */}
-          </Typography>
-          <IconButton to="account">
-            <Avatar
-              alt="Remy Sharp"
-              //   src={profile.dp}
-              sx={{ width: 30, height: 30 }}
-              to="account"
-              component={RouterLink}
-            />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        open={open}
-        sx={
-          {
-            // background: "#1A2027"
-          }
-        }
-      >
-        <AppBar position="static" color="default" elevation={0}>
-          <Toolbar
-            variant="dense"
-            sx={{
-              // background: "#1A2027",
-              boxShadow: 0,
-              height: 40,
-              color: "#ffffff",
-              borderBottom: "1px solid #333",
-            }}
-          >
-            <DrawerHeader
-              sx={{
-                color: "#000000",
-                justifyContent: "center",
-                display: "flex",
-                textAlign: "center",
-                alignItems: "center",
-              }}
+                    <Typography
+                        variant="subtitle1"
+                        sx={{ paddingRight: 1, cursor: "pointer" }}
+                    >
+                        {/* {profile.fname} */}
+                    </Typography>
+                    <IconButton to="account">
+                        <Avatar
+                            alt="Remy Sharp"
+                            //   src={profile.dp}
+                            sx={{ width: 30, height: 30 }}
+                            to="account"
+                            component={RouterLink}
+                        />
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+            <Drawer
+                variant="permanent"
+                open={open}
+                sx={
+                    {
+                        // background: "#1A2027"
+                    }
+                }
             >
-              <Typography
-                sx={{
-                  justifyContent: "center",
-                  display: "flex",
-                  textAlign: "center",
-                  alignItems: "center",
-                  fontSize: 18,
-                  fontWeight: 600,
-                }}
-              >
-                123AUC ADMIN PANEL
-              </Typography>
-            </DrawerHeader>
-          </Toolbar>
-        </AppBar>
-        <Divider />
-        {/* Menu List */}
-        <List
-          sx={
-            {
-              // background: "#1A2027",
-            }
-          }
-        >
-          {menu_items.map((item) => (
-            <div key={item.id}>
-              <ListItemButton
-                key={item.label}
-                sx={{
-                  py: 0,
-                  minHeight: 32,
-                  // color: "rgba(255,255,255,.8)",
-                  ":hover": {
-                    color: "#ffffff",
-                    background: "#00a19e",
-                  },
-                }}
-                to={item.url}
-                component={RouterLink}
-                className={location.pathname === item.url ? "active" : null}
-              >
-                <ListItemIcon sx={{
-                    // color: "inherit",
-                    minWidth: 40,
-                    fontSize: 14,
-                  }} 
+                <AppBar position="static" color="default" elevation={0}>
+                    <Toolbar
+                        variant="dense"
+                        sx={{
+                            // background: "#1A2027",
+                            boxShadow: 0,
+                            height: 40,
+                            color: "#ffffff",
+                            borderBottom: "1px solid #333",
+                        }}
+                    >
+                        <DrawerHeader
+                            sx={{
+                                color: "#000000",
+                                justifyContent: "center",
+                                display: "flex",
+                                textAlign: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Typography
+                                sx={{
+                                    justifyContent: "center",
+                                    display: "flex",
+                                    textAlign: "center",
+                                    alignItems: "center",
+                                    fontSize: 18,
+                                    fontWeight: 600,
+                                }}
+                            >
+                                123AUC ADMIN PANEL
+                            </Typography>
+                        </DrawerHeader>
+                    </Toolbar>
+                </AppBar>
+                <Divider />
+                {/* Menu List */}
+                <List
+                    sx={
+                        {
+                            // background: "#1A2027",
+                        }
+                    }
                 >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.name}
-                  primaryTypographyProps={{
-                    fontSize: 14,
-                  }}
-                  sx={{
-                    // color: "#ffffff",
-                    textAlign: "left",
-                    alignItems: "center",
-                    display: "flex",
-                    justifyContent: "left",
-                    marginBottom: 1,
-                  }}
-                />
-              </ListItemButton>
-            </div>
-          ))}
-        </List>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 1, pt: 5 }}>
-        <DrawerHeader />
-        <Outlet />
-      </Box>
-    </Box>
-  );
+                    {menu_items.map((item) => (
+                        <div key={item.id}>
+
+                            {item.isheader && open && (
+                                <ListItemButton
+                                    key={item.label}
+                                    sx={{
+                                        py: 0,
+                                        minHeight: 32,
+                                    }}
+                                    component={RouterLink}
+                                >
+                                    <ListItemText
+                                        primary={item.name}
+                                        primaryTypographyProps={{
+                                            fontSize: 18,
+                                            padding: "5px 0px 5px 0px",
+                                        }}
+                                        sx={{
+                                            color: "#555",
+                                            textAlign: "left",
+                                            alignItems: "center",
+                                            display: "flex",
+                                            justifyContent: "left",
+                                            marginBottom: 1,
+                                        }}
+                                    />
+                                </ListItemButton>
+                            )}
+
+                            {!item.isheader && (<ListItemButton
+                                key={item.label}
+                                sx={{
+                                    py: 0,
+                                    minHeight: 32,
+
+                                    ":hover": {
+                                        color: "#ffffff",
+                                        background: "#00a19e",
+                                    },
+                                }}
+                                to={item.url}
+                                component={RouterLink}
+                                className={location.pathname === item.url ? "active" : null}
+                            >
+                                <ListItemIcon sx={{
+                                    // color: "inherit",
+                                    minWidth: 40,
+                                    fontSize: 14,
+                                }}
+                                >
+                                    {item.icon}
+                                </ListItemIcon>
+
+                                <ListItemText
+                                    primary={item.name}
+                                    primaryTypographyProps={{
+                                        fontSize: 14,
+                                    }}
+                                    sx={{
+                                        // color: "#ffffff",
+                                        textAlign: "left",
+                                        alignItems: "center",
+                                        display: "flex",
+                                        justifyContent: "left",
+                                        marginBottom: 1,
+                                    }}
+                                />
+                            </ListItemButton>
+
+                            )}
+
+
+                        </div>
+                    ))}
+                </List>
+
+
+            </Drawer>
+            <Box component="main" sx={{ flexGrow: 1, p: 1, pt: 5 }}>
+                <DrawerHeader />
+                <Outlet />
+            </Box>
+        </Box>
+    );
 }
