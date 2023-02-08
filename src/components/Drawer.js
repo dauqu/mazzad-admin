@@ -33,7 +33,7 @@ const openedMixin = (theme) => ({
         duration: theme.transitions.duration.enteringScreen,
     }),
     overflowX: "hidden",
-    background: "#eeeeee",
+    background: "#fff",
 });
 
 const closedMixin = (theme) => ({
@@ -46,7 +46,7 @@ const closedMixin = (theme) => ({
     [theme.breakpoints.up("sm")]: {
         width: `calc(${theme.spacing(7)} + 1px)`,
     },
-    background: "#eeeeee",
+    background: "#fff",
 });
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -132,6 +132,7 @@ export default function MiniDrawer() {
                         onClick={handleDrawerOpen}
                         edge="start"
                         sx={{
+                            color: "#000",
                             marginRight: "36px",
                             ...(open && { display: "none" }),
                         }}
@@ -143,7 +144,7 @@ export default function MiniDrawer() {
                             <IconButton
                                 onClick={handleDrawerClose}
                                 sx={{
-                                    color: "#ffffff",
+                                    color: "#000",
                                     marginLeft: 0,
                                 }}
                             >
@@ -180,7 +181,7 @@ export default function MiniDrawer() {
                             to="/notifications"
                             component={RouterLink}
                             sx={{
-                                color: "#ffffff",
+                                color: "#000",
                             }}
                         >
                             <NotificationsTwoToneIcon />
@@ -261,30 +262,21 @@ export default function MiniDrawer() {
                         <div key={item.id}>
 
                             {item.isheader && open && (
-                                <ListItemButton
-                                    key={item.label}
-                                    sx={{
-                                        py: 0,
-                                        minHeight: 32,
+                                <ListItemText
+                                    primary={item.name}
+                                    primaryTypographyProps={{
+                                        fontSize: 18,
+                                        padding: "5px 10px",
                                     }}
-                                    component={RouterLink}
-                                >
-                                    <ListItemText
-                                        primary={item.name}
-                                        primaryTypographyProps={{
-                                            fontSize: 18,
-                                            padding: "5px 0px 5px 0px",
-                                        }}
-                                        sx={{
-                                            color: "#555",
-                                            textAlign: "left",
-                                            alignItems: "center",
-                                            display: "flex",
-                                            justifyContent: "left",
-                                            marginBottom: 1,
-                                        }}
-                                    />
-                                </ListItemButton>
+                                    sx={{
+                                        color: "#555",
+                                        textAlign: "left",
+                                        alignItems: "center",
+                                        display: "flex",
+                                        justifyContent: "left",
+                                        marginBottom: 1,
+                                    }}
+                                />
                             )}
 
                             {!item.isheader && (<ListItemButton

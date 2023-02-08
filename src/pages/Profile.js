@@ -63,7 +63,7 @@ const Profile = () => {
       </div>
       <div>
         <button className='btn bg-blue-400'>Save</button>
-        <button className='btn bg-red-400'>Cancle</button>
+        <button className='button bg-red-400'>Cancle</button>
       </div>
     </div>
   )
