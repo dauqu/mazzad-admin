@@ -17,20 +17,12 @@ import Badge from "@mui/material/Badge";
 import Avatar from "@mui/material/Avatar";
 import "./Drawer.css";
 
-import {
-  Link as RouterLink,
-  Route,
-  Routes,
-  useLocation,
-  Outlet,
-  useNavigate,
-} from "react-router-dom";
+import { Link as RouterLink, useLocation, Outlet } from "react-router-dom";
 
 //Icons
 import KeyboardDoubleArrowLeftTwoToneIcon from "@mui/icons-material/KeyboardDoubleArrowLeftTwoTone";
 import NotificationsTwoToneIcon from "@mui/icons-material/NotificationsTwoTone";
 import menu_items from "./menu_items";
-import axios from "axios";
 
 const drawerWidth = 250;
 
@@ -41,7 +33,7 @@ const openedMixin = (theme) => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: "hidden",
-  background: "#1A2027",
+  background: "#eeeeee",
 });
 
 const closedMixin = (theme) => ({
@@ -54,7 +46,7 @@ const closedMixin = (theme) => ({
   [theme.breakpoints.up("sm")]: {
     width: `calc(${theme.spacing(7)} + 1px)`,
   },
-  background: "#1A2027",
+  background: "#eeeeee",
 });
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -121,7 +113,6 @@ export default function MiniDrawer() {
     setOpen(false);
   };
 
-
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -130,7 +121,7 @@ export default function MiniDrawer() {
         open={open}
         sx={{
           boxShadow: 0,
-          background: "#1A2027",
+          background: "#eeeeee",
           borderBottom: "1px solid #333",
         }}
       >
@@ -151,7 +142,10 @@ export default function MiniDrawer() {
             {open === true ? (
               <IconButton
                 onClick={handleDrawerClose}
-                sx={{ color: "#ffffff", marginLeft: 0 }}
+                sx={{
+                  color: "#ffffff",
+                  marginLeft: 0,
+                }}
               >
                 <KeyboardDoubleArrowLeftTwoToneIcon />
               </IconButton>
@@ -175,7 +169,7 @@ export default function MiniDrawer() {
             aria-haspopup="true"
             onClick={handleDrawerClose}
             sx={{
-              color: "#ffffff",
+              // color: "#ffffff",
               marginLeft: "auto",
               marginRight: 5,
             }}
@@ -185,7 +179,9 @@ export default function MiniDrawer() {
               color="error"
               to="/notifications"
               component={RouterLink}
-              sx={{ color: "#ffffff" }}
+              sx={{
+                color: "#ffffff",
+              }}
             >
               <NotificationsTwoToneIcon />
             </StyledBadge>
@@ -208,12 +204,20 @@ export default function MiniDrawer() {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open} sx={{ background: "#1A2027" }}>
+      <Drawer
+        variant="permanent"
+        open={open}
+        sx={
+          {
+            // background: "#1A2027"
+          }
+        }
+      >
         <AppBar position="static" color="default" elevation={0}>
           <Toolbar
             variant="dense"
             sx={{
-              background: "#1A2027",
+              // background: "#1A2027",
               boxShadow: 0,
               height: 40,
               color: "#ffffff",
@@ -222,7 +226,7 @@ export default function MiniDrawer() {
           >
             <DrawerHeader
               sx={{
-                color: "#ffffff",
+                color: "#000000",
                 justifyContent: "center",
                 display: "flex",
                 textAlign: "center",
@@ -231,14 +235,15 @@ export default function MiniDrawer() {
             >
               <Typography
                 sx={{
-                  color: "#ffffff",
                   justifyContent: "center",
                   display: "flex",
                   textAlign: "center",
                   alignItems: "center",
+                  fontSize: 18,
+                  fontWeight: 600,
                 }}
               >
-                123AUC
+                123AUC ADMIN PANEL
               </Typography>
             </DrawerHeader>
           </Toolbar>
@@ -246,9 +251,11 @@ export default function MiniDrawer() {
         <Divider />
         {/* Menu List */}
         <List
-          sx={{
-            background: "#1A2027",
-          }}
+          sx={
+            {
+              // background: "#1A2027",
+            }
+          }
         >
           {menu_items.map((item) => (
             <div key={item.id}>
@@ -257,24 +264,31 @@ export default function MiniDrawer() {
                 sx={{
                   py: 0,
                   minHeight: 32,
-                  color: "rgba(255,255,255,.8)",
-                  ":hover": { color: "#ffffff", background: "#0070d1" },
+                  // color: "rgba(255,255,255,.8)",
+                  ":hover": {
+                    color: "#ffffff",
+                    background: "#00a19e",
+                  },
                 }}
                 to={item.url}
                 component={RouterLink}
                 className={location.pathname === item.url ? "active" : null}
               >
-                <ListItemIcon sx={{ color: "inherit" }}>
+                <ListItemIcon sx={{
+                    // color: "inherit",
+                    minWidth: 40,
+                    fontSize: 14,
+                  }} 
+                >
                   {item.icon}
                 </ListItemIcon>
                 <ListItemText
                   primary={item.name}
                   primaryTypographyProps={{
                     fontSize: 14,
-                    fontWeight: "medium",
                   }}
                   sx={{
-                    color: "#ffffff",
+                    // color: "#ffffff",
                     textAlign: "left",
                     alignItems: "center",
                     display: "flex",
@@ -285,9 +299,6 @@ export default function MiniDrawer() {
               </ListItemButton>
             </div>
           ))}
-          {/* <div>
-            <Outlet />
-          </div> */}
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 1, pt: 5 }}>
