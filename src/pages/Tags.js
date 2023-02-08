@@ -294,7 +294,7 @@ const MenuProps = {
 
 export default function Tags() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
 
   // Alert
   const Alert = React.forwardRef(function Alert(props, ref) {
