@@ -16,7 +16,7 @@ import Support from "./pages/Support";
 import Posts from "./pages/Posts";
 import Bids from "./pages/Bids";
 import Info from "./pages/Info";
-import Account from "./pages/Account";
+import Bankaccount from "./pages/Bankaccount";
 import Notifications from "./pages/Notifications";
 import AddProduct from "./pages/AddProducts";
 import AddPage from "./pages/AddPage";
@@ -73,8 +73,8 @@ function App() {
           
           <Route path="/contracts" element={<Contracts />} />
 
-          <Route path="/account" element={<Account />} />
-          <Route path="/new-account" element={<AddProduct />} />
+          <Route path="/bank-account" element={<Bankaccount />} />
+          {/* <Route path="/new-account" element={<AddProduct />} /> */}
 
           <Route path="/categories" element={<Categories />} />
           <Route path="/new-category" element={<NewCategory />} />
