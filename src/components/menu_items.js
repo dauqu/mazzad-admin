@@ -167,7 +167,7 @@ const menu_items = [
     id: "19",
     name: "Chatbot Settings",
     icon: <SupportAgentTwoToneIcon />,
-    url: "/settings",
+    url: "/chatbot-setting",
   },
   {
     id: "header-5",
@@ -195,7 +195,7 @@ const menu_items = [
     id: "22",
     name: "System Info",
     icon: <InfoTwoToneIcon />,
-    url: "/settings",
+    url: "/system-info",
   },
 ];
 
