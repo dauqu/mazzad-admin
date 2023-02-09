@@ -37,7 +37,7 @@ export default function AddProduct() {
   const [pages, setPages] = React.useState([]);
   const [content, setContent] = React.useState([]);
 
-  const [title, setTitle] = React.useState("Enter Page Title Here...");
+  const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState(
     "Enter Page Description Here..."
   );
@@ -79,6 +79,7 @@ export default function AddProduct() {
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter Page Title"
             style={{
               width: "60%",
               height: "35px",
@@ -87,8 +88,6 @@ export default function AddProduct() {
               outline: "none",
               border: "none",
               fontSize: "1.2rem",
-              placeholder: "Enter Page Title",
-              placeholderColor: "#fff",
             }}
           />
 
@@ -119,82 +118,118 @@ export default function AddProduct() {
             }}
           >
             {/* Product Content */}
-            <TextField id="outlined-basic" placeholder="Product content" label="Product Description" focused={true} multiline={true} minRows={6} variant="filled" sx={{
-              width: "100%",
-              color: "#fff",
-              backgroundColor: "#f0f0f0",
-              outline: "none",
-              border: "none",
-              fontSize: "1.2rem",
-              placeholder: "Enter Page Title",
-              placeholderColor: "#fff",
-            }} />
-
+            <TextField id="outlined-basic"
+              placeholder="Product description..."
+              label="Product Description"
+              focused={true} multiline={true} minRows={6} variant="filled" sx={{
+                width: "100%",
+                color: "#fff",
+                backgroundColor: "#fff",
+                outline: "none",
+                border: "none",
+                fontSize: "1.2rem",
+                placeholderColor: "#fff",
+              }} />
 
             {/* Category */}
             <TextField id="outlined-basic" placeholder="254" label="Price" focused={true} variant="filled" size="small" sx={{
               width: "100%",
               color: "#fff",
-              backgroundColor: "#f0f0f0",
+              backgroundColor: "#fff",
               outline: "none",
               border: "none",
               fontSize: "1rem",
-              placeholder: "Enter Page Title",
+              placeholderColor: "#fff",
+              marginTop: 1,
+            }} />
+
+            <TextField
+              id="outlined-basic"
+              placeholder="254"
+              label="Vendor" focused={true} variant="filled" size="small" sx={{
+                width: "100%",
+                color: "#fff",
+                backgroundColor: "#fff",
+                outline: "none",
+                border: "none",
+                fontSize: "1rem",
+                placeholderColor: "#fff",
+                marginTop: 1,
+              }} />
+
+
+            {/* Category */}
+            <TextField id="outlined-basic"
+              placeholder="https://google.com/image.png"
+              label="Product Image"
+              focused={true} variant="filled" size="small" sx={{
+                width: "100%",
+                color: "#fff",
+                backgroundColor: "#fff",
+                outline: "none",
+                border: "none",
+                fontSize: "1rem",
+                placeholderColor: "#fff",
+                marginTop: 1,
+              }} />
+
+
+            <TextField
+              id="outlined-basic"
+              placeholder="Active"
+              label="Status"
+              focused={true} variant="filled" size="small" sx={{
+                width: "100%",
+                color: "#fff",
+                backgroundColor: "#fff",
+                outline: "none",
+                border: "none",
+                fontSize: "1rem",
+                placeholderColor: "#fff",
+                marginTop: 1,
+              }} />
+
+
+            {/* Category */}
+            <TextField id="outlined-basic" placeholder="Type.." label="Product Type" focused={true} variant="filled" size="small" sx={{
+              width: "100%",
+              color: "#fff",
+              backgroundColor: "#fff",
+              outline: "none",
+              border: "none",
+              fontSize: "1rem",
               placeholderColor: "#fff",
               marginTop: 1,
             }} />
 
             {/* Category */}
-            <TextField id="outlined-basic" placeholder="https://google.com/image.png" label="Product Image" focused={true} variant="filled" size="small" sx={{
-              width: "100%",
-              color: "#fff",
-              backgroundColor: "#f0f0f0",
-              outline: "none",
-              border: "none",
-              fontSize: "1rem",
-              placeholder: "Enter Page Title",
-              placeholderColor: "#fff",
-              marginTop: 1,
-            }} />
+            <TextField id="outlined-basic"
+              placeholder="Featured"
+              label="Featured" focused={true} variant="filled" size="small" sx={{
+                width: "100%",
+                color: "#fff",
+                backgroundColor: "#fff",
+                outline: "none",
+                border: "none",
+                fontSize: "1rem",
+                placeholderColor: "#fff",
+                marginTop: 1,
+              }} />
 
             {/* Category */}
-            <TextField id="outlined-basic" placeholder="sale" label="Product Category" focused={true} variant="filled" size="small" sx={{
-              width: "100%",
-              color: "#fff",
-              backgroundColor: "#f0f0f0",
-              outline: "none",
-              border: "none",
-              fontSize: "1rem",
-              placeholder: "Enter Page Title",
-              placeholderColor: "#fff",
-              marginTop: 1,
-            }} />
-
-            {/* Category */}
-            <TextField id="outlined-basic" placeholder="13/09/2022" label="Ready for bid" focused={true} variant="filled" size="small" sx={{
-              width: "100%",
-              color: "#fff",
-              backgroundColor: "#f0f0f0",
-              outline: "none",
-              border: "none",
-              fontSize: "1rem",
-              placeholder: "Enter Page Title",
-              placeholderColor: "#fff",
-              marginTop: 1,
-            }} />
-
-            {/* Category */}
-            <TextField id="outlined-basic" placeholder="Active default" label="Status" focused={true} variant="filled" size="small" sx={{
-              width: "100%",
-              color: "#fff",
-              backgroundColor: "#f0f0f0",
-              outline: "none",
-              border: "none",
-              fontSize: "1rem",
-              placeholder: "Enter Page Title",
-              placeholderColor: "#fff",
-              marginTop: 1,
-            }} />
+            <TextField id="outlined-basic"
+              placeholder="Language"
+              label="language"
+              focused={true} variant="filled" size="small" sx={{
+                width: "100%",
+                color: "#fff",
+                backgroundColor: "#fff",
+                outline: "none",
+                border: "none",
+                fontSize: "1rem",
+                placeholderColor: "#fff",
+                marginTop: 1,
+              }} />
 
           </Item>
         </Grid>

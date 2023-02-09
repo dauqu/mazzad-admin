@@ -22,8 +22,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TablePagination from "@mui/material/TablePagination";
-import CloseIcon from "@mui/icons-material/Close";
-import MuiAlert from "@mui/material/Alert";
+
+import AddIcon from '@mui/icons-material/Add';
+
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from "@mui/material/AppBar";
 import { Dialog, DialogTitle, Divider, Stack, TextField } from "@mui/material";
@@ -334,21 +335,21 @@ export default function Services() {
   const showModal = (row) => {
     setViewData(row);
     setViewModal(true);
-  }
+  };
 
   return (
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
-          {/* <IconButton
+          <IconButton
             edge="start"
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => navigate("/add-page")}
+            onClick={() => navigate("/add-service")}
           >
             <AddIcon />
-          </IconButton> */}
+          </IconButton>
           <Typography variant="h6" color="inherit" component="div">
             Services
           </Typography>

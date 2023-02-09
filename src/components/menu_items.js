@@ -3,9 +3,7 @@ import AutoAwesomeMosaicTwoToneIcon from "@mui/icons-material/AutoAwesomeMosaicT
 import ShoppingCartCheckoutTwoToneIcon from "@mui/icons-material/ShoppingCartCheckoutTwoTone";
 import ShoppingBagTwoToneIcon from "@mui/icons-material/ShoppingBagTwoTone";
 import CategoryTwoToneIcon from "@mui/icons-material/CategoryTwoTone";
-import PeopleTwoToneIcon from "@mui/icons-material/PeopleTwoTone";
 import SupportAgentTwoToneIcon from "@mui/icons-material/SupportAgentTwoTone";
-import DescriptionTwoToneIcon from "@mui/icons-material/DescriptionTwoTone";
 import PostAddTwoToneIcon from "@mui/icons-material/PostAddTwoTone";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import CopyAllTwoToneIcon from "@mui/icons-material/CopyAllTwoTone";
@@ -19,6 +17,7 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 import StyleIcon from '@mui/icons-material/Style';
 import ClassIcon from '@mui/icons-material/Class';
 import SearchIcon from '@mui/icons-material/Search';
+import PersonIcon from '@mui/icons-material/Person';
 
 const menu_items = [
   {
@@ -76,7 +75,7 @@ const menu_items = [
     url: "/auctions",
   },
   {
-    id: "18",
+    id: "8",
     name: "Company",
     icon: <CategoryTwoToneIcon />,
     url: "/companies",
@@ -88,19 +87,19 @@ const menu_items = [
     isheader: true,
   },
   {
-    id: "8",
+    id: "9",
     name: "Dashboard",
     icon: <PostAddTwoToneIcon />,
     url: "/",
   },
   {
-    id: "9",
+    id: "10",
     name: "Deals",
     icon: <CopyAllTwoToneIcon />,
     url: "/deals",
   },
   {
-    id: "10",
+    id: "11",
     name: "Offers Management",
     icon: <LocalOfferIcon />,
     url: "/offers",
@@ -113,7 +112,7 @@ const menu_items = [
   },
   
   {
-    id: "11",
+    id: "12",
     name: "Wallet",
     icon: <RadioButtonCheckedIcon />,
     url: "/wallet",
@@ -121,7 +120,7 @@ const menu_items = [
   
   
   {
-    id: "12",
+    id: "13",
     name: "Bank Account",
     icon: <ApartmentIcon />,
     url: "/bank-account",
@@ -133,56 +132,67 @@ const menu_items = [
     isheader: true
   },
   {
-    id: "13",
+    id: "14",
     name: "Points",
     icon: <StyleIcon />,
     url: "/points",
   },
   {
-    id: "14",
+    id: "15",
     name: "Ads",
     icon: <ClassIcon />,
     url: "/classifications",
   },
   {
-    id: "15",
+    id: "16",
     name: "Traders",
     icon: <SearchIcon />,
     url: "/traders",
   },
   {
-    id: "16",
+    id: "17",
     name: "Jobs",
     icon: <ShoppingCartCheckoutTwoToneIcon />,
     url: "/jobs",
   },
  
   {
-    id: "17",
+    id: "18",
     name: "Complaints",
     icon: <SupportAgentTwoToneIcon />,
     url: "/complaints",
   },
   
   {
-    id: "18",
+    id: "19",
     name: "Chatbot Settings",
     icon: <SupportAgentTwoToneIcon />,
     url: "/settings",
   },
   {
     id: "header-5",
-    name: "Settings",
+    name: "Others",
     isheader: true
   },
   {
     id: "20",
+    name: "Users",
+    icon: <PersonIcon />,
+    url: "/users",
+  },
+  {
+    id: "header-6",
+    name: "Settings",
+    isheader: true
+  },
+  {
+    id: "21",
     name: "Settings",
     icon: <SettingsTwoToneIcon />,
     url: "/settings",
   },
   {
-    id: "21",
+    id: "22",
     name: "System Info",
     icon: <InfoTwoToneIcon />,
     url: "/settings",

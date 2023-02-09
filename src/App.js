@@ -36,6 +36,7 @@ import * as React from "react";
 import Profile from "./pages/Profile";
 import Contracts from "./pages/Contracts";
 import Wallet from "./pages/Wallet";
+import AddService from "./pages/AddService";
 
 //Axios allow auth 
 axios.defaults.withCredentials = true;
@@ -110,6 +111,7 @@ function App() {
           <Route path="/points" element={<Points />} />
 
           <Route path="/services" element={<Services />} />
+          <Route path="/add-service" element={<AddService />} />
 
           <Route path="/offers" element={<Offers />} />
 

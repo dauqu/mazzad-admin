@@ -32,7 +32,7 @@ import Snackbar from "@mui/material/Snackbar";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Divider } from "@mui/material";
+import { Divider,  } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 //Html Tooltip
@@ -358,13 +358,6 @@ export default function Products() {
 
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   // Get Category
   const [category, setCategory] = React.useState([]);
@@ -400,6 +393,7 @@ export default function Products() {
   const [alertOpen, setAlertOpen] = React.useState(false);
 
   const [rows, setProducts] = React.useState([]);
+
 
   // Set Featured Image
   const featuredImageHandleChange = (e) => {
@@ -441,38 +435,6 @@ export default function Products() {
   const handlePrivateChange = () => {
     setPrivate(!isprivate);
   };
-
-  //Create Product
-  // function createPost() {
-  //   axios
-  //     .post(`${process.env.REACT_APP_BACKEND_URL}/products`, {
-  //       productTitle,
-  //       productDescription,
-  //       productCategory,
-  //       tags,
-  //       productGallery,
-  //       featuredImage,
-  //       regularPrice,
-  //       salePrice,
-  //       reviews,
-  //       comments,
-  //       isprivate,
-  //       stackStatus,
-  //       taxStatus,
-  //       taxClass,
-  //     })
-  //     .then((response) => {
-  //       setAlert("Product successfully added", response);
-  //       setStatus("success");
-  //       console.log(response.data);
-  //       getProducts();
-  //     })
-  //     .catch((e) => {
-  //       setAlert(e.response.data.message);
-  //       setStatus(e.response.data.status);
-  //     });
-  //   setAlertOpen(true);
-  // }
 
   //Get Product
   const getProducts = () => {
@@ -536,8 +498,6 @@ export default function Products() {
     }
     setAlertOpen(false);
   };
-
-  const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
   // Alert
   const Alert = React.forwardRef(function Alert(props, ref) {
