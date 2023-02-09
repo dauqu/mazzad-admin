@@ -70,22 +70,28 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "name",
+    id: "Title",
     numeric: false,
     disablePadding: true,
-    label: "Name",
+    label: "Title",
   },
   {
-    id: "description",
+    id: "Value",
+    numeric: false,
+    disablePadding: false,
+    label: "Value",
+  },
+  {
+    id: "Description",
     numeric: false,
     disablePadding: false,
     label: "Description",
   },
   {
-    id: "published",
+    id: "Currency",
     numeric: false,
     disablePadding: false,
-    label: "Published At",
+    label: "Currency",
   },
 ];
 
@@ -273,9 +279,7 @@ export default function Auctions() {
     setOpen(true);
   };
 
-  // function createData(name, description, fat, carbs, published) {
-  //   return { name, description, fat, carbs, published };
-  // }
+ 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("description");
   const [selected, setSelected] = React.useState([]);
@@ -484,10 +488,23 @@ export default function Auctions() {
                                       // color: "#ffffff",
                                     }}
                                   >
-                                    {row.name}
+                                    {row.title}
                                   </Typography>
                                 </TableCell>
 
+                                <TableCell align="left">
+                                  <Typography
+                                    sx={{
+                                      overflow: "hidden",
+                                      whiteSpace: "nowrap",
+                                      maxWidth: "50ch",
+                                      textOverflow: "ellipsis",
+                                      // color: "#ffffff",
+                                    }}
+                                  >
+                                    {row.value}
+                                  </Typography>
+                                </TableCell>
                                 <TableCell align="left">
                                   <Typography
                                     sx={{
@@ -512,7 +529,7 @@ export default function Auctions() {
                                       // color: "#ffffff",
                                     }}
                                   >
-                                    {row.createdAt.slice(0, 10)}
+                                    {row.currency}
                                   </Typography>
                                 </TableCell>
                               </TableRow>

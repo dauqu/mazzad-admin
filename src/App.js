@@ -35,6 +35,7 @@ import axios from "axios";
 import * as React from "react";
 import Profile from "./pages/Profile";
 import Contracts from "./pages/Contracts";
+import Wallet from "./pages/Wallet";
 
 //Axios allow auth 
 axios.defaults.withCredentials = true;
@@ -121,6 +122,7 @@ function App() {
           <Route path="/search" element={<Search />} />
 
           <Route path="/profile" element={<Profile />} />
+          <Route path="/wallet" element={<Wallet />} />
 
           {/* 404 page */}
           <Route path="*" element={
