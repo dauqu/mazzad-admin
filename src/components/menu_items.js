@@ -18,16 +18,17 @@ import StyleIcon from "@mui/icons-material/Style";
 import ClassIcon from "@mui/icons-material/Class";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonIcon from "@mui/icons-material/Person";
+import { CompareArrows, DomainAddOutlined, EmailOutlined, HighlightTwoTone, History, InfoOutlined, LocalOfferOutlined, Memory, MessageOutlined, NotificationAddOutlined, NotInterested, PasswordOutlined, SettingsOutlined, SmsOutlined, StarBorderOutlined, UploadFileOutlined, Wallet, WalletOutlined } from "@mui/icons-material";
 
 const menu_items = [
   {
     name: "Ads Management",
-    icon: <AutoAwesomeMosaicTwoToneIcon />,
+    icon: <HighlightTwoTone />,
     url: "/ads",
   },
   {
-    name: "Comany Management",
-    icon: <InfoTwoToneIcon />,
+    name: "Company Management",
+    icon: <DomainAddOutlined />,
     url: "/companies",
   },
   {
@@ -43,13 +44,13 @@ const menu_items = [
   },
   {
     name: "Rate",
-    icon: <AutoAwesomeMosaicTwoToneIcon />,
+    icon: <StarBorderOutlined />,
     url: "/rate",
   },
 
   {
     name: "Opportunities",
-    icon: <CategoryTwoToneIcon />,
+    icon: <LocalOfferOutlined />,
     url: "/opportunities",
   },
   {
@@ -59,17 +60,17 @@ const menu_items = [
   },
   {
     name: "Refund",
-    icon: <AutoAwesomeMosaicTwoToneIcon />,
+    icon: <History />,
     url: "/refund",
   },
   {
     name: "Blacklist",
-    icon: <PostAddTwoToneIcon />,
+    icon: <NotInterested />,
     url: "/blacklist",
   },
   {
     name: "Complaints",
-    icon: <CopyAllTwoToneIcon />,
+    icon: <CompareArrows />,
     url: "/complaints",
   },
 
@@ -101,13 +102,13 @@ const menu_items = [
   {
     id: "21",
     name: "All Files",
-    icon: <SettingsTwoToneIcon />,
+    icon: <Memory />,
     url: "/file-manager",
   },
   {
     id: "22",
     name: "Upload Files",
-    icon: <InfoTwoToneIcon />,
+    icon: <UploadFileOutlined />,
     url: "/upload-files",
   },
   {
@@ -117,18 +118,23 @@ const menu_items = [
   },
   {
     name: "Notifications",
-    icon: <LocalOfferIcon />,
+    icon: <NotificationAddOutlined />,
     url: "/notifications",
   },
   {
+    name: "Transactions History",
+    icon: <WalletOutlined />,
+    url: "/transactions-history",
+  },
+  {
     name: "SMS",
-    icon: <SearchIcon />,
-    url: "/traders",
+    icon: <MessageOutlined />,
+    url: "/sms",
   },
   {
     name: "Email",
-    icon: <ShoppingCartCheckoutTwoToneIcon />,
-    url: "/sms",
+    icon: <EmailOutlined />,
+    url: "/email",
   },
   {
     id: "20",
@@ -138,7 +144,7 @@ const menu_items = [
   },
   {
     name: "Logs",
-    icon: <SdStorageTwoToneIcon />,
+    icon: <PasswordOutlined />,
     url: "/logs",
   },
   {
@@ -149,13 +155,13 @@ const menu_items = [
   {
     id: "21",
     name: "Settings",
-    icon: <SettingsTwoToneIcon />,
+    icon: <SettingsOutlined />,
     url: "/settings",
   },
   {
     id: "22",
     name: "System Info",
-    icon: <InfoTwoToneIcon />,
+    icon: <InfoOutlined />,
     url: "/system-info",
   },
 ];
