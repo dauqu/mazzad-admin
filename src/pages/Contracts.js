@@ -1,36 +1,39 @@
-import * as React from "react";
-import PropTypes from "prop-types";
+import React from 'react'
+
+import { 
+    Box, Dialog, 
+    OutlinedInput, 
+    TextareaAutosize, 
+    AppBar, 
+    Toolbar,
+    IconButton, 
+    Typography, 
+    Divider, 
+    Paper, 
+    TableContainer, 
+    Table, 
+    TableBody, 
+    TableRow, 
+    TableCell, 
+    Checkbox, 
+    TablePagination, 
+    Stack,
+    TableHead,
+    TableSortLabel,
+    Snackbar,
+    Alert,
+    Tooltip,
+} from '@mui/material'
+import { visuallyHidden, } from '@mui/utils'
 import { alpha } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import { visuallyHidden } from "@mui/utils";
+import PropTypes from 'prop-types'
+import { Link as RouterLink } from "react-router-dom";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import RemoveRedEyeTwoToneIcon from "@mui/icons-material/RemoveRedEyeTwoTone";
-import MuiAlert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
-import AppBar from "@mui/material/AppBar";
-import AddIcon from "@mui/icons-material/Add";
-import { Dialog, Divider, OutlinedInput, TextareaAutosize } from "@mui/material";
 
-import { Link as RouterLink } from "react-router-dom";
-import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
-import { Stack } from "@mui/system";
-
+import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai'
+import AddIcon from '@mui/icons-material/Add';
 
 
 const headCells = [
@@ -38,13 +41,13 @@ const headCells = [
         id: "1",
         numeric: false,
         disablePadding: true,
-        label: "Name",
+        label: "ID",
     },
     {
         id: "2",
         numeric: false,
         disablePadding: true,
-        label: "Description",
+        label: "Title",
     },
     {
         id: "3",
@@ -168,7 +171,7 @@ const EnhancedTableToolbar = (props) => {
                         to={`./../view-product/${window.selected}`}
                         component={RouterLink}
                     >
-                        <RemoveRedEyeTwoToneIcon />
+                        <EditTwoToneIcon />
                     </IconButton>
                 </Tooltip>
             ) : (
@@ -213,14 +216,9 @@ EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
 };
 
-export default function Tags() {
+
+const Contracts = () => {
     const [open, setOpen] = React.useState(false);
-
-    // Alert
-    const Alert = React.forwardRef(function Alert(props, ref) {
-        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-    });
-
     return (
         <Box
             sx={{
@@ -367,5 +365,7 @@ export default function Tags() {
                 />
             </Paper>
         </Box>
-    );
+    )
 }
+
+export default Contracts

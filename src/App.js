@@ -34,6 +34,7 @@ import Invoice from "./pages/Invoice";
 import axios from "axios";
 import * as React from "react";
 import Profile from "./pages/Profile";
+import Contracts from "./pages/Contracts";
 
 //Axios allow auth 
 axios.defaults.withCredentials = true;
@@ -65,8 +66,11 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
         <Route path="/" element={<MiniDrawer />}>
           <Route path="" element={<Dashboard />} />
+          
+          <Route path="/contracts" element={<Contracts />} />
 
           <Route path="/account" element={<Account />} />
           <Route path="/new-account" element={<AddProduct />} />

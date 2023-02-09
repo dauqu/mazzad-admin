@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -100,13 +100,13 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 export default function MiniDrawer() {
-    const theme = useTheme();
     const [open, setOpen] = React.useState(true);
     const location = useLocation();
     const [countNotifications, setCountNotifications] = React.useState(1);
 
     const handleDrawerOpen = () => {
         setOpen(true);
+        setCountNotifications(0);
     };
 
     const handleDrawerClose = () => {
@@ -239,7 +239,7 @@ export default function MiniDrawer() {
                                     display: "flex",
                                     textAlign: "start",
                                     alignItems: "center",
-                                    fontSize: 20,
+                                    fontSize: 18,
                                     fontWeight: 600,
                                 }}
                             >
