@@ -1,22 +1,22 @@
 import React from 'react'
 
-import { 
-    Box, Dialog, 
-    OutlinedInput, 
-    TextareaAutosize, 
-    AppBar, 
+import {
+    Box, Dialog,
+    OutlinedInput,
+    TextareaAutosize,
+    AppBar,
     Toolbar,
-    IconButton, 
-    Typography, 
-    Divider, 
-    Paper, 
-    TableContainer, 
-    Table, 
-    TableBody, 
-    TableRow, 
-    TableCell, 
-    Checkbox, 
-    TablePagination, 
+    IconButton,
+    Typography,
+    Divider,
+    Paper,
+    TableContainer,
+    Table,
+    TableBody,
+    TableRow,
+    TableCell,
+    Checkbox,
+    TablePagination,
     Stack,
     TableHead,
     TableSortLabel,
@@ -27,7 +27,7 @@ import {
 import { visuallyHidden, } from '@mui/utils'
 import { alpha } from "@mui/material/styles";
 import PropTypes from 'prop-types'
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
@@ -219,6 +219,8 @@ EnhancedTableToolbar.propTypes = {
 
 const Contracts = () => {
     const [open, setOpen] = React.useState(false);
+    const navigate = useNavigate();
+
     return (
         <Box
             sx={{
@@ -229,20 +231,7 @@ const Contracts = () => {
                 transition: "box-shadow 1s ease-in-out",
             }}
         >
-            <Dialog
-                open={open}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <div className="p-[20px] flex flex-col">
-                    <OutlinedInput size="small" type="text" placeholder="Tag" className="w-[500px] my-2 outline-none border-[1px]" />
-                    <TextareaAutosize type="text" placeholder="Description.." className=" p-2 my-2 w-[500px] outline-none border-[1px] resize-none" minRows={8} ></TextareaAutosize>
-                    <div className="flex gap-x-3">
-                        <button className="bg-red-400 text-white p-2 mt-4 px-5" onClick={() => setOpen(false)}>Close</button>
-                        <input type="button" placeholder="Tag " value={"Submit"} className="bg-teal-500 text-white p-2 mt-4 px-5 cursor-pointer" />
-                    </div>
-                </div>
-            </Dialog>
+
             <AppBar position="static">
                 <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
                     <IconButton
@@ -250,12 +239,12 @@ const Contracts = () => {
                         color="inherit"
                         aria-label="menu"
                         sx={{ mr: 2 }}
-                        onClick={() => setOpen(true)}
+                        onClick={() => navigate("/add-contract")}
                     >
                         <AddIcon />
                     </IconButton>
                     <Typography variant="h6" color="inherit" component="div">
-                        Manage Tags
+                        Manage Contracts
                     </Typography>
                     <Divider sx={{ flexGrow: 1 }} />
                 </Toolbar>

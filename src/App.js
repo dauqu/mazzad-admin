@@ -37,6 +37,7 @@ import Profile from "./pages/Profile";
 import Contracts from "./pages/Contracts";
 import Wallet from "./pages/Wallet";
 import AddService from "./pages/AddService";
+import AddContract from "./pages/AddContract";
 
 //Axios allow auth 
 axios.defaults.withCredentials = true;
@@ -73,6 +74,7 @@ function App() {
           <Route path="" element={<Dashboard />} />
           
           <Route path="/contracts" element={<Contracts />} />
+          <Route path="/add-contract" element={<AddContract />} />
 
           <Route path="/bank-account" element={<Bankaccount />} />
           {/* <Route path="/new-account" element={<AddProduct />} /> */}

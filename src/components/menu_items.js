@@ -21,14 +21,12 @@ import PersonIcon from '@mui/icons-material/Person';
 
 const menu_items = [
   {
-    id: "1",
-    name: "Profile",
+    name: "Ads Management",
     icon: <AutoAwesomeMosaicTwoToneIcon />,
-    url: "/profile",
+    url: "/add-management",
   },
   {
-    id: "2",
-    name: "Tags",
+    name: "Comany Management",
     icon: <InfoTwoToneIcon />,
     url: "/tags",
   },
@@ -39,146 +37,107 @@ const menu_items = [
     isheader: true,
   },
   {
-    id: "3",
-    name: "Products Management",
+    name: "User",
     icon: <ShoppingBagTwoToneIcon />,
     url: "/products",
   },
   {
-    id: "4",
-    name: "Services Management",
+    name: "Auction",
     icon: <MiscellaneousServicesIcon />,
     url: "/services",
   },
   {
-    id: "5",
-    name: "Contracts",
+    name: "Rate",
     icon: <AutoAwesomeMosaicTwoToneIcon />,
     url: "/contracts",
   },
+ 
   {
-    id: "6",
-    name: "Files & Media",
-    icon: <SdStorageTwoToneIcon />,
-    url: "/media",
-  },
-  {
-    id: "header-2",
-    name: "Auction",
-    icon: <AutoAwesomeMosaicTwoToneIcon />,
-    isheader: true,
-  },
-  {
-    id: "7",
-    name: "Auctions",
+    name: "Opportunities",
     icon: <CategoryTwoToneIcon />,
     url: "/auctions",
   },
   {
-    id: "8",
-    name: "Company",
-    icon: <CategoryTwoToneIcon />,
-    url: "/companies",
-  },
-  {
-    id: "header-2",
     name: "Report",
-    icon: <AutoAwesomeMosaicTwoToneIcon />,
+    icon: <CategoryTwoToneIcon />,
     isheader: true,
   },
   {
-    id: "9",
-    name: "Dashboard",
+    name: "Refund",
+    icon: <AutoAwesomeMosaicTwoToneIcon />,
+    url: "/companies",
+  },
+  {
+    name: "Blacklist",
     icon: <PostAddTwoToneIcon />,
     url: "/",
   },
   {
-    id: "10",
-    name: "Deals",
+    name: "Complaints",
     icon: <CopyAllTwoToneIcon />,
     url: "/deals",
   },
+  
   {
-    id: "11",
-    name: "Offers Management",
-    icon: <LocalOfferIcon />,
-    url: "/offers",
-  },
-  {
-    id: "header-3",
-    name: "Wallets",
+    name: "Loyality Points",
     icon: <ShoppingBagTwoToneIcon />,
     isheader: true
   },
-  
+
   {
-    id: "12",
-    name: "Wallet",
+    name: "Contracts",
     icon: <RadioButtonCheckedIcon />,
-    url: "/wallet",
+    url: "/contracts",
   },
-  
-  
+
+
   {
-    id: "13",
-    name: "Bank Account",
+    name: "Sales",
     icon: <ApartmentIcon />,
     url: "/bank-account",
   },
   {
-    id: "header-4",
-    name: "Loyality Points",
-    icon: <PaymentsIcon />,
-    isheader: true
-  },
-  {
-    id: "14",
-    name: "Points",
+    name: "Tags",
     icon: <StyleIcon />,
     url: "/points",
   },
   {
-    id: "15",
-    name: "Ads",
+    name: "Contries",
     icon: <ClassIcon />,
     url: "/classifications",
   },
+
   {
-    id: "16",
-    name: "Traders",
+    name: "Others",
+    icon: <CategoryTwoToneIcon />,
+    isheader: true,
+  },
+  {
+    name: "Notifications",
+    icon: <LocalOfferIcon />,
+    url: "/offers",
+  },
+
+  {
+    name: "SMS",
     icon: <SearchIcon />,
     url: "/traders",
   },
   {
-    id: "17",
-    name: "Jobs",
+    name: "Email",
     icon: <ShoppingCartCheckoutTwoToneIcon />,
     url: "/jobs",
-  },
- 
-  {
-    id: "18",
-    name: "Complaints",
-    icon: <SupportAgentTwoToneIcon />,
-    url: "/complaints",
-  },
-  
-  {
-    id: "19",
-    name: "Chatbot Settings",
-    icon: <SupportAgentTwoToneIcon />,
-    url: "/chatbot-setting",
-  },
-  {
-    id: "header-5",
-    name: "Others",
-    isheader: true
   },
   {
     id: "20",
     name: "Users",
     icon: <PersonIcon />,
     url: "/users",
+  },
+  {
+    name: "Logs",
+    icon: <SdStorageTwoToneIcon />,
+    url: "/media",
   },
   {
     id: "header-6",

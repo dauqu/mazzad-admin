@@ -130,53 +130,38 @@ export default function AddService() {
                             id="outlined-basic"
                             placeholder="Video Thumbnail"
                             focused={true}
-                            variant="filled" size="small" 
+                            variant="filled" size="small"
                             className="w-full my-2 outline-none border-[1px]"
-                         />
+                        />
 
 
                         {/* Category */}
                         <OutlinedInput id="outlined-basic"
-                            placeholder="https://google.com/image.png"
-                            focused={true} variant="filled" size="small" 
+                            placeholder="Image 1"
+                            focused={true} variant="filled" size="small"
                             className="w-full my-2 outline-none border-[1px]" />
 
 
                         <OutlinedInput id="outlined-basic"
-                            placeholder="https://google.com/image.png"
-                            focused={true} variant="filled" size="small" 
+                            placeholder="Image 2"
+                            focused={true} variant="filled" size="small"
                             className="w-full my-2 outline-none border-[1px]"
-                             />
-                             
+                        />
+
                         <OutlinedInput id="outlined-basic"
-                            placeholder="https://google.com/image.png"
-                            label="Image 3"
-                            focused={true} variant="filled" size="small" sx={{
-                                width: "100%",
-                                color: "#fff",
-                                backgroundColor: "#fff",
-                                outline: "none",
-                                border: "none",
-                                fontSize: "1rem",
-                                placeholderColor: "#fff",
-                                marginTop: 1,
-                            }} />
+                            placeholder="Image 3"
+                            focused={true} variant="filled" size="small"
+                            className="w-full my-2 outline-none border-[1px]"
+                        />
 
 
                         <OutlinedInput
                             id="outlined-basic"
                             placeholder="Tags"
-                            label="Tags"
-                            focused={true} variant="filled" size="small" sx={{
-                                width: "100%",
-                                color: "#fff",
-                                backgroundColor: "#fff",
-                                outline: "none",
-                                border: "none",
-                                fontSize: "1rem",
-                                placeholderColor: "#fff",
-                                marginTop: 1,
-                            }} />
+                            focused={true}
+                            variant="filled" size="small"
+                            className="w-full my-2 outline-none border-[1px]"
+                        />
 
                     </Item>
                 </Grid>
