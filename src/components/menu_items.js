@@ -9,26 +9,26 @@ import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import CopyAllTwoToneIcon from "@mui/icons-material/CopyAllTwoTone";
 import SdStorageTwoToneIcon from "@mui/icons-material/SdStorageTwoTone";
 import InfoTwoToneIcon from "@mui/icons-material/InfoTwoTone";
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import ApartmentIcon from '@mui/icons-material/Apartment';
-import PaymentsIcon from '@mui/icons-material/Payments';
-import StyleIcon from '@mui/icons-material/Style';
-import ClassIcon from '@mui/icons-material/Class';
-import SearchIcon from '@mui/icons-material/Search';
-import PersonIcon from '@mui/icons-material/Person';
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
+import MiscellaneousServicesIcon from "@mui/icons-material/MiscellaneousServices";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import PaymentsIcon from "@mui/icons-material/Payments";
+import StyleIcon from "@mui/icons-material/Style";
+import ClassIcon from "@mui/icons-material/Class";
+import SearchIcon from "@mui/icons-material/Search";
+import PersonIcon from "@mui/icons-material/Person";
 
 const menu_items = [
   {
     name: "Ads Management",
     icon: <AutoAwesomeMosaicTwoToneIcon />,
-    url: "/add-management",
+    url: "/ads",
   },
   {
     name: "Comany Management",
     icon: <InfoTwoToneIcon />,
-    url: "/tags",
+    url: "/companies",
   },
   {
     id: "header-1",
@@ -37,25 +37,20 @@ const menu_items = [
     isheader: true,
   },
   {
-    name: "User",
-    icon: <ShoppingBagTwoToneIcon />,
-    url: "/products",
-  },
-  {
     name: "Auction",
     icon: <MiscellaneousServicesIcon />,
-    url: "/services",
+    url: "/auctions",
   },
   {
     name: "Rate",
     icon: <AutoAwesomeMosaicTwoToneIcon />,
-    url: "/contracts",
+    url: "/rate",
   },
- 
+
   {
     name: "Opportunities",
     icon: <CategoryTwoToneIcon />,
-    url: "/auctions",
+    url: "/opportunities",
   },
   {
     name: "Report",
@@ -65,48 +60,56 @@ const menu_items = [
   {
     name: "Refund",
     icon: <AutoAwesomeMosaicTwoToneIcon />,
-    url: "/companies",
+    url: "/refund",
   },
   {
     name: "Blacklist",
     icon: <PostAddTwoToneIcon />,
-    url: "/",
+    url: "/blacklist",
   },
   {
     name: "Complaints",
     icon: <CopyAllTwoToneIcon />,
-    url: "/deals",
+    url: "/complaints",
   },
-  
+
   {
     name: "Loyality Points",
     icon: <ShoppingBagTwoToneIcon />,
-    isheader: true
+    isheader: true,
   },
-
   {
     name: "Contracts",
     icon: <RadioButtonCheckedIcon />,
     url: "/contracts",
   },
-
-
   {
     name: "Sales",
     icon: <ApartmentIcon />,
-    url: "/bank-account",
+    url: "/sales",
   },
   {
     name: "Tags",
     icon: <StyleIcon />,
-    url: "/points",
+    url: "/tags",
   },
   {
-    name: "Contries",
-    icon: <ClassIcon />,
-    url: "/classifications",
+    id: "header-6",
+    name: "Files Manager",
+    isheader: true,
   },
-
+  {
+    id: "21",
+    name: "All Files",
+    icon: <SettingsTwoToneIcon />,
+    url: "/file-manager",
+  },
+  {
+    id: "22",
+    name: "Upload Files",
+    icon: <InfoTwoToneIcon />,
+    url: "/upload-files",
+  },
   {
     name: "Others",
     icon: <CategoryTwoToneIcon />,
@@ -115,9 +118,8 @@ const menu_items = [
   {
     name: "Notifications",
     icon: <LocalOfferIcon />,
-    url: "/offers",
+    url: "/notifications",
   },
-
   {
     name: "SMS",
     icon: <SearchIcon />,
@@ -126,7 +128,7 @@ const menu_items = [
   {
     name: "Email",
     icon: <ShoppingCartCheckoutTwoToneIcon />,
-    url: "/jobs",
+    url: "/sms",
   },
   {
     id: "20",
@@ -137,12 +139,12 @@ const menu_items = [
   {
     name: "Logs",
     icon: <SdStorageTwoToneIcon />,
-    url: "/media",
+    url: "/logs",
   },
   {
     id: "header-6",
     name: "Settings",
-    isheader: true
+    isheader: true,
   },
   {
     id: "21",

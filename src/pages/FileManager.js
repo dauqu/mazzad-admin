@@ -1,4 +1,5 @@
-
+import ImageList from "@mui/material/ImageList";
+import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
@@ -18,43 +19,73 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import LinkOutlinedIcon from "@mui/icons-material/LinkOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import Tooltip from "@mui/material/Tooltip";
-import Box from "@mui/material/Box";
-import AppBar from "@mui/material/AppBar";
-import AddIcon from "@mui/icons-material/Add";
-import { Divider } from "@mui/material";
-import Toolbar from "@mui/material/Toolbar";
-import { useNavigate } from "react-router-dom";
+import { AppBar, Divider, Toolbar } from "@mui/material";
+import { Add } from "@mui/icons-material";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "center",
-  // color: "#fff",
-  // backgroundColor: "#0000009E",
+  color: "#fff",
+  //   backgroundColor: "#1A2027",
 }));
 
-export default function Storage() {
-  const [files, setFiles] = React.useState([]);
+export default function FileManager() {
+  const [files, setFiles] = React.useState([
+    {
+      name: "File Name",
+      size: "File Size",
+      type: "File Type",
+      path: "File Path",
+      date: "File Date",
+    },
+    {
+      name: "File Name",
+      size: "File Size",
+      type: "File Type",
+      path: "File Path",
+      date: "File Date",
+    },
+    {
+      name: "File Name",
+      size: "File Size",
+      type: "File Type",
+      path: "File Path",
+      date: "File Date",
+    },
+    {
+      name: "File Name",
+      size: "File Size",
+      type: "File Type",
+      path: "File Path",
+      date: "File Date",
+    },
+    {
+      name: "File Name",
+      size: "File Size",
+      type: "File Type",
+      path: "File Path",
+      date: "File Date",
+    },
+  ]);
   const [dir, setDir] = React.useState([]);
   const [server_alert, setAlert] = useState();
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = useState();
 
-  const navigate = useNavigate();
-
   // Files Data
- async function getFileData() {
-  await axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/storage/uploaded_files`)
+  function getFileData() {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/files/uploaded_files`)
       .then((response) => {
         setFiles(response.data);
       });
   }
 
   //Delete Post
- async function deleteOneFile(item) {
-   await axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/storage/delete`, {
+  function deleteOneFile(item) {
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/files/delete`, {
         name: item.name,
       })
       .then((res) => {
@@ -74,20 +105,17 @@ export default function Storage() {
     getFileData();
   }, []);
 
-  async function getDirectoryData() {
-   await axios.get(`${process.env.REACT_APP_BACKEND_URL}/storage/dir`)
-    .then((response) => {
-      setDir(response.data);
-    });
-  }
-
   //get directory data path
   React.useEffect(() => {
-    getDirectoryData();
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/files/dir`)
+      .then((response) => {
+        setDir(response.data);
+      });
   }, []);
 
   const onChange = (e) => {
-    let url = `${process.env.REACT_APP_BACKEND_URL}/storage`;
+    let url = `${process.env.REACT_APP_BACKEND_URL}/files`;
     let file = e.target.files[0];
     uploadFile(url, file);
     getFileData();
@@ -114,8 +142,6 @@ export default function Storage() {
         setStatus(e.response.data.status);
       });
   };
-
-  // if (!files) return null;
 
   //Copy Link on Button Click
   const handleCopyClick = (item) => {
@@ -161,36 +187,7 @@ export default function Storage() {
   });
 
   return (
-    <Box sx={{ flexGrow: 1, mt: 3 }}>
-      <AppBar position="static">
-        <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          // onClick={() => navigate("/add-page")}
-          >
-            {/* <CloseIcon /> */}
-            <AddIcon>
-              <input
-                name="uploadedFile"
-                multiple
-                hidden
-                type="file"
-                onChange={onChange}
-                id="contained-button-file"
-                accept="*"
-              />
-            </AddIcon>
-          </IconButton>
-          <Typography variant="h6" color="inherit" component="div">
-            File Manager
-          </Typography>
-          <Divider sx={{ flexGrow: 1 }} />
-        </Toolbar>
-      </AppBar>
-
+    <Grid container spacing={1} sx={{ marginBottom: 1, marginTop: 1 }}>
       <Snackbar
         open={open}
         autoHideDuration={3000}
@@ -203,93 +200,84 @@ export default function Storage() {
           {server_alert}
         </Alert>
       </Snackbar>
-      <Paper sx={{ boxShadow: 0, borderRadius: 1, background: "#1A2027", p: 1 }}>
-        <Grid container spacing={2}>
-          {/* <Grid item xs={12}>
-          <Item sx={{ boxShadow: 0, display: "flex" }}>
-            <label
-              htmlFor="contained-button-file"
-              sx={{
-                maxWidth: 10,
-                backgroundColor: "#333fff",
-                justifyContent: "left",
-                textAlign: "left",
-              }}
-            >
-              <Button
-                htmlFor="contained-button-file"
-                variant="contained"
-                component="span"
-                size="small"
-                sx={{
-                  mr: 2,
-                  display: { xs: "none", md: "flex" },
-                  boxShadow: 0,
-                  background: "#333333",
-                  justifyContent: "left",
-                  textAlign: "left",
-                }}
-              >
-                <input
-                  name="uploadedFile"
-                  multiple
-                  hidden
-                  type="file"
-                  onChange={onChange}
-                  id="contained-button-file"
-                  accept="*"
-                />
-                Upload new file
-              </Button>
-            </label>
-            <Typography sx={{ flexGrow: 1 }}></Typography>
-          </Item>
-        </Grid> */}
 
-          {/* Map  */}
-          {files.map((item) => (
-            <Grid item xs>
-              <Item
-                sx={{
-                  maxWidth: "450px",
-                  minWidth: "200px",
-                }}
-              >
+      <Grid item xs={12}>
+        <AppBar
+          position="static"
+          sx={{
+            boxShadow: 0,
+          }}
+        >
+          <Toolbar
+            variant="dense"
+            sx={{
+              background: "#333",
+              color: "#fff",
+              boxShadow: 0,
+            }}
+          >
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+            >
+              {/* <CloseIcon /> */}
+              <Add />
+            </IconButton>
+            <Typography variant="h6" color="inherit" component="div">
+              File Manager
+            </Typography>
+            <Divider sx={{ flexGrow: 1 }} />
+          </Toolbar>
+        </AppBar>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Item sx={{ boxShadow: 0 }}>
+          <ImageList
+            sx={{ width: "100%", height: "80vh" }}
+            cols={5}
+            rowHeight={300}
+          >
+            {files
+              .slice(0)
+              .reverse()
+              .map((item) => (
                 <Card
                   sx={{
-                    height: 250,
+                    height: 230,
+                    minWidth: 200,
+                    // backgroundColor: "#1A2027",
                     boxShadow: 0,
-                    border: "1px solid #1A2027",
-                    background: "#0000009E",
+                    border: "1px solid #ccc",
                   }}
                   key={item.id}
                 >
                   {item.file_extension === ".jpg" ||
-                    item.file_extension === ".gif" ||
-                    item.file_extension === ".png" ||
-                    item.file_extension === ".jpeg" ||
-                    item.file_extension === ".svg" ||
-                    item.file_extension === ".ico" ? (
+                  item.file_extension === ".gif" ||
+                  item.file_extension === ".png" ||
+                  item.file_extension === ".jpeg" ||
+                  item.file_extension === ".svg" ||
+                  item.file_extension === ".ico" ? (
                     <CardMedia component="img" height="150" image={item.path} />
                   ) : (
                     <Card
                       height="140"
                       sx={{
-                        height: 150,
+                        height: 120,
                         boxShadow: 0,
-                        backgroundColor: "#1A2027",
+                        // backgroundColor: "#1A2027",
                         display: "block",
                         justifyContent: "center",
                         textAlign: "center",
                         alignItems: "center",
-                        color: "#fff",
                       }}
                     >
                       <InsertDriveFileIcon
                         sx={{
                           width: 80,
                           height: 80,
-                          color: "#fff",
                           marginTop: 2,
                         }}
                       />
@@ -317,7 +305,6 @@ export default function Storage() {
                         textOverflow: "ellipsis",
                         justifyContent: "left",
                         textAlign: "left",
-                        color: "#fff",
                       }}
                     >
                       {item.name}
@@ -337,7 +324,6 @@ export default function Storage() {
                         size="small"
                         sx={{
                           backgroundColor: "#00000021",
-                          color: "#fff",
                           border: "1px solid #fff",
                         }}
                         onClick={onClickUrl(`${item.path}`)}
@@ -350,7 +336,6 @@ export default function Storage() {
                         size="small"
                         sx={{
                           backgroundColor: "#00000021",
-                          color: "#fff",
                           border: "1px solid #fff",
                         }}
                         onClick={() => handleCopyClick(item)}
@@ -364,7 +349,6 @@ export default function Storage() {
                         size="small"
                         sx={{
                           backgroundColor: "#00000021",
-                          color: "#fff",
                           border: "1px solid #fff",
                         }}
                         onClick={() => deleteOneFile(item)}
@@ -383,11 +367,10 @@ export default function Storage() {
                     </Typography>
                   </CardActions>
                 </Card>
-              </Item>
-            </Grid>
-          ))}
-        </Grid>
-      </Paper>
-    </Box>
+              ))}
+          </ImageList>
+        </Item>
+      </Grid>
+    </Grid>
   );
 }

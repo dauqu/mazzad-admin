@@ -1,4 +1,3 @@
-
 import "./App.css";
 import MiniDrawer from "./components/Drawer";
 import { Route, Routes, useNavigate } from "react-router-dom";
@@ -7,7 +6,6 @@ import Dashboard from "./pages/Dashboard";
 import Register from "./pages/Register";
 import Categories from "./pages/Categories";
 import Products from "./pages/Products";
-import Storage from "./pages/Storage";
 import Pages from "./pages/Pages";
 import Tags from "./pages/Tags";
 import Users from "./pages/Users";
@@ -38,26 +36,35 @@ import Contracts from "./pages/Contracts";
 import Wallet from "./pages/Wallet";
 import AddService from "./pages/AddService";
 import AddContract from "./pages/AddContract";
+import AdsManagement from "./pages/AdsManagement";
+import FileManager from "./pages/FileManager";
+import RateManagement from "./pages/RateManagement";
+import Opportunities from "./pages/Opportunities";
+import Refund from "./pages/Refund";
+import Complaints from "./pages/Complaints";
+import Sales from "./pages/Sales";
+import Logs from "./pages/Logs";
 
-//Axios allow auth 
+//Axios allow auth
 axios.defaults.withCredentials = true;
 
-
 function App() {
-
   const navigate = useNavigate();
 
   //Check login
   async function checkLogin() {
-    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login/check`).then((res) => {
-      console.log(res);
-      if (res.data.islogin !== true) {
+    await axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/login/check`)
+      .then((res) => {
+        console.log(res);
+        if (res.data.islogin !== true) {
+          navigate("/login");
+        }
+      })
+      .catch((e) => {
+        console.log(e);
         navigate("/login");
-      }
-    }).catch((e) => {
-      console.log(e);
-      navigate("/login");
-    });
+      });
   }
 
   React.useEffect(() => {
@@ -72,11 +79,21 @@ function App() {
 
         <Route path="/" element={<MiniDrawer />}>
           <Route path="" element={<Dashboard />} />
-          
+
+          <Route path="/ads" element={<AdsManagement />} />
+          <Route path="/companies" element={<Companies />} />
+
+          <Route path="/rate" element={<RateManagement />} />
+          <Route path="/opportunities" element={<Opportunities />} />
+
           <Route path="/contracts" element={<Contracts />} />
           <Route path="/add-contract" element={<AddContract />} />
 
+          <Route path="/complaints" element={<Complaints />} />
+          <Route path="/sales" element={<Sales />} />
+
           <Route path="/bank-account" element={<Bankaccount />} />
+          <Route path="/refund" element={<Refund />} />
           {/* <Route path="/new-account" element={<AddProduct />} /> */}
 
           <Route path="/categories" element={<Categories />} />
@@ -84,8 +101,6 @@ function App() {
 
           <Route path="/products" element={<Products />} />
           <Route path="/new-product" element={<AddProduct />} />
-
-          <Route path="/media" element={<Storage />} />
 
           <Route path="/pages" element={<Pages />} />
           <Route path="/new-page" element={<AddPage />} />
@@ -109,6 +124,8 @@ function App() {
           <Route path="/info" element={<Info />} />
           <Route path="/notifications" element={<Notifications />} />
 
+          <Route path="/file-manager" element={<FileManager />} />
+
           <Route path="/auctions" element={<Auctions />} />
           <Route path="/points" element={<Points />} />
 
@@ -128,16 +145,24 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/wallet" element={<Wallet />} />
 
+          <Route path="/logs" element={<Logs />} />
+
           {/* 404 page */}
-          <Route path="*" element={
-            <div className="text-center" style={{
-              marginTop: "20%",
-              color: "white",
-            }}>
-              <h1 className="text-5xl font-bold">404</h1>
-              <p className="text-2xl">Page not found</p>
-            </div>
-          } />
+          <Route
+            path="*"
+            element={
+              <div
+                className="text-center"
+                style={{
+                  marginTop: "20%",
+                  color: "white",
+                }}
+              >
+                <h1 className="text-5xl font-bold">404</h1>
+                <p className="text-2xl">Page not found</p>
+              </div>
+            }
+          />
         </Route>
       </Routes>
     </div>
