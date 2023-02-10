@@ -157,11 +157,8 @@ export default function MiniDrawer() {
                     <Typography
                         variant="h6"
                         noWrap
-                        // to="/"
-                        // component={RouterLink}
                         sx={{ color: "#fff", TextDecoration: "none" }}
                     >
-                        {/* Dashboard */}
                     </Typography>
                     <Typography sx={{ flexGrow: 1 }}></Typography>
                     <IconButton
@@ -192,12 +189,10 @@ export default function MiniDrawer() {
                         variant="subtitle1"
                         sx={{ paddingRight: 1, cursor: "pointer" }}
                     >
-                        {/* {profile.fname} */}
                     </Typography>
                     <IconButton to="account">
                         <Avatar
                             alt="Remy Sharp"
-                            //   src={profile.dp}
                             sx={{ width: 30, height: 30 }}
                             to="account"
                             component={RouterLink}
@@ -257,8 +252,8 @@ export default function MiniDrawer() {
                         }
                     }
                 >
-                    {menu_items.map((item) => (
-                        <div key={item.id}>
+                    {menu_items.map((item, idx) => (
+                        <div key={idx}>
 
                             {item.isheader && open && (
                                 <ListItemText

@@ -100,13 +100,11 @@ const menu_items = [
     isheader: true,
   },
   {
-    id: "21",
     name: "All Files",
     icon: <Memory />,
     url: "/file-manager",
   },
   {
-    id: "22",
     name: "Upload Files",
     icon: <UploadFileOutlined />,
     url: "/upload-files",
@@ -137,7 +135,6 @@ const menu_items = [
     url: "/email",
   },
   {
-    id: "20",
     name: "Users",
     icon: <PersonIcon />,
     url: "/users",
@@ -153,13 +150,11 @@ const menu_items = [
     isheader: true,
   },
   {
-    id: "21",
     name: "Settings",
     icon: <SettingsOutlined />,
     url: "/settings",
   },
   {
-    id: "22",
     name: "System Info",
     icon: <InfoOutlined />,
     url: "/system-info",

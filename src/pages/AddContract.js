@@ -5,63 +5,66 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { Divider } from "@mui/material";
 import axios from "axios";
 import Button from "@mui/material/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import slugify from "slugify";
 import OutlinedInput from '@mui/material/OutlinedInput';
-import { Stack } from "@mui/system";
-
-
-
-const Item = styled(Paper)(({ theme }) => ({
-    // backgroundColor: "#1A2027",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-    borderRadius: 1,
-}));
 
 export default function AddContract() {
     const navigate = useNavigate();
 
-    const handleClick = (e) => {
-        console.log("click");
-    };
+    const { id } = useParams();
 
-    //get pages
-    const [pages, setPages] = React.useState([]);
-    const [content, setContent] = React.useState([]);
 
-    const [title, setTitle] = React.useState("");
-    const [description, setDescription] = React.useState(
-        "Enter Page Description Here..."
-    );
 
-    //Axios POST request
-    const handleSubmit = (e) => {
-        console.log("submit");
-        e.preventDefault();
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/products`, {
-            title: title,
-            slug: slug,
-            description: description,
-            content: content,
-        });
-    };
-
-    //Generate Slug
-    const slug = slugify(title, {
-        replacement: "-", // replace spaces with replacement
-        remove: null, // regex to remove characters
-        lower: true, // result in lower case
-        remove: /[*+~.()'"!:@#/]/g,
+    const [contractData, setContractData] = React.useState({
+        title: "",
+        terms: "",
+        stamp_profile: "",
+        signature_profile: "",
+        return_terms: "",
+        local_ship_terms: {
+            price: 0,
+            days: 0,
+        },
+        international_ship_terms: {
+            price: 0,
+            days: 0,
+        },
+        
     });
+
+
+    React.useEffect(() => {
+        if (!id || id === undefined) {
+            return;
+        }
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/contract/${id}`)
+            .then((res) => {
+                console.log(res.data);
+                setContractData(res.data.contract);
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    }, [id]);
+
+    const updateContract = () => {
+        axios.put(`${process.env.REACT_APP_BACKEND_URL}/contract/${id}`, contractData)
+            .then((res) => {
+                console.log(res);
+                // navigate("/contracts");
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    };
+
+
 
     return (
         <Box sx={{ flexGrow: 1, marginTop: 3 }}>
@@ -77,25 +80,7 @@ export default function AddContract() {
                         <CloseIcon />
                     </IconButton>
 
-                    <input
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Name"
-                        style={{
-                            width: "60%",
-                            height: "35px",
-                            color: "#fff",
-                            backgroundColor: "#00000000",
-                            outline: "none",
-                            border: "none",
-                            fontSize: "1.2rem",
-                        }}
-                    />
-
                     <Divider sx={{ flexGrow: 1 }} />
-                    {/* <IconButton edge="start" color="inherit" aria-label="menu">
-            <AddIcon />
-          </IconButton> */}
                     <Button
                         variant="contained"
                         size="small"
@@ -103,7 +88,7 @@ export default function AddContract() {
                         sx={{
                             boxShadow: 0,
                         }}
-                        onClick={handleSubmit}
+                        onClick={() => updateContract()}
                     >
                         Publish
                     </Button>
@@ -112,79 +97,121 @@ export default function AddContract() {
 
             <Grid container spacing={1} alignItems="stretch">
                 <Grid item xs={12} alignItems="stretch">
-                    <Item
-                        onDoubleClick={handleClick}
+                    <OutlinedInput id="outlined-basic"
+                        value={contractData.title}
+                        onChange={(e) => setContractData({ ...contractData, title: e.target.value })}
+                        placeholder="Title"
+                        focused={true} variant="filled" size="small"
+                        className="w-full my-2 outline-none border-[1px]"
+                    />
+
+                    <OutlinedInput
+                        value={contractData.terms}
+                        onChange={(e) => setContractData({ ...contractData, terms: e.target.value })}
+                        id="outlined-basic"
+                        placeholder="Terms"
+                        focused={true}
+                        variant="filled" size="small"
+                        className="w-full my-2 outline-none border-[1px]"
+                    />
+                    <Box sx={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr 1fr',
+                        columnGap: "10px",
+                        alignItems: "center",
+                    }} >
+                        <h2 className="text-start">Local Ship Term:</h2>
+                        <OutlinedInput id="outlined-basic"
+                            value={contractData.local_ship_terms.price}
+                            onChange={(e) => setContractData({
+                                ...contractData,
+                                local_ship_terms: {
+                                    ...contractData.local_ship_terms,
+                                    price: e.target.value
+                                }
+                            })}
+                            placeholder="Price"
+                            focused={true} variant="filled" size="small"
+                            className="w-full my-2 outline-none border-[1px]" />
+
+                        <OutlinedInput id="outlined-basic"
+                            value={contractData.local_ship_terms.days}
+                            onChange={(e) => setContractData({
+                                ...contractData,
+                                local_ship_terms: {
+                                    ...contractData.local_ship_terms,
+                                    days: e.target.value
+                                }
+                            })}
+                            placeholder="Days"
+                            focused={true} variant="filled" size="small"
+                            className="w-full my-2 outline-none border-[1px]" />
+
+                    </Box>
+                    <Box
                         sx={{
-                            height: "86vh",
-                        }}
-                    >
-
-
-                        {/* Category */}
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 1fr 1fr',
+                            columnGap: "10px",
+                            alignItems: "center"
+                        }}>
+                        <h2 className="text-start">International Ship Term:</h2>
                         <OutlinedInput id="outlined-basic"
-                            placeholder="Title"
+                            value={contractData.international_ship_terms.days}
+                            onChange={(e) => setContractData({
+                                ...contractData,
+                                international_ship_terms: {
+                                    ...contractData.international_ship_terms,
+                                    days: e.target.value
+                                }
+                            })}
+                            placeholder="Price"
                             focused={true} variant="filled" size="small"
-                            className="w-full my-2 outline-none border-[1px]"
-                        />
-
-                        <OutlinedInput
-                            id="outlined-basic"
-                            placeholder="Terms"
-                            focused={true}
-                            variant="filled" size="small"
-                            className="w-full my-2 outline-none border-[1px]"
-                        />
-
-
-                        {/* Category */}
-                        <Box sx={{ display: 'grid', gridTemplateColumns: '3fr 1fr' }}>
-                            <OutlinedInput id="outlined-basic"
-                                placeholder="Local Ship Term Price"
-                                focused={true} variant="filled" size="small"
-                                className="w-full my-2 outline-none border-[1px]" />
-
-                            <OutlinedInput id="outlined-basic"
-                                placeholder="Days"
-                                focused={true} variant="filled" size="small"
-                                className="w-full my-2 outline-none border-[1px]" />
-
-                        </Box>
-                        <Box sx={{ display: 'grid', gridTemplateColumns: '3fr 1fr' }}>
-                            <OutlinedInput id="outlined-basic"
-                                placeholder="International Ship Term Price"
-                                focused={true} variant="filled" size="small"
-                                className="w-full my-2 outline-none border-[1px]" />
-
-                            <OutlinedInput id="outlined-basic"
-                                placeholder="Days"
-                                focused={true} variant="filled" size="small"
-                                className="w-full my-2 outline-none border-[1px]" />
-
-                        </Box>
+                            className="w-full my-2 outline-none border-[1px]" />
 
                         <OutlinedInput id="outlined-basic"
-                            placeholder="Return Terms"
+                            value={contractData.international_ship_terms.days}
+                            onChange={(e) => setContractData({
+                                ...contractData,
+                                international_ship_terms: {
+                                    ...contractData.international_ship_terms,
+                                    days: e.target.value
+                                }
+                            })}
+                            placeholder="Days"
                             focused={true} variant="filled" size="small"
-                            className="w-full my-2 outline-none border-[1px]"
-                        />
+                            className="w-full my-2 outline-none border-[1px]" />
+
+                    </Box>
+
+                    <OutlinedInput id="outlined-basic"
+                        value={contractData.return_terms}
+                        onChange={(e) => setContractData({ ...contractData, return_terms: e.target.value })}
+                        placeholder="Return Terms"
+                        focused={true} variant="filled" size="small"
+                        className="w-full my-2 outline-none border-[1px]"
+                    />
 
 
-                        <OutlinedInput
-                            id="outlined-basic"
-                            placeholder="Signature from Profile"
-                            focused={true}
-                            variant="filled" size="small"
-                            className="w-full my-2 outline-none border-[1px]"
-                        />
-                        <OutlinedInput
-                            id="outlined-basic"
-                            placeholder="Company from Profile"
-                            focused={true}
-                            variant="filled" size="small"
-                            className="w-full my-2 outline-none border-[1px]"
-                        />
+                    <OutlinedInput
+                        value={contractData.signature_profile}
+                        onChange={(e) => setContractData({ ...contractData, signature_profile: e.target.value })}
+                        id="outlined-basic"
+                        placeholder="Signature from Profile"
+                        focused={true}
+                        variant="filled" size="small"
+                        className="w-full my-2 outline-none border-[1px]"
+                    />
+                    <OutlinedInput
+                        value={contractData.stamp_profile}
+                        onChange={(e) => setContractData({ ...contractData, stamp_profile: e.target.value })}
+                        id="outlined-basic"
+                        placeholder="Company from Profile"
+                        focused={true}
+                        variant="filled" size="small"
+                        className="w-full my-2 outline-none border-[1px]"
+                    />
 
-                    </Item>
                 </Grid>
             </Grid>
         </Box>

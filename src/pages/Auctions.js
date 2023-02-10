@@ -27,8 +27,9 @@ import MuiAlert from "@mui/material/Alert";
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Divider } from "@mui/material";
+import { Button, Divider, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -93,6 +94,12 @@ const headCells = [
     disablePadding: false,
     label: "Currency",
   },
+  {
+    id: "Actions",
+    numeric: false,
+    disablePadding: false,
+    label: "Actions",
+  },
 ];
 
 function EnhancedTableHead(props) {
@@ -111,7 +118,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox" sx={{ }}>
+        <TableCell padding="checkbox" sx={{}}>
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -120,7 +127,7 @@ function EnhancedTableHead(props) {
             inputProps={{
               "aria-label": "select all desserts",
             }}
-            sx={{ }}
+            sx={{}}
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -129,13 +136,13 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ }}
+            sx={{}}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
-              sx={{ }}
+              sx={{}}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -190,7 +197,7 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: "1 1 100%",  }}
+          sx={{ flex: "1 1 100%", }}
           variant="h6"
           id="tableTitle"
           component="div"
@@ -201,14 +208,14 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton onClick={window.deletePost}>
-            <DeleteIcon sx={{ }} />
+          <IconButton>
+            <DeleteIcon sx={{}} />
           </IconButton>
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
           <IconButton>
-            <FilterListIcon sx={{  }} />
+            <FilterListIcon sx={{}} />
           </IconButton>
         </Tooltip>
       )}
@@ -220,11 +227,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 export default function Auctions() {
-  // const [post, setPost] = React.useState(null);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [server_alert, setAlert] = useState();
-  const [status, setStatus] = useState();
+  
   const [rows, setCategories] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = useState(true);
@@ -242,44 +245,7 @@ export default function Auctions() {
     setLoading(false);
   }, []);
 
-  //Post new category
-  const createPost = (e) => {
-    e.preventDefault();
-    axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/categories`, {
-        name,
-        description,
-      })
-      .then((res) => {
-        setAlert("Category successfully added", res);
-        setStatus("success");
-        getCategoryData();
-      })
-      .catch((e) => {
-        setAlert(e.response.data.message);
-        setStatus(e.response.data.status);
-      });
-    setOpen(true);
-  };
 
-  //Delete category
-  window.deletePost = () => {
-    axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/categories/${selected}`)
-      .then((res) => {
-        setAlert("Category successfully deleted", res);
-        setStatus("success");
-        getCategoryData();
-        setSelected([]);
-      })
-      .catch((e) => {
-        setAlert(e.response.data.message);
-        setStatus(e.response.data.status);
-      });
-    setOpen(true);
-  };
-
- 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("description");
   const [selected, setSelected] = React.useState([]);
@@ -301,26 +267,6 @@ export default function Auctions() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -332,32 +278,17 @@ export default function Auctions() {
 
   const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
-  const handleClose = (reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
+  const handleDelete = (id) => {
+    axios
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/bids/${id}`)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
-  const action = (
-    <React.Fragment>
-      {/* <Button color="secondary" size="small" onClick={handleClose}>
-        UNDO
-      </Button> */}
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
-  const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
 
   return (
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
@@ -419,7 +350,7 @@ export default function Auctions() {
                 >
                   <EnhancedTableToolbar numSelected={selected.length} />
                   <TableContainer
-                    sx={{ }}
+                    sx={{}}
                   >
                     <Table
                       sx={{ minWidth: 750 }}
@@ -451,16 +382,12 @@ export default function Auctions() {
                             return (
                               <TableRow
                                 hover
-                                onClick={(event) => handleClick(event, row._id)}
+                                // onClick={(event) => handleClick(event, row._id)}
                                 role="checkbox"
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}
                                 key={row._id}
                                 selected={isItemSelected}
-                                sx={{
-                                  // color: "#ffffff",
-                                  // backgroundColor: "#1A2027",
-                                }}
                               >
                                 <TableCell padding="checkbox">
                                   <Checkbox
@@ -469,7 +396,7 @@ export default function Auctions() {
                                     inputProps={{
                                       "aria-labelledby": labelId,
                                     }}
-                                    sx={{ }}
+                                    sx={{}}
                                   />
                                 </TableCell>
 
@@ -532,6 +459,21 @@ export default function Auctions() {
                                     {row.currency}
                                   </Typography>
                                 </TableCell>
+                                <TableCell align="left">
+                                  <Stack direction={"row"} sx={{ columnGap: "10px", alignItems: "center" }} >
+                                    <AiOutlineEdit onClick={() => navigate(`/edit-auction/${row.id}`)} size={22} />
+                                    <AiOutlineDelete onClick={() => handleDelete(row.id)} size={22} />
+                                    <Button
+                                      color="primary"
+                                      size="small"
+                                      variant="contained" sx={{
+                                        color: "#fff",
+                                        elevation: 0,
+                                      }}>
+                                      Activate
+                                    </Button>
+                                  </Stack>
+                                </TableCell>
                               </TableRow>
                             );
                           })}
@@ -546,7 +488,7 @@ export default function Auctions() {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
-                    sx={{ }}
+                    sx={{}}
                   />
                 </Paper>
               </Item>

@@ -25,11 +25,43 @@ import Snackbar from "@mui/material/Snackbar";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Dialog, Divider, OutlinedInput, TextareaAutosize, Button } from "@mui/material";
+import { Dialog, Divider, Button, TextField } from "@mui/material";
 
 import { Link as RouterLink } from "react-router-dom";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { Stack } from "@mui/system";
+import axios from "axios";
+
+
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+// This method is created for cross-browser compatibility, if you don't
+// need to support IE11, you can use Array.prototype.sort() directly
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
 
 
 const headCells = [
@@ -94,7 +126,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            // sx={{ color: "white" }}
+          // sx={{ color: "white" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -180,7 +212,7 @@ const EnhancedTableToolbar = (props) => {
       {numSelected === 1 ? (
         <Tooltip
           title="Edit"
-          // sx={{ color: "#fff" }}
+        // sx={{ color: "#fff" }}
         >
           <IconButton
             to={`./../update-product/${window.selected}`}
@@ -216,12 +248,97 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function Tags() {
-    const [open, setOpen] = React.useState(false);
+
+
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("description");
+  const [selected, setSelected] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(15);
+
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const isSelected = (_id) => selected.indexOf(_id) !== -1;
+
+  const [open, setOpen] = React.useState(false);
+  const [tags, setTags] = React.useState([]);
+
+
+  const [isEdit, setIsEdit] = React.useState(false);
+  const [tagData, setTagData] = React.useState({
+    name: "",
+    description: "",
+  });
 
   // Alert
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
+
+  // load all tags 
+  React.useEffect(() => {
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/tags`).then((res) => {
+      setTags(res.data);
+      console.log(res.data);
+    });
+  }, []);
+
+
+  const addTag = () => {
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/tags`, tagData).then(
+      (res) => {
+        console.log(res.data);
+        setOpen(false);
+        setTags([...tags, res.data.tag]);
+        setTagData({
+          name: "",
+          description: "",
+        });
+
+      })
+      .catch((err) => {
+        console.log(err);
+      }
+      );
+  };
+
+  const deleteTag = (id) => {
+    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/tags/${id}`).then((res) => {
+      console.log(res.data);
+      setTags(tags.filter((tag) => tag.id !== id));
+    });
+  }
+
+  const updateTag = () => {
+    axios
+      .put(`${process.env.REACT_APP_BACKEND_URL}/tags/${tagData.id}`, tagData)
+      .then((res) => {
+        console.log(res.data);
+        setOpen(false);
+
+        setTags(
+          tags.map((tag) => {
+            if (tag.id === tagData.id) {
+              return res.data.tag;
+            } else {
+              return tag;
+            }
+          })
+        );
+        setTagData({
+          name: "",
+          description: "",
+        });
+      });
+  };
 
   return (
     <Box
@@ -239,23 +356,37 @@ export default function Tags() {
         aria-describedby="alert-dialog-description"
       >
         <div className="p-[20px] flex flex-col">
-          <OutlinedInput
+          <TextField
+            value={tagData.name}
+            onChange={(e) => setTagData({ ...tagData, name: e.target.value })}
             size="small"
             type="text"
             placeholder="Tag"
             className="w-[500px] my-2 outline-none border-[1px]"
+            sx={{ margin: "10px 0" }}
           />
-          <TextareaAutosize
+          <TextField
+            value={tagData.description}
+            onChange={(e) => setTagData({ ...tagData, description: e.target.value })}
+            multiline
             type="text"
+            variant="outlined"
             placeholder="Description.."
             className=" p-2 my-2 w-[500px] outline-none border-[1px] resize-none"
             minRows={8}
-          ></TextareaAutosize>
+            sx={{ margin: "5px 0 20px 0" }}
+          />
           <Stack direction="row" spacing={1}>
             <Button
               variant="contained"
               color="error"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false)
+                setTagData({
+                  name: "",
+                  description: "",
+                })
+              }}
             >
               Close
             </Button>
@@ -266,8 +397,10 @@ export default function Tags() {
                 color: "#fff",
                 elevation: 0,
               }}
+
+              onClick={() => isEdit ? updateTag() : addTag()}
             >
-              Submit
+              {isEdit ? "Update" : "Submit"}
             </Button>
           </Stack>
         </div>
@@ -279,7 +412,10 @@ export default function Tags() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => setOpen(true)}
+            onClick={() => {
+              setOpen(true)
+              setIsEdit(false)
+            }}
           >
             <AddIcon />
           </IconButton>
@@ -318,65 +454,86 @@ export default function Tags() {
           >
             <EnhancedTableHead />
             <TableBody>
-              <TableRow
-                hover
-                role="checkbox"
-                tabIndex={-1}
-                sx={{ color: "#fff" }}
-              >
-                <TableCell padding="checkbox">
-                  <Checkbox color="primary" />
-                </TableCell>
+              {stableSort(tags, getComparator(order, orderBy))
+                .slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
+                .slice()
+                .reverse()
+                .map((row, index) => {
+                  const isItemSelected = isSelected(row._id);
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                <TableCell scope="row" padding="none">
-                  <Typography
-                    size="small"
-                    sx={{
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                      maxWidth: "20ch",
-                      textOverflow: "ellipsis",
-                      cursor: "pointer",
-                    }}
-                  >
-                    SDFDG
-                  </Typography>
-                </TableCell>
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      sx={{ color: "#fff" }}
+                      key={row.id}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox color="primary" />
+                      </TableCell>
 
-                <TableCell
-                  component="th"
-                  scope="row"
-                  padding="none"
-                  sx={{
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    maxWidth: "20ch",
-                    minWidth: "15ch",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  gjfgj
-                </TableCell>
-                <TableCell align="left" sx={{}}>
-                  4 USD
-                </TableCell>
-                <TableCell align="left" sx={{}} style={{}}>
-                  <Stack direction={"row"} sx={{ columnGap: "10px" }}>
-                    <AiOutlineEdit size="18" />
-                    <AiOutlineDelete size="18" />
-                  </Stack>
-                </TableCell>
-              </TableRow>
+                      <TableCell scope="row" padding="none">
+                        <Typography
+                          size="small"
+                          sx={{
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            maxWidth: "20ch",
+                            textOverflow: "ellipsis",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {row.name}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        padding="none"
+                        sx={{
+                          overflow: "hidden",
+                          whiteSpace: "nowrap",
+                          maxWidth: "20ch",
+                          minWidth: "15ch",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {row.description}
+                      </TableCell>
+                      <TableCell align="left" sx={{}}>
+                        {new Date(row.createdAt).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell align="left" sx={{}} style={{}}>
+                        <Stack direction={"row"} sx={{ columnGap: "10px" }}>
+                          <AiOutlineEdit size="18" onClick={() => {
+                            setOpen(true);
+                            setTagData(row);
+                            setIsEdit(true);
+                          }} />
+                          <AiOutlineDelete size="18" onClick={() => deleteTag(row.id)} />
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[15, 30, 40]}
           component="div"
-          count={100}
-          rowsPerPage={5}
-          page={0}
-          onPageChange={() => {}}
+          count={tags.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          sx={{}}
         />
       </Paper>
     </Box>

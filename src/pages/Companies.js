@@ -22,12 +22,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TablePagination from "@mui/material/TablePagination";
-import CloseIcon from "@mui/icons-material/Close";
-import MuiAlert from "@mui/material/Alert";
+import AddIcon from "@mui/icons-material/Add";
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from "@mui/material/AppBar";
 import { Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { Stack } from "@mui/system";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -91,6 +92,12 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: "Published At",
+  },
+  {
+    id: "actions",
+    numeric: false,
+    disablePadding: false,
+    label: "Actions",
   },
 ];
 
@@ -200,7 +207,7 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton onClick={window.deletePost}>
+          <IconButton>
             <DeleteIcon sx={{}} />
           </IconButton>
         </Tooltip>
@@ -219,16 +226,12 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 export default function Companies() {
-  // const [post, setPost] = React.useState(null);
-  const [name, setName] = useState("");
-  const [server_alert, setAlert] = useState();
-  const [status, setStatus] = useState();
+
   const [rows, setCompanies] = React.useState([]);
-  const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  //Get all categories
+  //Get all comapnies
   async function getCategoryData() {
     const res = await axios.get(
       `${process.env.REACT_APP_BACKEND_URL}/companies`
@@ -241,26 +244,6 @@ export default function Companies() {
     setLoading(false);
   }, []);
 
-  //Delete category
-  window.deletePost = () => {
-    axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/categories/${selected}`)
-      .then((res) => {
-        setAlert("Category successfully deleted", res);
-        setStatus("success");
-        getCategoryData();
-        setSelected([]);
-      })
-      .catch((e) => {
-        setAlert(e.response.data.message);
-        setStatus(e.response.data.status);
-      });
-    setOpen(true);
-  };
-
-  // function createData(name, description, fat, carbs, published) {
-  //   return { name, description, fat, carbs, published };
-  // }
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("description");
   const [selected, setSelected] = React.useState([]);
@@ -281,6 +264,21 @@ export default function Companies() {
     }
     setSelected([]);
   };
+
+
+  const handleDelete = (id) => {
+    axios
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/companies/${id}`)
+      .then((res) => {  
+        // remove this from company data 
+        const newCompanies = rows.filter((company) => company.id !== id);
+        setCompanies(newCompanies);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -313,12 +311,6 @@ export default function Companies() {
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  const handleClose = (reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
 
   return (
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
@@ -329,7 +321,7 @@ export default function Companies() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => navigate("/add-page")}
+            onClick={() => navigate("/add-company")}
           >
             <AddIcon />
           </IconButton> */}
@@ -491,6 +483,12 @@ export default function Companies() {
                                   >
                                     {row.data.createAt.slice(0, 10)}
                                   </Typography>
+                                </TableCell>
+                                <TableCell align="left">
+                                  <Stack direction={"row"} sx={{ columnGap: "10px"}} >
+                                    <AiOutlineEdit onClick={() => navigate(`/edit-company/${row.id}`)} size={22} />
+                                    <AiOutlineDelete onClick={() => handleDelete(row.id)} size={22} />
+                                  </Stack>
                                 </TableCell>
                               </TableRow>
                             );

@@ -1,6 +1,4 @@
-import "./App.css";
 import MiniDrawer from "./components/Drawer";
-import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Register from "./pages/Register";
@@ -29,8 +27,6 @@ import Classifications from "./pages/Classifications";
 import Search from "./pages/Search";
 import NewCategory from "./pages/NewCategory";
 import Invoice from "./pages/Invoice";
-import axios from "axios";
-import * as React from "react";
 import Profile from "./pages/Profile";
 import Contracts from "./pages/Contracts";
 import Wallet from "./pages/Wallet";
@@ -44,6 +40,16 @@ import Refund from "./pages/Refund";
 import Complaints from "./pages/Complaints";
 import Sales from "./pages/Sales";
 import Logs from "./pages/Logs";
+import AddCompany from "./pages/AddCompany";
+import AddAuction from "./pages/AddAuction";
+import AddComplaints from "./pages/AddComplaints";
+
+import "./App.css";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import axios from "axios";
+import * as React from "react";
+import { Button } from "@mui/material";
+import AddRefund from "./pages/AddRefund";
 
 //Axios allow auth
 axios.defaults.withCredentials = true;
@@ -81,20 +87,24 @@ function App() {
           <Route path="" element={<Dashboard />} />
 
           <Route path="/ads" element={<AdsManagement />} />
-          <Route path="/companies" element={<Companies />} />
 
           <Route path="/rate" element={<RateManagement />} />
           <Route path="/opportunities" element={<Opportunities />} />
 
           <Route path="/contracts" element={<Contracts />} />
-          <Route path="/add-contract" element={<AddContract />} />
+          <Route path="/edit-contract/:id" element={<AddContract />} />
 
           <Route path="/complaints" element={<Complaints />} />
+          <Route path="/edit-complaint/:id" element={<AddComplaints />} />
+
+
+
           <Route path="/sales" element={<Sales />} />
 
           <Route path="/bank-account" element={<Bankaccount />} />
+
           <Route path="/refund" element={<Refund />} />
-          {/* <Route path="/new-account" element={<AddProduct />} /> */}
+          <Route path="/edit-refund/:id" element={<AddRefund />} />
 
           <Route path="/categories" element={<Categories />} />
           <Route path="/new-category" element={<NewCategory />} />
@@ -109,6 +119,8 @@ function App() {
           <Route path="/new-tag" element={<AddProduct />} />
 
           <Route path="/users" element={<Users />} />
+
+
           <Route path="/settings" element={<Settings />} />
           <Route path="/support" element={<Support />} />
 
@@ -127,6 +139,8 @@ function App() {
           <Route path="/file-manager" element={<FileManager />} />
 
           <Route path="/auctions" element={<Auctions />} />
+          <Route path="/edit-auction/:id" element={<AddAuction />} />
+
           <Route path="/points" element={<Points />} />
 
           <Route path="/services" element={<Services />} />
@@ -135,6 +149,7 @@ function App() {
           <Route path="/offers" element={<Offers />} />
 
           <Route path="/companies" element={<Companies />} />
+          <Route path="/edit-company/:id" element={<AddCompany />} />
 
           <Route path="/commission" element={<Commission />} />
 
@@ -146,24 +161,21 @@ function App() {
           <Route path="/wallet" element={<Wallet />} />
 
           <Route path="/logs" element={<Logs />} />
-
-          {/* 404 page */}
-          <Route
-            path="*"
-            element={
-              <div
-                className="text-center"
-                style={{
-                  marginTop: "20%",
-                  color: "white",
-                }}
-              >
-                <h1 className="text-5xl font-bold">404</h1>
-                <p className="text-2xl">Page not found</p>
-              </div>
-            }
-          />
         </Route>
+        <Route
+          path="*"
+          element={
+            <div
+              className="text-center w-full h-screen flex flex-col items-center justify-center"
+            >
+              <h1 className="text-5xl font-bold">404</h1>
+              <p className="text-2xl mt-2 mb-1">Page not found</p>
+              <Link to={'/'}>
+                <Button variant="contained" color="secondary">Go Home</Button>
+              </Link>
+            </div>
+          }
+        />
       </Routes>
     </div>
   );

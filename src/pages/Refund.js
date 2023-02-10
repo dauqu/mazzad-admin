@@ -22,18 +22,15 @@ import { styled } from "@mui/material/styles";
 import Rating from "@mui/material/Rating";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import RemoveRedEyeTwoToneIcon from "@mui/icons-material/RemoveRedEyeTwoTone";
-import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
-import { useTheme } from "@mui/material/styles";
 import Chip from "@mui/material/Chip";
-import CardMedia from "@mui/material/CardMedia";
-import MuiAlert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Divider,  } from "@mui/material";
+import { Button, Divider, } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { Stack } from "@mui/system";
 
 //Html Tooltip
 const HtmlTooltip = styled(({ className, ...props }) => (
@@ -88,50 +85,33 @@ const headCells = [
     id: "1",
     numeric: false,
     disablePadding: true,
-    label: "Image",
+    label: "Title",
   },
   {
     id: "2",
     numeric: false,
     disablePadding: true,
-    label: "Products Name",
+    label: "Description",
   },
   {
     id: "3",
     numeric: false,
     disablePadding: false,
-    label: "Price",
+    label: "Created At",
   },
   {
     id: "4",
     numeric: false,
     disablePadding: false,
-    label: "Rating",
+    label: "Status",
   },
   {
     id: "5",
     numeric: false,
     disablePadding: false,
-    label: "Tags",
+    label: "Actions",
   },
-  {
-    id: "6",
-    numeric: false,
-    disablePadding: false,
-    label: "Categories",
-  },
-  {
-    id: "7",
-    numeric: false,
-    disablePadding: false,
-    label: "Published At",
-  },
-  {
-    id: "8",
-    numeric: false,
-    disablePadding: false,
-    label: "Status",
-  },
+
 ];
 
 function EnhancedTableHead(props) {
@@ -230,7 +210,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          List of Advertisement 
+          List of Complaints
         </Typography>
       )}
 
@@ -290,14 +270,7 @@ EnhancedTableToolbar.propTypes = {
 // Tags
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+
 
 export default function Refund() {
   const [order, setOrder] = React.useState("asc");
@@ -318,7 +291,7 @@ export default function Refund() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n._id);
+      const newSelecteds = complaints.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
@@ -356,166 +329,45 @@ export default function Refund() {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const [open, setOpen] = React.useState(false);
+  const [complaints, setComplaints] = React.useState([]);
+ 
 
-
-  // Get Category
-  const [category, setCategory] = React.useState([]);
   React.useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/blog`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/refund`)
       .then((response) => {
-        setCategory(response.data);
+        setComplaints([...response.data]);
       });
   }, []);
 
 
-  const theme = useTheme();
-
-  //Product Title
-  const [productTitle, setProductTitle] = React.useState("");
-  const [productDescription, setProductDescription] = React.useState("");
-  const [productCategory, setProductCategory] = React.useState("");
-  const [productGallery, setProductGallery] = React.useState("");
-  const [featuredImage, setFeaturedImage] = React.useState("");
-  const [featuredImageFront, setFeaturedImageFront] = React.useState("");
-  const [regularPrice, setRegularPrice] = React.useState("");
-  const [salePrice, setSalePrice] = React.useState("");
-  const [reviews, setReviews] = React.useState(false);
-  const [comments, setComments] = React.useState(false);
-  const [isprivate, setPrivate] = React.useState(false);
-  const [stackStatus, setStackStatus] = React.useState("");
-  const [taxStatus, setTaxStatus] = React.useState("");
-  const [taxClass, setTaxClass] = React.useState("");
-  const [tags, setTags] = React.useState([]);
-  const [server_alert, setAlert] = React.useState();
-  const [status, setStatus] = React.useState();
-  const [alertOpen, setAlertOpen] = React.useState(false);
-
-  const [rows, setProducts] = React.useState([]);
-
-
-  // Set Featured Image
-  const featuredImageHandleChange = (e) => {
-    if (e.target.files) {
-      // const FeaturedImage_ = Array.from(e.target.files).map((file) =>
-      //   URL.createObjectURL(file)
-      // );
-      setFeaturedImage(e.target.files[0].name);
+  const getChipColor = (status) => {
+    if (status === "pending") {
+      return "warning";
+    } else if (status === "active") {
+      return "success";
+    } else if (status === "rejected") {
+      return "error";
     }
-    if (e.target.files) {
-      const FeaturedImage_ = Array.from(e.target.files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setFeaturedImageFront(FeaturedImage_);
+    return "info";
+  };
+
+  const deleteRefund = (id) => {
+    try {
+
+      axios
+        .delete(`${process.env.REACT_APP_BACKEND_URL}/refund/${id}`)
+        .then((response) => {
+          console.log("response: ", response);
+          // remove complaints from the list
+          const newComplaints = complaints.filter((complaint) => complaint.id !== id);
+          setComplaints(newComplaints);
+        });
+    } catch (error) {
+      console.log("Error in deleting complaints: ", error.message);
     }
-  };
+  }
 
-  console.log(featuredImage);
-
-  // Set Featured Image
-  const productGalleryHandleChange = (e) => {
-    if (e.target.files) {
-      const productGallery = Array.from(e.target.files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setProductGallery(productGallery);
-      console.log(productGallery);
-    }
-  };
-
-  const handleReviewsChange = () => {
-    setReviews(!reviews);
-  };
-
-  const handleCommentsChange = () => {
-    setComments(!comments);
-  };
-
-  const handlePrivateChange = () => {
-    setPrivate(!isprivate);
-  };
-
-  //Get Product
-  const getProducts = () => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/products`)
-      .then((response) => {
-        setProducts(response.data);
-      });
-  };
-
-  React.useEffect(() => {
-    getProducts();
-  }, []);
-
-
-  //Delete Product
-  window.deleteProduct = () => {
-    axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/products/${selected}`)
-      .then((response) => {
-        setAlert("Product successfully deleted", response);
-        setStatus("success");
-        console.log(response.data);
-        getProducts();
-        setAlertOpen(true);
-        setSelected([]);
-      })
-      .catch((e) => {
-        setAlert(e.response.data.message);
-        setStatus(e.response.data.status);
-        setAlertOpen(true);
-      });
-  };
-
-  //Edit Product
-  const editProduct = (id) => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/products/${id}`)
-      .then((response) => {
-        setProductTitle(response.data.title);
-        setProductDescription(response.data.description);
-        setProductCategory(response.data.category);
-        setProductGallery(response.data.gallery);
-        setFeaturedImage(response.data.featured_image);
-        setFeaturedImageFront(response.data.featured_image_front);
-        setRegularPrice(response.data.regular_price);
-        setSalePrice(response.data.sale_price);
-        setReviews(response.data.reviews);
-        setComments(response.data.comments);
-        setPrivate(response.data.isprivate);
-        setStackStatus(response.data.stack_status);
-        setTaxStatus(response.data.tax_status);
-        setTaxClass(response.data.tax_class);
-        setTags(response.data.tags);
-      });
-  };
-
-  const alertHandleClose = (reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setAlertOpen(false);
-  };
-
-  // Alert
-  const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
-
-  const alertAction = (
-    <React.Fragment>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={alertHandleClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
 
   return (
     <Box
@@ -529,51 +381,19 @@ export default function Refund() {
     >
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={() => navigate("/new-product")}
-          >
-            {/* <CloseIcon /> */}
-            <AddIcon />
-          </IconButton>
           <Typography variant="h6" color="inherit" component="div">
-            Manage Ads 
+            Manage Refunds
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
       </AppBar>
 
-      {/* Alert */}
-      <Snackbar
-        open={alertOpen}
-        autoHideDuration={5000}
-        resumeHideDuration={5000}
-        action={alertAction}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        onClose={alertHandleClose}
-      >
-        <Alert
-          onClose={alertHandleClose}
-          severity={status}
-          sx={{ width: "100%" }}
-        >
-          {server_alert}
-        </Alert>
-      </Snackbar>
-
-
-      {/*  */}
 
       <Paper
         sx={{
           width: "100%",
           mb: 2,
           boxShadow: 0,
-          // background: "#1A2027",
-          // color: "#fff",
           overflow: "scroll",
         }}
       >
@@ -590,14 +410,11 @@ export default function Refund() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={complaints.length}
             />
             <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(complaints, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .reverse()
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.slug);
                   const labelId = `enhanced-table-checkbox-${index}`;
@@ -605,11 +422,11 @@ export default function Refund() {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.slug)}
+                      // onClick={(event) => handleClick(event, row.slug)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.slug}
+                      key={row.id}
                       selected={isItemSelected}
                       sx={{ color: "#fff" }}
                     >
@@ -626,33 +443,8 @@ export default function Refund() {
                         padding="none"
                       // sx={{ color: "#fff" }}
                       >
-                        <HtmlTooltip
-                          placement="right"
-                          title={
-                            <React.Fragment>
-                              <CardMedia
-                                component="img"
-                                height="140"
-                                image={row.image}
-                                alt="green iguana"
-                              />
-                            </React.Fragment>
-                          }
-                        >
-                          <Typography
-                            size="small"
-                            sx={{
-                              overflow: "hidden",
-                              whiteSpace: "nowrap",
-                              maxWidth: "20ch",
-                              textOverflow: "ellipsis",
-                              cursor: "pointer",
-                              // color: "#fff",
-                            }}
-                          >
-                            {row.image}
-                          </Typography>
-                        </HtmlTooltip>
+
+                        {row.title}
                       </TableCell>
 
                       <TableCell
@@ -669,44 +461,28 @@ export default function Refund() {
                           // color: "#fff",
                         }}
                       >
-                        {row.title}
+                        {row.description}
                       </TableCell>
-                      <TableCell align="left" sx={{}}>
-                        {row.price + " USD"}
+                      <TableCell sx={{}}>
+                        {new Date(row.createdAt).toLocaleDateString()}
                       </TableCell>
-                      <TableCell align="left">
-                        <Rating
-                          name="half-rating-read"
-                          // value={row.all_reviews.rating}
-                          precision={0.5}
-                          readOnly
-                        />
-                      </TableCell>
-                      <TableCell align="left" sx={{ width: 400 }}>
-                        {/* {row.tags.map((value) => (
-                          <Chip
-                            sx={{ height: 18, fontSize: 12, margin: 0.2 }}
-                            color="success"
-                            size="small"
-                            key={value._id}
-                            label={value}
-                          />
-                        ))} */}
-                      </TableCell>
-                      <TableCell align="left" sx={{}}>
-                        {row.category}
-                      </TableCell>
-                      <TableCell align="left" sx={{}}>
-                        {row.createdAt.slice(0, 10)}
-                      </TableCell>
-
-                      <TableCell align="left">
+                      <TableCell>
                         <Chip
                           label={row.status}
+                          color={getChipColor(row.status)}
                           size="small"
-                          color={row.status === "active" ? "success" : "error"}
-                          sx={{ width: 80 }}
                         />
+                      </TableCell>
+                      <TableCell sx={{}}>
+                        <Stack direction="row" spacing={1}>
+                          <AiOutlineEdit onClick={() => navigate(`/edit-refund/${row.id}`)} size={22} />
+                          <AiOutlineDelete size={22} onClick={() => deleteRefund(row.id)} />
+                          <Button
+                            size="small"
+                            variant="contained"
+                            color="primary"
+                          >Transfer</Button>
+                        </Stack>
                       </TableCell>
                     </TableRow>
                   );
@@ -717,7 +493,7 @@ export default function Refund() {
         <TablePagination
           rowsPerPageOptions={[15, 30, 40]}
           component="div"
-          count={rows.length}
+          count={complaints.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
