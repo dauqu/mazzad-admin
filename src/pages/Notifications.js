@@ -1,6 +1,6 @@
 function Notifications() {
     return (
-      <div>
+      <div className="py-4">
         <h1>Notifications</h1>
       </div>
     );

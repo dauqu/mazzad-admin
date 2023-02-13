@@ -22,7 +22,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TablePagination from "@mui/material/TablePagination";
-import AddIcon from "@mui/icons-material/Add";
+
+//loading
+import Loading from '../components/Loading';
+
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from "@mui/material/AppBar";
 import { Divider } from "@mui/material";
@@ -229,6 +232,8 @@ export default function Companies() {
 
   const [rows, setCompanies] = React.useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [deleting, setDeleting] = useState(false);
   const navigate = useNavigate();
 
   //Get all comapnies
@@ -237,11 +242,12 @@ export default function Companies() {
       `${process.env.REACT_APP_BACKEND_URL}/companies`
     );
     setCompanies(res.data);
+    setLoading(false);
   }
 
   React.useEffect(() => {
+    setLoading(true);
     getCategoryData();
-    setLoading(false);
   }, []);
 
   const [order, setOrder] = React.useState("asc");
@@ -267,6 +273,7 @@ export default function Companies() {
 
 
   const handleDelete = (id) => {
+    setDeleting(true);
     axios
       .delete(`${process.env.REACT_APP_BACKEND_URL}/companies/${id}`)
       .then((res) => {  
@@ -276,7 +283,10 @@ export default function Companies() {
       })
       .catch((err) => {
         console.log(err);
-      });
+      }).finally(() => {
+        setDeleting(false);
+      }
+      );
   };
 
 
@@ -316,15 +326,6 @@ export default function Companies() {
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
-          {/* <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={() => navigate("/add-company")}
-          >
-            <AddIcon />
-          </IconButton> */}
           <Typography variant="h6" color="inherit" component="div">
             Companies
           </Typography>
@@ -384,14 +385,11 @@ export default function Companies() {
                         rowCount={rows.length}
                       />
                       <TableBody>
-                        {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.slice().sort(getComparator(order, orderBy)) */}
                         {stableSort(rows, getComparator(order, orderBy))
                           .slice(
                             page * rowsPerPage,
                             page * rowsPerPage + rowsPerPage
                           )
-                          .slice()
                           .reverse()
                           .map((row, index) => {
                             const isItemSelected = isSelected(row.id);
@@ -400,12 +398,12 @@ export default function Companies() {
                             return (
                               <TableRow
                                 hover
-                                onClick={(event) => handleClick(event, row.id)}
                                 role="checkbox"
-                                aria-checked={isItemSelected}
+                                // onClick={(event) => handleClick(event, row.id)}
+                                // aria-checked={isItemSelected}
+                                // selected={isItemSelected}
                                 tabIndex={-1}
                                 key={row.id}
-                                selected={isItemSelected}
                                 sx={
                                   {
                                     // color: "#ffffff",
@@ -439,7 +437,7 @@ export default function Companies() {
                                       // color: "#ffffff",
                                     }}
                                   >
-                                    {row.data.name}
+                                    {row.name}
                                   </Typography>
                                 </TableCell>
 
@@ -453,7 +451,7 @@ export default function Companies() {
                                       // color: "#ffffff",
                                     }}
                                   >
-                                    {row.data.description}
+                                    {row.description}
                                   </Typography>
                                 </TableCell>
 
@@ -467,7 +465,7 @@ export default function Companies() {
                                       // color: "#ffffff",
                                     }}
                                   >
-                                    {row.data.status.toUpperCase()}
+                                    {row.status.toUpperCase()}
                                   </Typography>
                                 </TableCell>
 
@@ -481,13 +479,13 @@ export default function Companies() {
                                       // color: "#ffffff",
                                     }}
                                   >
-                                    {row.data.createAt.slice(0, 10)}
+                                    {new Date(row.createdAt).toLocaleDateString()}
                                   </Typography>
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Stack direction={"row"} sx={{ columnGap: "10px"}} >
+                                  <Stack direction={"row"} sx={{ display: "flex", alignItems: "center", columnGap: "10px"}} >
                                     <AiOutlineEdit onClick={() => navigate(`/edit-company/${row.id}`)} size={22} />
-                                    <AiOutlineDelete onClick={() => handleDelete(row.id)} size={22} />
+                                    {deleting ? <Loading height={40} width={40} /> : <AiOutlineDelete onClick={() => handleDelete(row.id)} size={22} />}
                                   </Stack>
                                 </TableCell>
                               </TableRow>

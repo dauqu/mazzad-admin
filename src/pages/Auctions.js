@@ -27,9 +27,10 @@ import MuiAlert from "@mui/material/Alert";
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Button, Divider, Stack } from "@mui/material";
+import { Alert, Button, Divider, Snackbar, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import Loading from "../components/Loading";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -227,15 +228,17 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 export default function Auctions() {
-  
+
   const [rows, setCategories] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState("");
+
   const navigate = useNavigate();
 
   //Get all categories
   async function getCategoryData() {
-    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/bids`);
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/auctions`);
     console.log(res.data);
     setCategories(res.data);
   }
@@ -252,6 +255,11 @@ export default function Auctions() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(15);
 
+  const [erroralert, setErroralert] = React.useState(false);
+  const [errorOpen, setErrorOpen] = React.useState(false);
+  const [server_alert, setAlert] = React.useState();
+  const [status, setStatus] = React.useState();
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -267,6 +275,8 @@ export default function Auctions() {
     setSelected([]);
   };
 
+ 
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -279,36 +289,70 @@ export default function Auctions() {
   const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
   const handleDelete = (id) => {
+    setDeleting(id);
     axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/bids/${id}`)
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/auctions/${id}`)
       .then((res) => {
+        const removedBids = rows.filter((bid) => bid.id !== id);
+        setCategories(removedBids);
+        setAlert(res.data.message);
+        setOpen(true);
+        setStatus("success");
         console.log(res.data);
       })
       .catch((e) => {
-        console.log(e);
+        setAlert("Error deleting bid. Check your internet connection.");
+        setOpen(true);
+        setStatus("error");
+      }).finally(() => {
+        setDeleting("");
       });
   };
 
+  const handleClose = (reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   return (
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
-          {/* <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={() => navigate("/add-page")}
-          >
-            <AddIcon />
-          </IconButton> */}
           <Typography variant="h6" color="inherit" component="div">
             Auctions
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
       </AppBar>
+
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        resumeHideDuration={3000}
+        action={action}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity={status} sx={{ width: "100%" }}>
+          {server_alert}
+        </Alert>
+      </Snackbar>
 
       <Grid container spacing={1}>
         {/* StartSubmit Form */}
@@ -386,7 +430,7 @@ export default function Auctions() {
                                 role="checkbox"
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}
-                                key={row._id}
+                                key={row.id}
                                 selected={isItemSelected}
                               >
                                 <TableCell padding="checkbox">
@@ -462,16 +506,7 @@ export default function Auctions() {
                                 <TableCell align="left">
                                   <Stack direction={"row"} sx={{ columnGap: "10px", alignItems: "center" }} >
                                     <AiOutlineEdit onClick={() => navigate(`/edit-auction/${row.id}`)} size={22} />
-                                    <AiOutlineDelete onClick={() => handleDelete(row.id)} size={22} />
-                                    <Button
-                                      color="primary"
-                                      size="small"
-                                      variant="contained" sx={{
-                                        color: "#fff",
-                                        elevation: 0,
-                                      }}>
-                                      Activate
-                                    </Button>
+                                    {deleting === row.id ? <Loading height={30} width={30} /> : <AiOutlineDelete onClick={() => handleDelete(row.id)} size={22} />}
                                   </Stack>
                                 </TableCell>
                               </TableRow>

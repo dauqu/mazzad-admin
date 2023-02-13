@@ -12,6 +12,7 @@ import axios from "axios";
 import Button from "@mui/material/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import OutlinedInput from '@mui/material/OutlinedInput';
+import Loading from "../components/Loading";
 
 
 export default function AddContract() {
@@ -22,13 +23,18 @@ export default function AddContract() {
         status: "active",
     });
 
+    const [updating, setUpdating] = useState(false);
+
     const onUpdate = () => {
+        setUpdating(true);
         axios.put(`${process.env.REACT_APP_BACKEND_URL}/companies/${id}`, companyData)
             .then((res) => {
                 navigate("/companies");
             })
             .catch((e) => {
                 console.log(e);
+            }).finally(() => {
+                setUpdating(false);
             });
     };
 
@@ -53,7 +59,7 @@ export default function AddContract() {
     return (
         <Box sx={{ flexGrow: 1, marginTop: 3 }}>
             <AppBar position="static">
-                <Toolbar variant="dense" sx={{ background: "#333" }}>
+                <Toolbar variant="dense" sx={{ background: "#333", justifyContent: "space-between" }}>
                     <IconButton
                         edge="start"
                         color="inherit"
@@ -64,18 +70,19 @@ export default function AddContract() {
                         <CloseIcon />
                     </IconButton>
 
-                    <Divider sx={{ flexGrow: 1 }} />
-                    <Button
-                        variant="contained"
-                        size="small"
-                        color="success"
-                        sx={{
-                            boxShadow: 0,
-                        }}
-                        onClick={onUpdate}
-                    >
-                        Update
-                    </Button>
+                    {updating ? <Loading height={45} width={45} /> : (
+                        <Button
+                            variant="contained"
+                            size="small"
+                            color="success"
+                            sx={{
+                                boxShadow: 0,
+                            }}
+                            onClick={onUpdate}
+                        >
+                            Update
+                        </Button>
+                    )}
                 </Toolbar>
             </AppBar>
 

@@ -216,15 +216,15 @@ export default function FileManager() {
               boxShadow: 0,
             }}
           >
-            <IconButton
+            {/* <IconButton
               edge="start"
               color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
             >
-              {/* <CloseIcon /> */}
+               <CloseIcon />
               <Add />
-            </IconButton>
+            </IconButton> */}
             <Typography variant="h6" color="inherit" component="div">
               File Manager
             </Typography>
