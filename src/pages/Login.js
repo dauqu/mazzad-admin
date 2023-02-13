@@ -45,18 +45,21 @@ export default function Login() {
       })
       .then((res) => {
         console.log(res);
+        localStorage.setItem("token", res.data.token)
         setAlert(res.data.message, res);
         setStatus(res.data.status);
         setOpen(true);
         //Redirect to home page if login is successful
+        setIsLoading(false);
+        console.log(res.data.token);
         setTimeout(() => {
           navigate("/");
         }, [1000]);
-        setIsLoading(false);
       })
       .catch((e) => {
         setErroralert(e.response.data.message);
         setErrorOpen(true);
+
 
         setIsLoading(false);
         console.log(e);
