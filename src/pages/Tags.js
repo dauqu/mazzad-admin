@@ -31,6 +31,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { Stack } from "@mui/system";
 import axios from "axios";
+import Loading from "../components/Loading";
 
 
 function descendingComparator(a, b, orderBy) {
@@ -49,8 +50,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
+// Hello
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -273,6 +273,8 @@ export default function Tags() {
 
   const [loading, setLoading] = React.useState(false);
 
+  const [deleting, setDeleting] = React.useState("");
+
   const [isEdit, setIsEdit] = React.useState(false);
   const [tagData, setTagData] = React.useState({
     name: "",
@@ -289,8 +291,9 @@ export default function Tags() {
     setLoading(true);
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/tags`).then((res) => {
       setTags(res.data);
+
       console.log(res.data);
-    })  .catch((err) => {
+    }).catch((err) => {
       console.log(err);
     }).finally(() => {
       setTimeout(() => {
@@ -301,7 +304,11 @@ export default function Tags() {
 
 
   const addTag = () => {
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/tags`, tagData).then(
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/tags`, tagData, {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+      },
+    }).then(
       (res) => {
         console.log(res.data);
         setOpen(false);
@@ -319,11 +326,22 @@ export default function Tags() {
   };
 
   const deleteTag = (id) => {
-    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/tags/${id}`).then((res) => {
-      console.log(res.data);
-      setTags(tags.filter((tag) => tag.id !== id));
-    });
-  }
+    setDeleting(id);
+    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/tags/${id}`)
+      .then((res) => {
+        console.log(res.data);
+        setTimeout(() => {
+          setTags(tags.filter((tag) => tag.id !== id));
+        }, 400);
+      })
+      .catch((err) => {
+        console.log(err);
+      }).finally(() => {
+        setTimeout(() => {
+          setDeleting("");
+        }, 400);
+      });
+  };
 
   const updateTag = () => {
     axios
@@ -446,128 +464,133 @@ export default function Tags() {
       {/*  */}
 
       <Grid item xs>
-          <Paper sx={{ boxShadow: 0, borderRadius: 1 }}>
-            {loading ? (
-              <Grid
-                container
-                spacing={2}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  marginTop: 0,
-                  paddingBottom: 4,
-                  paddingTop: 2,
-                  paddingLeft: 2,
-                  paddingRight: 2,
-                }}
-              >
-                <Grid item xs={12}>
-                  <LinearProgress />
-                </Grid>
+        <Paper sx={{ boxShadow: 0, borderRadius: 1 }}>
+          {loading ? (
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                width: "100%",
+                height: "100%",
+                marginTop: 0,
+                paddingBottom: 4,
+                paddingTop: 2,
+                paddingLeft: 2,
+                paddingRight: 2,
+              }}
+            >
+              <Grid item xs={12}>
+                <LinearProgress />
               </Grid>
-            ) : (<Paper
-        sx={{
-          width: "100%",
-          mb: 2,
-          boxShadow: 0,
-          overflow: "scroll",
-        }}
-      >
-        <EnhancedTableToolbar />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size="small"
+            </Grid>
+          ) : (<Paper
+            sx={{
+              width: "100%",
+              mb: 2,
+              boxShadow: 0,
+              overflow: "scroll",
+            }}
           >
-            <EnhancedTableHead />
-            <TableBody>
-              {stableSort(tags, getComparator(order, orderBy))
-                .slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-                .slice()
-                .reverse()
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row._id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+            <EnhancedTableToolbar />
+            <TableContainer>
+              <Table
+                sx={{ minWidth: 750 }}
+                aria-labelledby="tableTitle"
+                size="small"
+              >
+                <EnhancedTableHead />
+                <TableBody>
+                  {stableSort(tags, getComparator(order, orderBy))
+                    .slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(row._id);
+                      const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      sx={{ color: "#fff" }}
-                      key={row.id}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox color="primary" />
-                      </TableCell>
-
-                      <TableCell scope="row" padding="none">
-                        <Typography
-                          size="small"
-                          sx={{
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            maxWidth: "20ch",
-                            textOverflow: "ellipsis",
-                            cursor: "pointer",
-                          }}
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          sx={{ color: "#fff" }}
+                          key={row.id}
                         >
-                          {row.name}
-                        </Typography>
-                      </TableCell>
+                          <TableCell padding="checkbox">
+                            <Checkbox color="primary" />
+                          </TableCell>
 
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        padding="none"
-                        sx={{
-                          overflow: "hidden",
-                          whiteSpace: "nowrap",
-                          maxWidth: "20ch",
-                          minWidth: "15ch",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        {row.description}
-                      </TableCell>
-                      <TableCell align="left" sx={{}}>
-                        {new Date(row.createdAt).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell align="left" sx={{}} style={{}}>
-                        <Stack direction={"row"} sx={{ columnGap: "10px" }}>
-                          <AiOutlineEdit size="18" onClick={() => {
-                            setOpen(true);
-                            setTagData(row);
-                            setIsEdit(true);
-                          }} />
-                          <AiOutlineDelete size="18" onClick={() => deleteTag(row.id)} />
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[15, 30, 40]}
-          component="div"
-          count={tags.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{}}
-        />
-      </Paper>
-       )}
+                          <TableCell scope="row" padding="none">
+                            <Typography
+                              size="small"
+                              sx={{
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                maxWidth: "20ch",
+                                textOverflow: "ellipsis",
+                                cursor: "pointer",
+                              }}
+                            >
+                              {row.name}
+                            </Typography>
+                          </TableCell>
 
-       </Paper>
-       </Grid>
+                          <TableCell
+                            component="th"
+                            scope="row"
+                            padding="none"
+                            sx={{
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              maxWidth: "20ch",
+                              minWidth: "15ch",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            {row.description}
+                          </TableCell>
+                          <TableCell align="left" sx={{}}>
+                            {new Date(row.createdAt).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell align="left" sx={{}} style={{}}>
+                            <Stack direction={"row"} sx={{
+                              columnGap: "10px",
+                              alignItems: "center"
+                            }}>
+                              <AiOutlineEdit size="18" onClick={() => {
+                                setOpen(true);
+                                setTagData(row);
+                                setIsEdit(true);
+                              }} />
+                              {deleting === row.id ?
+                                <Loading height={30} width={30} />
+                                : (
+                                  <AiOutlineDelete size="18" onClick={() => deleteTag(row.id)} />
+                                )}
+                            </Stack>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[15, 30, 40]}
+              component="div"
+              count={tags.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              sx={{}}
+            />
+          </Paper>
+          )}
+
+        </Paper>
+      </Grid>
     </Box>
   );
 }

@@ -35,34 +35,30 @@ export default function Login() {
   const navigate = useNavigate();
 
   // login 
-  async function handleLogin(e) {
-    setIsLoading(true);
+  const handleLogin = (e) => {
+    // setIsLoading(true);
     e.preventDefault();
-    await axios
+    axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
         email: username,
         password: password,
       })
       .then((res) => {
-        console.log(res);
-        localStorage.setItem("token", res.data.token)
+        localStorage.setItem("token", res.data.token);
+
         setAlert(res.data.message, res);
         setStatus(res.data.status);
         setOpen(true);
-        //Redirect to home page if login is successful
         setIsLoading(false);
-        console.log(res.data.token);
         setTimeout(() => {
           navigate("/");
-        }, [1000]);
+        }, 1000);
       })
       .catch((e) => {
         setErroralert(e.response.data.message);
         setErrorOpen(true);
-
-
-        setIsLoading(false);
         console.log(e);
+      }).finally(() => {
       });
   }
 
@@ -136,78 +132,78 @@ export default function Login() {
           alignItems: "center",
         }}>
 
-        
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            backgroundColor: "#f3f3f3",
-            padding: "20px",
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Login
-          </Typography>
-          <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              onChange={(e) => setUserName(e.target.value)}
-              value={username}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-            />
 
-            <Button
-              fullWidth
-              variant="contained"
-              type="submit"
-              color="primary"
-              sx={{
-                marginTop: "20px",
-                boxShadow: "none",
-                borderRadius: "50px",
-                border: "1px solid #d6d4d4",
-                cursor: "pointer",
-              }}
-              onClick={(e) => handleLogin(e)}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <CircularProgress size={24} color="secondary" />
-              ) : (
-                "Login  "
-              )}
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              backgroundColor: "#f3f3f3",
+              padding: "20px",
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Login
+            </Typography>
+            <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                onChange={(e) => setUserName(e.target.value)}
+                value={username}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+              />
+
+              <Button
+                fullWidth
+                variant="contained"
+                type="submit"
+                color="primary"
+                sx={{
+                  marginTop: "20px",
+                  boxShadow: "none",
+                  borderRadius: "50px",
+                  border: "1px solid #d6d4d4",
+                  cursor: "pointer",
+                }}
+                onClick={(e) => handleLogin(e)}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <CircularProgress size={24} color="secondary" />
+                ) : (
+                  "Login  "
+                )}
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
               </Grid>
-            </Grid>
+            </Box>
           </Box>
-        </Box>
         </Box>
       </Container>
     </ThemeProvider>

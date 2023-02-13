@@ -59,7 +59,6 @@ import BlackList from "./pages/BlackList";
 // loading
 import Loading from "./components/Loading";
 import AddFile from "./pages/AddFile";
-import { getToken } from "./components/Checktoken";
 
 //Axios allow auth
 // axios.defaults.withCredentials = true;
@@ -72,18 +71,22 @@ function App() {
   //Check login
   async function checkLogin() {
     setLoading(true);
-    const token = getToken();
+    const token = localStorage.getItem("token");
+    console.log(token);
     if (!token) {
       navigate("/login");
     }
 
     await axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/login/check`)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/login/check`,{}, {
+        headers: {
+          'x-access-token': token
+        }
+      })
       .then((res) => {
-        console.log(res);
-        // if (res.data.islogin !== true) {
-        //   navigate("/login");
-        // }
+        if (res.data.islogin !== true) {
+          navigate("/login");
+        }
       })
       .catch((e) => {
         console.log(e);
