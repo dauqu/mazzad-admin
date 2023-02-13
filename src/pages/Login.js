@@ -36,7 +36,7 @@ export default function Login() {
 
   // login 
   const handleLogin = (e) => {
-    // setIsLoading(true);
+    setIsLoading(true);
     e.preventDefault();
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
@@ -49,7 +49,6 @@ export default function Login() {
         setAlert(res.data.message, res);
         setStatus(res.data.status);
         setOpen(true);
-        setIsLoading(false);
         setTimeout(() => {
           navigate("/");
         }, 1000);
@@ -59,6 +58,7 @@ export default function Login() {
         setErrorOpen(true);
         console.log(e);
       }).finally(() => {
+        setIsLoading(false);
       });
   }
 
