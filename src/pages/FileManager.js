@@ -31,56 +31,12 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function FileManager() {
-  const [files, setFiles] = React.useState([
-    {
-      name: "File Name",
-      size: "File Size",
-      type: "File Type",
-      path: "File Path",
-      date: "File Date",
-    },
-    {
-      name: "File Name",
-      size: "File Size",
-      type: "File Type",
-      path: "File Path",
-      date: "File Date",
-    },
-    {
-      name: "File Name",
-      size: "File Size",
-      type: "File Type",
-      path: "File Path",
-      date: "File Date",
-    },
-    {
-      name: "File Name",
-      size: "File Size",
-      type: "File Type",
-      path: "File Path",
-      date: "File Date",
-    },
-    {
-      name: "File Name",
-      size: "File Size",
-      type: "File Type",
-      path: "File Path",
-      date: "File Date",
-    },
-  ]);
-  const [dir, setDir] = React.useState([]);
+  
+  const [files, setFiles] = React.useState([]);
   const [server_alert, setAlert] = useState();
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = useState();
-
-  // Files Data
-  function getFileData() {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/files/uploaded_files`)
-      .then((response) => {
-        setFiles(response.data);
-      });
-  }
+  const [loading, setLoading] = useState(false);
 
   //Delete Post
   function deleteOneFile(item) {
@@ -91,7 +47,6 @@ export default function FileManager() {
       .then((res) => {
         setAlert("File successfully Deleted", res);
         setStatus("success");
-        getFileData();
       })
       .catch((e) => {
         setAlert(e.response.data.message);
@@ -100,26 +55,21 @@ export default function FileManager() {
     setOpen(true);
   }
 
-  // Directory Data
-  React.useEffect(() => {
-    getFileData();
-  }, []);
 
   //get directory data path
   React.useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/files/dir`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/storage`)
       .then((response) => {
-        setDir(response.data);
+        setFiles(response.data.files);
+      }).catch((e) => {
+        setAlert("Error while fetching files");
+        setStatus("info");
+        setOpen(true);
+      }).finally(() => {
+        setLoading(false);
       });
   }, []);
-
-  const onChange = (e) => {
-    let url = `${process.env.REACT_APP_BACKEND_URL}/files`;
-    let file = e.target.files[0];
-    uploadFile(url, file);
-    getFileData();
-  };
 
   // Upload File
   const uploadFile = (url, file) => {
@@ -134,7 +84,6 @@ export default function FileManager() {
       .then((e) => {
         setAlert("File successfully uploaded", e);
         setStatus("success", e);
-        getFileData();
         setOpen(true);
       })
       .catch((e) => {
@@ -147,7 +96,7 @@ export default function FileManager() {
   const handleCopyClick = (item) => {
     setAlert("Link copied successfully");
     setStatus("success");
-    navigator.clipboard.writeText(item.path);
+    navigator.clipboard.writeText(item.url);
     setOpen(true);
   };
 
@@ -157,9 +106,8 @@ export default function FileManager() {
     if (newWindow) newWindow.opener = null;
   };
 
-  const onClickUrl = (url) => {
-    return () => openInNewTab(url);
-  };
+ 
+
 
   //Alert
   const handleClose = (reason) => {
@@ -243,7 +191,7 @@ export default function FileManager() {
             {files
               .slice(0)
               .reverse()
-              .map((item) => (
+              .map((item, idx) => (
                 <Card
                   sx={{
                     height: 230,
@@ -252,7 +200,7 @@ export default function FileManager() {
                     boxShadow: 0,
                     border: "1px solid #ccc",
                   }}
-                  key={item.id}
+                  key={idx}
                 >
                   {item.file_extension === ".jpg" ||
                   item.file_extension === ".gif" ||
@@ -326,7 +274,7 @@ export default function FileManager() {
                           backgroundColor: "#00000021",
                           border: "1px solid #fff",
                         }}
-                        onClick={onClickUrl(`${item.path}`)}
+                        onClick={() => openInNewTab(`${item.url}`)}
                       >
                         <RemoveRedEyeOutlinedIcon />
                       </IconButton>

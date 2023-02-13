@@ -21,6 +21,8 @@ import {
     Snackbar,
     Alert,
     Tooltip,
+    Grid,
+    LinearProgress,
 } from '@mui/material'
 import { visuallyHidden, } from '@mui/utils'
 import { alpha } from "@mui/material/styles";
@@ -31,7 +33,6 @@ import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 
 import { AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai'
-import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
 
 
@@ -249,6 +250,7 @@ const Contracts = () => {
     const navigate = useNavigate();
 
     const [allContracts, setAllContracts] = useState([]);
+    const [loading, setLoading] = React.useState(false);
 
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("description");
@@ -284,9 +286,17 @@ const Contracts = () => {
 
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/contract`).then((res) => {
-            setAllContracts(res.data);
-        });
+        setLoading(true);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/contract`)
+            .then((res) => {
+                setAllContracts(res.data);
+            }).catch((err) => {
+                console.log(err);
+            }).finally(() => {
+                setTimeout(() => {
+                    setLoading(false);
+                }, 300);
+            });
     }, []);
 
     const deleteContract = (id) => {
@@ -347,123 +357,146 @@ const Contracts = () => {
 
 
             {/*  */}
-
-            <Paper
-                sx={{
-                    width: "100%",
-                    mb: 2,
-                    boxShadow: 0,
-                    overflow: "scroll",
-                }}
-            >
-                <EnhancedTableToolbar
-                numSelected={selected.length}
-                />
-                <TableContainer>
-                    <Table
-                        sx={{ minWidth: 750 }}
-                        aria-labelledby="tableTitle"
-                        size="small"
-                    >
-                        <EnhancedTableHead
-                            numSelected={5}
-                            order={order}
-                            orderBy={orderBy}
-                            onSelectAllClick={handleSelectAllClick}
-                            onRequestSort={handleRequestSort}
-                            rowCount={allContracts.length}
-                        />
-                        <TableBody>
-
-
-                            {stableSort(allContracts, getComparator(order, orderBy))
-                                .slice(
-                                    page * rowsPerPage,
-                                    page * rowsPerPage + rowsPerPage
-                                )
-                                .slice()
-                                .reverse()
-                                .map((row, index) => {
-                                    const isItemSelected = isSelected(row._id);
-
-                                    return (
-                                        <TableRow
-                                            hover
-                                            // onClick={(event) => handleClick(event, row._id)}
-                                            role="checkbox"
-                                            aria-checked={isItemSelected}
-                                            tabIndex={-1}
-                                            key={row.id}
-                                            selected={isItemSelected}
-                                        >
+            <Grid item xs>
+                <Paper sx={{ boxShadow: 0, borderRadius: 1 }}>
+                    {loading ? (
+                        <Grid
+                            container
+                            spacing={2}
+                            sx={{
+                                width: "100%",
+                                height: "100%",
+                                marginTop: 0,
+                                paddingBottom: 4,
+                                paddingTop: 2,
+                                paddingLeft: 2,
+                                paddingRight: 2,
+                            }}
+                        >
+                            <Grid item xs={12}>
+                                <LinearProgress />
+                            </Grid>
+                        </Grid>
+                    ) : (
+                        <Paper
+                            sx={{
+                                width: "100%",
+                                mb: 2,
+                                boxShadow: 0,
+                                overflow: "scroll",
+                            }}
+                        >
+                            <EnhancedTableToolbar
+                                numSelected={selected.length}
+                            />
+                            <TableContainer>
+                                <Table
+                                    sx={{ minWidth: 750 }}
+                                    aria-labelledby="tableTitle"
+                                    size="small"
+                                >
+                                    <EnhancedTableHead
+                                        numSelected={5}
+                                        order={order}
+                                        orderBy={orderBy}
+                                        onSelectAllClick={handleSelectAllClick}
+                                        onRequestSort={handleRequestSort}
+                                        rowCount={allContracts.length}
+                                    />
+                                    <TableBody>
 
 
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    color="primary"
-                                                />
-                                            </TableCell>
+                                        {stableSort(allContracts, getComparator(order, orderBy))
+                                            .slice(
+                                                page * rowsPerPage,
+                                                page * rowsPerPage + rowsPerPage
+                                            )
+                                            .slice()
+                                            .reverse()
+                                            .map((row, index) => {
+                                                const isItemSelected = isSelected(row._id);
 
-                                            <TableCell
-                                                scope="row"
-                                                padding="none"
-                                            >
-                                                <Typography
-                                                    size="small"
-                                                    sx={{
-                                                        overflow: "hidden",
-                                                        whiteSpace: "nowrap",
-                                                        maxWidth: "20ch",
-                                                        textOverflow: "ellipsis",
-                                                        cursor: "pointer",
-                                                    }}
-                                                >
-                                                    {row.id}
-                                                </Typography>
-                                            </TableCell>
+                                                return (
+                                                    <TableRow
+                                                        hover
+                                                        // onClick={(event) => handleClick(event, row._id)}
+                                                        // aria-checked={isItemSelected}
+                                                        // selected={isItemSelected}
+                                                        role="checkbox"
+                                                        tabIndex={-1}
+                                                        key={row.id}
+                                                    >
 
-                                            <TableCell
-                                                component="th"
-                                                scope="row"
-                                                padding="none"
-                                                sx={{
-                                                    overflow: "hidden",
-                                                    whiteSpace: "nowrap",
-                                                    maxWidth: "20ch",
-                                                    minWidth: "15ch",
-                                                    textOverflow: "ellipsis",
-                                                }}
-                                            >
-                                                {row.title}
-                                            </TableCell>
-                                            <TableCell align="left" sx={{}}>
-                                                {row.terms}
-                                            </TableCell>
-                                            <TableCell align="left" sx={{}} style={{
-                                            }}>
-                                                <Stack direction={"row"} sx={{ columnGap: "10px" }}>
 
-                                                    <AiOutlineEdit size="18" onClick={() => navigate(`/edit-contract/${row.id}`)} />
-                                                    <AiOutlineDelete size="18" onClick={() => deleteContract(row.id)} />
-                                                </Stack>
-                                            </TableCell>
-                                        </TableRow>
-                                    )
-                                })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[15, 30, 40]}
-                    component="div"
-                    count={allContracts.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    sx={{}}
-                />
-            </Paper>
+                                                        <TableCell padding="checkbox">
+                                                            <Checkbox
+                                                                color="primary"
+                                                            />
+                                                        </TableCell>
+
+                                                        <TableCell
+                                                            scope="row"
+                                                            padding="none"
+                                                        >
+                                                            <Typography
+                                                                size="small"
+                                                                sx={{
+                                                                    overflow: "hidden",
+                                                                    whiteSpace: "nowrap",
+                                                                    maxWidth: "20ch",
+                                                                    textOverflow: "ellipsis",
+                                                                    cursor: "pointer",
+                                                                }}
+                                                            >
+                                                                {row.id}
+                                                            </Typography>
+                                                        </TableCell>
+
+                                                        <TableCell
+                                                            component="th"
+                                                            scope="row"
+                                                            padding="none"
+                                                            sx={{
+                                                                overflow: "hidden",
+                                                                whiteSpace: "nowrap",
+                                                                maxWidth: "20ch",
+                                                                minWidth: "15ch",
+                                                                textOverflow: "ellipsis",
+                                                            }}
+                                                        >
+                                                            {row.title}
+                                                        </TableCell>
+                                                        <TableCell align="left" sx={{}}>
+                                                            {row.terms}
+                                                        </TableCell>
+                                                        <TableCell align="left" sx={{}} style={{
+                                                        }}>
+                                                            <Stack direction={"row"} sx={{ columnGap: "10px" }}>
+
+                                                                <AiOutlineEdit size="18" onClick={() => navigate(`/edit-contract/${row.id}`)} />
+                                                                <AiOutlineDelete size="18" onClick={() => deleteContract(row.id)} />
+                                                            </Stack>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )
+                                            })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TablePagination
+                                rowsPerPageOptions={[15, 30, 40]}
+                                component="div"
+                                count={allContracts.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                sx={{}}
+                            />
+                        </Paper>
+                    )}
+                </Paper>
+            </Grid>
         </Box>
     )
 }

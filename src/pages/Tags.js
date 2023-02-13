@@ -25,7 +25,7 @@ import Snackbar from "@mui/material/Snackbar";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Dialog, Divider, Button, TextField } from "@mui/material";
+import { Dialog, Divider, Button, TextField, Grid, LinearProgress } from "@mui/material";
 
 import { Link as RouterLink } from "react-router-dom";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
@@ -271,6 +271,7 @@ export default function Tags() {
   const [open, setOpen] = React.useState(false);
   const [tags, setTags] = React.useState([]);
 
+  const [loading, setLoading] = React.useState(false);
 
   const [isEdit, setIsEdit] = React.useState(false);
   const [tagData, setTagData] = React.useState({
@@ -285,9 +286,16 @@ export default function Tags() {
 
   // load all tags 
   React.useEffect(() => {
+    setLoading(true);
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/tags`).then((res) => {
       setTags(res.data);
       console.log(res.data);
+    })  .catch((err) => {
+      console.log(err);
+    }).finally(() => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
     });
   }, []);
 
@@ -437,7 +445,27 @@ export default function Tags() {
 
       {/*  */}
 
-      <Paper
+      <Grid item xs>
+          <Paper sx={{ boxShadow: 0, borderRadius: 1 }}>
+            {loading ? (
+              <Grid
+                container
+                spacing={2}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  marginTop: 0,
+                  paddingBottom: 4,
+                  paddingTop: 2,
+                  paddingLeft: 2,
+                  paddingRight: 2,
+                }}
+              >
+                <Grid item xs={12}>
+                  <LinearProgress />
+                </Grid>
+              </Grid>
+            ) : (<Paper
         sx={{
           width: "100%",
           mb: 2,
@@ -536,6 +564,10 @@ export default function Tags() {
           sx={{}}
         />
       </Paper>
+       )}
+
+       </Paper>
+       </Grid>
     </Box>
   );
 }

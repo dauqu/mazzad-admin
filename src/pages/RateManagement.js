@@ -32,7 +32,7 @@ import Snackbar from "@mui/material/Snackbar";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Divider,  } from "@mui/material";
+import { Divider, Grid, LinearProgress, } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 //Html Tooltip
@@ -88,46 +88,16 @@ const headCells = [
     id: "1",
     numeric: false,
     disablePadding: true,
-    label: "Image",
+    label: "title",
   },
   {
     id: "2",
     numeric: false,
     disablePadding: true,
-    label: "Products Name",
+    label: "description",
   },
   {
     id: "3",
-    numeric: false,
-    disablePadding: false,
-    label: "Price",
-  },
-  {
-    id: "4",
-    numeric: false,
-    disablePadding: false,
-    label: "Rating",
-  },
-  {
-    id: "5",
-    numeric: false,
-    disablePadding: false,
-    label: "Tags",
-  },
-  {
-    id: "6",
-    numeric: false,
-    disablePadding: false,
-    label: "Categories",
-  },
-  {
-    id: "7",
-    numeric: false,
-    disablePadding: false,
-    label: "Published At",
-  },
-  {
-    id: "8",
     numeric: false,
     disablePadding: false,
     label: "Status",
@@ -230,7 +200,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          List of all Rates and Reviews 
+          List of all Rates and Reviews
         </Typography>
       )}
 
@@ -357,140 +327,28 @@ export default function RateManagement() {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const [open, setOpen] = React.useState(false);
-
-
-  // Get Category
-  const [category, setCategory] = React.useState([]);
-  React.useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/blog`)
-      .then((response) => {
-        setCategory(response.data);
-      });
-  }, []);
-
-
-  const theme = useTheme();
-
-  //Product Title
-  const [productTitle, setProductTitle] = React.useState("");
-  const [productDescription, setProductDescription] = React.useState("");
-  const [productCategory, setProductCategory] = React.useState("");
-  const [productGallery, setProductGallery] = React.useState("");
-  const [featuredImage, setFeaturedImage] = React.useState("");
-  const [featuredImageFront, setFeaturedImageFront] = React.useState("");
-  const [regularPrice, setRegularPrice] = React.useState("");
-  const [salePrice, setSalePrice] = React.useState("");
-  const [reviews, setReviews] = React.useState(false);
-  const [comments, setComments] = React.useState(false);
-  const [isprivate, setPrivate] = React.useState(false);
-  const [stackStatus, setStackStatus] = React.useState("");
-  const [taxStatus, setTaxStatus] = React.useState("");
-  const [taxClass, setTaxClass] = React.useState("");
-  const [tags, setTags] = React.useState([]);
   const [server_alert, setAlert] = React.useState();
   const [status, setStatus] = React.useState();
   const [alertOpen, setAlertOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const [rows, setProducts] = React.useState([]);
 
-
-  // Set Featured Image
-  const featuredImageHandleChange = (e) => {
-    if (e.target.files) {
-      // const FeaturedImage_ = Array.from(e.target.files).map((file) =>
-      //   URL.createObjectURL(file)
-      // );
-      setFeaturedImage(e.target.files[0].name);
-    }
-    if (e.target.files) {
-      const FeaturedImage_ = Array.from(e.target.files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setFeaturedImageFront(FeaturedImage_);
-    }
-  };
-
-  console.log(featuredImage);
-
-  // Set Featured Image
-  const productGalleryHandleChange = (e) => {
-    if (e.target.files) {
-      const productGallery = Array.from(e.target.files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setProductGallery(productGallery);
-      console.log(productGallery);
-    }
-  };
-
-  const handleReviewsChange = () => {
-    setReviews(!reviews);
-  };
-
-  const handleCommentsChange = () => {
-    setComments(!comments);
-  };
-
-  const handlePrivateChange = () => {
-    setPrivate(!isprivate);
-  };
-
-  //Get Product
-  const getProducts = () => {
+  React.useEffect(() => {
+    setLoading(true);
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/products`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/rate`)
       .then((response) => {
         setProducts(response.data);
+      }).catch((error) => {
+        console.log(error);
+      }).finally(() => {
+        setTimeout(() => {
+          setLoading(false);
+        }, 300);
       });
-  };
-
-  React.useEffect(() => {
-    getProducts();
   }, []);
 
-
-  //Delete Product
-  window.deleteProduct = () => {
-    axios
-      .delete(`${process.env.REACT_APP_BACKEND_URL}/products/${selected}`)
-      .then((response) => {
-        setAlert("Product successfully deleted", response);
-        setStatus("success");
-        console.log(response.data);
-        getProducts();
-        setAlertOpen(true);
-        setSelected([]);
-      })
-      .catch((e) => {
-        setAlert(e.response.data.message);
-        setStatus(e.response.data.status);
-        setAlertOpen(true);
-      });
-  };
-
-  //Edit Product
-  const editProduct = (id) => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/products/${id}`)
-      .then((response) => {
-        setProductTitle(response.data.title);
-        setProductDescription(response.data.description);
-        setProductCategory(response.data.category);
-        setProductGallery(response.data.gallery);
-        setFeaturedImage(response.data.featured_image);
-        setFeaturedImageFront(response.data.featured_image_front);
-        setRegularPrice(response.data.regular_price);
-        setSalePrice(response.data.sale_price);
-        setReviews(response.data.reviews);
-        setComments(response.data.comments);
-        setPrivate(response.data.isprivate);
-        setStackStatus(response.data.stack_status);
-        setTaxStatus(response.data.tax_status);
-        setTaxClass(response.data.tax_class);
-        setTags(response.data.tags);
-      });
-  };
 
   const alertHandleClose = (reason) => {
     if (reason === "clickaway") {
@@ -529,18 +387,17 @@ export default function RateManagement() {
     >
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
-          <IconButton
+          {/* <IconButton
             edge="start"
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
             onClick={() => navigate("/new-product")}
           >
-            {/* <CloseIcon /> */}
             <AddIcon />
-          </IconButton>
+          </IconButton> */}
           <Typography variant="h6" color="inherit" component="div">
-            Manage Rates  
+            Manage Rates
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
@@ -567,164 +424,134 @@ export default function RateManagement() {
 
       {/*  */}
 
-      <Paper
-        sx={{
-          width: "100%",
-          mb: 2,
-          boxShadow: 0,
-          // background: "#1A2027",
-          // color: "#fff",
-          overflow: "scroll",
-        }}
-      >
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size="small"
+      <Grid item xs>
+        <Paper sx={{ boxShadow: 0, borderRadius: 1 }}>
+          {loading ? (
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                width: "100%",
+                height: "100%",
+                marginTop: 0,
+                paddingBottom: 4,
+                paddingTop: 2,
+                paddingLeft: 2,
+                paddingRight: 2,
+              }}
+            >
+              <Grid item xs={12}>
+                <LinearProgress />
+              </Grid>
+            </Grid>
+          ) : (<Paper
+            sx={{
+              width: "100%",
+              mb: 2,
+              boxShadow: 0,
+              // background: "#1A2027",
+              // color: "#fff",
+              overflow: "scroll",
+            }}
           >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+            <EnhancedTableToolbar numSelected={selected.length} />
+            <TableContainer>
+              <Table
+                sx={{ minWidth: 750 }}
+                aria-labelledby="tableTitle"
+                size="small"
+              >
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={rows.length}
+                />
+                <TableBody>
+                  {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .reverse()
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.slug);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+                  {stableSort(rows, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .reverse()
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(row.slug);
+                      const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.slug)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.slug}
-                      selected={isItemSelected}
-                      sx={{ color: "#fff" }}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                        // sx={{ color: "#fff" }}
-                        />
-                      </TableCell>
-
-                      <TableCell
-                        scope="row"
-                        padding="none"
-                      // sx={{ color: "#fff" }}
-                      >
-                        <HtmlTooltip
-                          placement="right"
-                          title={
-                            <React.Fragment>
-                              <CardMedia
-                                component="img"
-                                height="140"
-                                image={row.image}
-                                alt="green iguana"
-                              />
-                            </React.Fragment>
-                          }
+                      return (
+                        <TableRow
+                          hover
+                          onClick={(event) => handleClick(event, row.slug)}
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row.slug}
+                          selected={isItemSelected}
+                          sx={{ color: "#fff" }}
                         >
-                          <Typography
-                            size="small"
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              color="primary"
+                              checked={isItemSelected}
+                            // sx={{ color: "#fff" }}
+                            />
+                          </TableCell>
+
+                          <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding="none"
                             sx={{
                               overflow: "hidden",
                               whiteSpace: "nowrap",
                               maxWidth: "20ch",
+                              minWidth: "15ch",
                               textOverflow: "ellipsis",
-                              cursor: "pointer",
                               // color: "#fff",
                             }}
                           >
-                            {row.image}
-                          </Typography>
-                        </HtmlTooltip>
-                      </TableCell>
+                            {row.title}
+                          </TableCell>
+                          <TableCell align="left" sx={{}}>
+                            {row.description}
+                          </TableCell>
+                          <TableCell align="left">
+                            <Rating
+                              name="half-rating-read"
+                              // value={row.all_reviews.rating}
+                              precision={0.5}
+                              readOnly
+                            />
+                          </TableCell>
+                          <TableCell align="left" sx={{ width: 400 }}>
+                            {row.status}
+                          </TableCell>
+                          <TableCell align="left" sx={{}}>
+                            {new Date(row.createdAt).toLocaleDateString()}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[15, 30, 40]}
+              component="div"
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            // sx={{ color: "#fff" }}
+            />
+          </Paper>
 
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                        sx={{
-                          overflow: "hidden",
-                          whiteSpace: "nowrap",
-                          maxWidth: "20ch",
-                          minWidth: "15ch",
-                          textOverflow: "ellipsis",
-                          // color: "#fff",
-                        }}
-                      >
-                        {row.title}
-                      </TableCell>
-                      <TableCell align="left" sx={{}}>
-                        {row.price + " USD"}
-                      </TableCell>
-                      <TableCell align="left">
-                        <Rating
-                          name="half-rating-read"
-                          // value={row.all_reviews.rating}
-                          precision={0.5}
-                          readOnly
-                        />
-                      </TableCell>
-                      <TableCell align="left" sx={{ width: 400 }}>
-                        {/* {row.tags.map((value) => (
-                          <Chip
-                            sx={{ height: 18, fontSize: 12, margin: 0.2 }}
-                            color="success"
-                            size="small"
-                            key={value._id}
-                            label={value}
-                          />
-                        ))} */}
-                      </TableCell>
-                      <TableCell align="left" sx={{}}>
-                        {row.category}
-                      </TableCell>
-                      <TableCell align="left" sx={{}}>
-                        {row.createdAt.slice(0, 10)}
-                      </TableCell>
-
-                      <TableCell align="left">
-                        <Chip
-                          label={row.status}
-                          size="small"
-                          color={row.status === "active" ? "success" : "error"}
-                          sx={{ width: 80 }}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[15, 30, 40]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        // sx={{ color: "#fff" }}
-        />
-      </Paper>
+          )}
+        </Paper>
+      </Grid>
     </Box>
   );
 }

@@ -107,7 +107,7 @@ const menu_items = [
   {
     name: "Upload Files",
     icon: <UploadFileOutlined />,
-    url: "/upload-files",
+    url: "/add-file",
   },
   {
     name: "Others",

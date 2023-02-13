@@ -27,7 +27,7 @@ import Chip from "@mui/material/Chip";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Divider, } from "@mui/material";
+import { Divider, Grid, LinearProgress, } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { Stack } from "@mui/system";
@@ -275,6 +275,7 @@ export default function Complaints() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [loading, setLoading] = React.useState(false);
 
   window.selected = selected;
   const navigate = useNavigate();
@@ -308,11 +309,18 @@ export default function Complaints() {
   const [rows, setComplaints] = React.useState([]);
   //Get Product
   const getProducts = () => {
+    setLoading(true);
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/complaints`)
       .then((response) => {
         setComplaints([...response.data]);
-      });
+      }).catch((error) => {
+        console.log(error)
+      }).finally(() => {
+        setTimeout(() => {
+          setLoading(false);
+        }, 300)
+      })
   };
 
   React.useEffect(() => {
@@ -367,7 +375,27 @@ export default function Complaints() {
       </AppBar>
 
 
-      <Paper
+      <Grid item xs>
+          <Paper sx={{ boxShadow: 0, borderRadius: 1 }}>
+            {loading ? (
+              <Grid
+                container
+                spacing={2}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  marginTop: 0,
+                  paddingBottom: 4,
+                  paddingTop: 2,
+                  paddingLeft: 2,
+                  paddingRight: 2,
+                }}
+              >
+                <Grid item xs={12}>
+                  <LinearProgress />
+                </Grid>
+              </Grid>
+            ) : ( <Paper
         sx={{
           width: "100%",
           mb: 2,
@@ -474,6 +502,10 @@ export default function Complaints() {
         // sx={{ color: "#fff" }}
         />
       </Paper>
+      )}
+
+      </Paper>
+      </Grid>
     </Box>
   );
 }

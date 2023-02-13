@@ -27,7 +27,7 @@ import Chip from "@mui/material/Chip";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Button, Divider, } from "@mui/material";
+import { Button, Divider, Grid, LinearProgress, } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { Stack } from "@mui/system";
@@ -279,6 +279,7 @@ export default function Refund() {
   const [page, setPage] = React.useState(0);
   const [dense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [loading, setLoading] = React.useState(false);
 
   window.selected = selected;
   const navigate = useNavigate();
@@ -333,11 +334,19 @@ export default function Refund() {
  
 
   React.useEffect(() => {
+    setLoading(true);
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/refund`)
       .then((response) => {
         setComplaints([...response.data]);
-      });
+      }).catch((error) => {
+        console.log("Error in getting complaints: ", error.message);
+      }).finally(() => {
+        // timeout 300 ms 
+        setTimeout(() => {
+          setLoading(false);
+        }, 300);
+      })
   }, []);
 
 
@@ -389,7 +398,27 @@ export default function Refund() {
       </AppBar>
 
 
-      <Paper
+      <Grid item xs>
+          <Paper sx={{ boxShadow: 0, borderRadius: 1 }}>
+            {loading ? (
+              <Grid
+                container
+                spacing={2}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  marginTop: 0,
+                  paddingBottom: 4,
+                  paddingTop: 2,
+                  paddingLeft: 2,
+                  paddingRight: 2,
+                }}
+              >
+                <Grid item xs={12}>
+                  <LinearProgress />
+                </Grid>
+              </Grid>
+            ) : (<Paper
         sx={{
           width: "100%",
           mb: 2,
@@ -501,6 +530,10 @@ export default function Refund() {
         // sx={{ color: "#fff" }}
         />
       </Paper>
+      )}
+      </Paper>
+      </Grid>
+
     </Box>
   );
 }

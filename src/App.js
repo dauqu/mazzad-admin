@@ -54,11 +54,11 @@ import Systeminfo from "./pages/Systeminfo";
 import Email from "./pages/Email";
 import SMS from "./pages/SMS";
 import TransactionHistory from "./pages/TransactionHistory";
-import UploadFile from "./pages/UploadFile";
 import BlackList from "./pages/BlackList";
 
 // loading
 import Loading from "./components/Loading";
+import AddFile from "./pages/AddFile";
 
 //Axios allow auth
 axios.defaults.withCredentials = true;
@@ -159,6 +159,7 @@ function App() {
             <Route path="/notifications" element={<Notifications />} />
 
             <Route path="/file-manager" element={<FileManager />} />
+            <Route path="/add-file" element={<AddFile />} />
 
             <Route path="/auctions" element={<Auctions />} />
             <Route path="/edit-auction/:id" element={<AddAuction />} />
@@ -174,7 +175,6 @@ function App() {
             <Route path="/edit-company/:id" element={<AddCompany />} />
 
             <Route path="/commission" element={<Commission />} />
-            <Route path="/upload-files" element={<UploadFile />} />
 
             <Route path="/classifications" element={<Classifications />} />
 

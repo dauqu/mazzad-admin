@@ -238,16 +238,20 @@ export default function Companies() {
 
   //Get all comapnies
   async function getCategoryData() {
-    const res = await axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/companies`
-    );
-    setCompanies(res.data);
-    setLoading(false);
   }
-
+  
   React.useEffect(() => {
-    setLoading(true);
-    getCategoryData();
+    axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/companies`
+    ).then((res) => {
+      setCompanies(res.data);
+    }).catch((err) => {
+      console.log(err);
+    }).finally(() => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
+    });
   }, []);
 
   const [order, setOrder] = React.useState("asc");

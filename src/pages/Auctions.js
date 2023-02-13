@@ -236,16 +236,19 @@ export default function Auctions() {
 
   const navigate = useNavigate();
 
-  //Get all categories
-  async function getCategoryData() {
-    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/auctions`);
-    console.log(res.data);
-    setCategories(res.data);
-  }
-
   React.useEffect(() => {
-    getCategoryData();
-    setLoading(false);
+    setLoading(true);
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/auctions`)
+      .then((res) => {
+        setCategories(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      }).finally(() => {
+        setTimeout(() => {
+          setLoading(false);
+        }, 300);
+      });
   }, []);
 
 
@@ -275,7 +278,7 @@ export default function Auctions() {
     setSelected([]);
   };
 
- 
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
