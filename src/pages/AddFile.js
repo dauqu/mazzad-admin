@@ -10,7 +10,7 @@ const AddFile = () => {
     const inputRef = React.useRef(null)
     const drop = React.useRef(null)
 
-    const [fileData, setFileData] = React.useState(null)
+    const [fileData, setFileData] = React.useState([])
     const [isFile, setIsFile] = React.useState(false)
 
     const [server_alert, setAlert] = React.useState(null);
@@ -53,44 +53,40 @@ const AddFile = () => {
         e.stopPropagation();
 
         const { files } = e.dataTransfer;
+        console.log(files);
 
-        if (!files && files.length == 0 || files.length > 1) {
-            alert('Please select one file');
+        if (!files && files.length <= 0) {
             return;
         }
+
+        setFileData([...files]);
+        setIsFile(true);
+
         inputRef.current.files = files;
-        setData(files[0]);
+        // setData(updatedFiles);
     };
 
     // Upload File
-    const uploadFile = (file) => {
-        if (!fileData) {
+    const uploadFile = () => {
+        if (!fileData || fileData.length <= 0) {
             setAlert("Please select a file");
             setStatus("error");
             setOpen(true);
             return;
         }
-        let formData = new FormData();
-        formData.append("uploadedFile", fileData);
-        axios
-            .post(`${process.env.REACT_APP_BACKEND_URL}/storage`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            })
-            .then((e) => {
-                setAlert("File successfully uploaded", e);
-                setStatus("success", e);
-                setOpen(true);
-                setTimeout(() => {
-                    navigate("/file-manager")
-                }
-                    , 1000);
-            })
-            .catch((e) => {
-                setAlert(e.response.data.message);
-                setStatus(e.response.data.status);
-            });
+        fileData.forEach(async (file) => {
+            let formData = new FormData();
+            formData.append("uploadedFile", file);
+            await axios
+                .post(`${process.env.REACT_APP_BACKEND_URL}/storage`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                })
+        });
+        setAlert("File successfully uploaded");
+        setStatus("success");
+        setOpen(true);
     };
 
     function formatBytes(a, b = 2) {
@@ -121,7 +117,7 @@ const AddFile = () => {
     );
 
     return (
-        <div className='w-full h-[90vh] py-4 flex flex-col items-center justify-center'>
+        <div className='h-[90vh] py-4 flex flex-col items-center justify-center'>
             <Snackbar
                 open={open}
                 autoHideDuration={3000}
@@ -135,29 +131,43 @@ const AddFile = () => {
                 </Alert>
             </Snackbar>
             <div
-                className='mt-4 w-[60%] h-[400px] flex flex-col items-center justify-center rounded-[30px]'
+                className={`justify-center mt-4 max-w-[60%] w-[60%] h-[400px] flex flex-row flex-wrap items-center p-3 rounded-[30px] gap-x-[10px]`}
                 style={{
                     outline: '2px dashed #000',
+                    overflow: 'hidden',
+                    overflowY: 'auto',
                 }}
                 ref={drop}
                 onClick={() => inputRef.current.click()}
             >
                 {isFile ? (
-                    <div>
-                        <h3 className='mb-3 text-xl'>{fileData.name}</h3>
-
-                        <h3 className='text-base'>{formatBytes(fileData.size)}</h3>
-                    </div>
+                    fileData.map((file, idx) => (
+                        <div className='h-[150px] overflow-hidden w-[200px] p-2 flex justify-between flex-col items-start shadow-lg' key={idx}>
+                            <h3 className='mb-3 text-xl'
+                            style={{
+                                display: "-webkit-box",
+                                WebkitLineClamp: 3,
+                                WebkitBoxOrient: "vertical",
+                                overflow: "hidden",
+                                textAlign: "left",
+                            }}
+                            >{file.name}</h3>
+                            <div>
+                                <h3 className='text-base'>{formatBytes(file.size)}</h3>
+                                <h3 className='text-base'>{String(file.type).split('/')[0]}</h3>
+                            </div>
+                        </div>
+                    ))
                 ) : (
                     <h2 className='font-serif text-xl text-gray-700'>To Upload file, Click or Drag in this area.</h2>
                 )}
-                <input type="file" hidden ref={inputRef} onChange={(e) => e.target.files.length > 0 && setData(e.target.files[0])} />
+                <input multiple type="file" hidden ref={inputRef} onChange={(e) => e.target.files.length > 0 && setData([...e.target.files])} />
             </div>
             <Button
-            sx={{
-                width: '60%',
-                marginTop: '2rem',
-            }}
+                sx={{
+                    width: '60%',
+                    marginTop: '2rem',
+                }}
                 variant="contained"
                 className='ml-4'
                 color='success'

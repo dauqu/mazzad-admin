@@ -42,7 +42,6 @@ export default function AddComplaints() {
     };
 
 
-
     return (
         <Box sx={{ flexGrow: 1, marginTop: 3 }}>
             <AppBar position="static">

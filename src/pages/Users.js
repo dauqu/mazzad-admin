@@ -17,7 +17,6 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -37,16 +36,12 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Divider } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Chip, Divider, Grid, LinearProgress } from "@mui/material";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { IoBanOutline } from "react-icons/io5";
+import { MdOutlineRemoveCircleOutline } from "react-icons/md";
+import Loading from "../components/Loading";
 
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "left",
-  // color: "#fff",
-  // backgroundColor: "#1A2027",
-}));
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -78,28 +73,22 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "_id",
+    id: "fullname",
     numeric: false,
     disablePadding: true,
     label: "Full Name",
   },
   {
-    id: "calories",
+    id: "username",
     numeric: false,
     disablePadding: false,
     label: "@username",
   },
   {
-    id: "fat",
+    id: "email",
     numeric: false,
     disablePadding: false,
     label: "Email address",
-  },
-  {
-    id: "carbs",
-    numeric: false,
-    disablePadding: false,
-    label: "Users Role",
   },
   {
     id: "phone",
@@ -108,10 +97,16 @@ const headCells = [
     label: "Phone Number",
   },
   {
-    id: "protein",
+    id: "Status",
     numeric: false,
     disablePadding: false,
-    label: "Date",
+    label: "Status",
+  },
+  {
+    id: "Action",
+    numeric: false,
+    disablePadding: false,
+    label: "Action",
   },
 ];
 
@@ -260,7 +255,9 @@ export default function Users() {
   const [page, setPage] = React.useState(0);
   const [dense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(15);
-  const navigate = useNavigate();
+
+  // open modal 
+  const [open, setOpen] = React.useState(false);
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -277,26 +274,6 @@ export default function Users() {
     setSelected([]);
   };
 
-  const handleClick = (event, _id) => {
-    const selectedIndex = selected.indexOf(_id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, _id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -308,66 +285,199 @@ export default function Users() {
 
   const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  // const emptyRows =
-  //   page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  const [open, setOpen] = React.useState(false);
+
+
+  const [server_alert, setAlert] = useState();
+  const [status, setStatus] = useState();
+
+
+  const [userdata, setUserdata] = useState({
+    fullName: "",
+    username: "",
+    email: "",
+    role: "",
+    password: "",
+    phone: "",
+  });
+
+
+  const [openalert, setOpenAlert] = useState(false);
+  const [rows, setUsers] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [blocking, setBlocking] = React.useState(false);
+  const [addingUser, setAddingUser] = React.useState(false);
+  const [isEditing, setIsEditing] = React.useState(false);
+
+  // load all users
+  React.useEffect(() => {
+    setLoading(true);
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/users`).then((response) => {
+      setUsers(response.data);
+    }).catch((e) => {
+      console.log(e);
+    }).finally(() => {
+      setLoading(false);
+    });
+  }, []);
+
+  // to delete a user 
+  const handleDelete = (id) => {
+    setIsDeleting(id);
+    axios
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/users/${id}`)
+      .then((res) => {
+        setAlert("User successfully deleted", res);
+        setStatus("success");
+      })
+      .catch((e) => {
+        setAlert(e.response.data.message);
+        setStatus(e.response.data.status);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setOpenAlert(true);
+          const removed = rows.filter((row) => row.id !== id);
+          setUsers(removed);
+          setIsDeleting("");
+        }, 500);
+      });
+  };
+
+  // to block user 
+  const handleBlock = (id) => {
+    setBlocking(id);
+    axios
+      .put(`${process.env.REACT_APP_BACKEND_URL}/users/block/${id}`)
+      .then((res) => {
+        setAlert("User Blocked successfully.");
+        setStatus("success");
+      })
+      .catch((e) => {
+        setAlert(e.response.data.message);
+        setStatus(e.response.data.status);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setOpenAlert(true);
+          setBlocking("");
+          // change status of user
+          const updated = rows.map((row) => {
+            if (row.id === id) {
+              row.status = "blacklist";
+            }
+            return row;
+          });
+          setUsers(updated);
+        }, 500);
+      });
+  };
+
+  // to unblock user
+  const handleUnBlock = (id) => {
+    setBlocking(id);
+    axios
+      .put(`${process.env.REACT_APP_BACKEND_URL}/users/unblock/${id}`)
+      .then((res) => {
+        setAlert("User unblocked successfully.");
+        setStatus("success");
+      })
+      .catch((e) => {
+        setAlert(e.response.data.message);
+        setStatus(e.response.data.status);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setOpenAlert(true);
+          setBlocking("");
+          // change status of user
+          const updated = rows.map((row) => {
+            if (row.id === id) {
+              row.status = "active";
+            }
+            return row;
+          });
+          setUsers(updated);
+        }, 500);
+      });
+  };
+
+  // to add user
+  const createPost = (e) => {
+    setAddingUser(true)
+    e.preventDefault();
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/register`, userdata)
+      .then((res) => {
+        setAlert("User successfully added");
+        setStatus("success");
+        setUsers([...rows, res.data.user]);
+      })
+      .catch((e) => {
+        setAlert(e.response.data.message);
+        setStatus(e.response.data.status);
+      }).finally(() => {
+        setTimeout(() => {
+          setOpenAlert(true);
+          setAddingUser(false);
+          setOpen(false);
+        }, 500);
+      });
+  };
+
+  const updatePost = (e) => {
+    e.preventDefault();
+    setAddingUser(true)
+    axios
+      .put(`${process.env.REACT_APP_BACKEND_URL}/users/${userdata.id}`, userdata)
+      .then((res) => {
+        setAlert("User successfully updated");
+        setStatus("success");
+        const updated = rows.map((row) => {
+          if (row.id === userdata.id) {
+            row = userdata;
+          }
+          return row;
+        });
+        setUsers(updated);
+      })
+      .catch((e) => {
+        setAlert(e.response.data.message);
+        setStatus(e.response.data.status);
+      }).finally(() => {
+        setTimeout(() => {
+          setOpenAlert(true);
+          setOpen(false);
+          setAddingUser(false);
+        }, 500);
+      });
+  };
+
 
   const handleClickOpen = () => {
     setOpen(true);
+    setUserdata({
+      fullName: "",
+      username: "",
+      email: "",
+      role: "",
+      password: "",
+      phone: "",
+    });
+
+    setIsEditing(false);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  // const [loading, setLoading] = React.useState(false);
-  // function handleLoadingClick() {
-  //   setLoading(true);
-  // }
-
-  const [server_alert, setAlert] = useState();
-  const [status, setStatus] = useState();
-  const [fname, setFName] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [openalert, setOpenAlert] = useState(false);
-  const [rows, setUsers] = React.useState([]);
-
-  function getUsers() {
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/users`).then((response) => {
-      setUsers(response.data);
-    });
-  }
-
-  React.useEffect(() => {
-    getUsers();
-  }, []);
-
-  const createPost = (e) => {
-    e.preventDefault();
-    axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/users`, {
-        fname,
-        username,
-        email,
-        password,
-        phone,
-      })
-      .then((res) => {
-        setAlert("User successfully added", res);
-        setStatus("success");
-        getUsers();
-      })
-      .catch((e) => {
-        setAlert(e.response.data.message);
-        setStatus(e.response.data.status);
-      });
-    setOpenAlert(true);
+  // to add user
+  const handleEdit = (user) => {
+    setUserdata(user);
+    setOpen(true);
+    setIsEditing(true)
   };
 
   const Alert = React.forwardRef(function Alert(props, ref) {
@@ -384,9 +494,6 @@ export default function Users() {
   // Alert
   const action = (
     <React.Fragment>
-      {/* <Button color="secondary" size="small" onClick={handleClose}>
-        UNDO
-      </Button> */}
       <IconButton
         size="small"
         aria-label="close"
@@ -450,30 +557,39 @@ export default function Users() {
 
             <TextField
               hiddenLabel
-              value={fname}
+              value={userdata.fullName}
               variant="filled"
               size="small"
-              onChange={(e) => setFName(e.target.value)}
+              onChange={(e) => setUserdata({
+                ...userdata,
+                fullName: e.target.value
+              })}
               margin="dense"
               sx={{ width: "100%" }}
               placeholder="Full Name"
             />
             <TextField
               hiddenLabel
-              value={username}
+              value={userdata.username}
               variant="filled"
               size="small"
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => setUserdata({
+                ...userdata,
+                username: e.target.value
+              })}
               margin="dense"
               sx={{ width: "100%" }}
               placeholder="Username"
             />
             <TextField
               hiddenLabel
-              value={email}
+              value={userdata.email}
               variant="filled"
               size="small"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setUserdata({
+                ...userdata,
+                email: e.target.value
+              })}
               margin="dense"
               sx={{ width: "100%" }}
               placeholder="Email"
@@ -485,29 +601,37 @@ export default function Users() {
               labelId="demo-select-small"
               id="demo-select-small"
               hiddenLabel
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
+              value={userdata.role}
+              onChange={(e) => setUserdata({
+                ...userdata,
+                role: e.target.value
+              })}
             >
-              <MenuItem value=""></MenuItem>
-              <MenuItem value={10}>user</MenuItem>
-              <MenuItem value={30}>vendor</MenuItem>
+              <MenuItem value={"user"}>user</MenuItem>
+              <MenuItem value={"vendor"}>vendor</MenuItem>
             </Select>
-            <TextField
+            {!isEditing && <TextField
               hiddenLabel
-              value={password}
+              value={userdata.password}
               variant="filled"
               size="small"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setUserdata({
+                ...userdata,
+                password: e.target.value
+              })}
               margin="dense"
               sx={{ width: "100%" }}
               placeholder="Password"
-            />
+            />}
             <TextField
               hiddenLabel
-              value={phone}
+              value={userdata.phone}
               variant="filled"
               size="small"
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => setUserdata({
+                ...userdata,
+                phone: e.target.value
+              })}
               margin="dense"
               sx={{ width: "100%" }}
               placeholder="Phone Number"
@@ -516,179 +640,221 @@ export default function Users() {
 
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button
-              variant="contained"
-              color="success"
-              size="small"
-              sx={{ boxShadow: 0 }}
-              onClick={createPost}
-            >
-              Submit
-            </Button>
+            {addingUser ? (
+              <Loading height={50} width={50} />
+            ) : (
+              <Button
+                variant="contained"
+                color="success"
+                size="small"
+                sx={{ boxShadow: 0 }}
+                onClick={isEditing ? updatePost : createPost}
+              >
+                {isEditing ? "Update" : " Submit"}
+              </Button>
+
+            )}
           </DialogActions>
         </form>
       </Dialog>
 
-      <Paper
-        sx={{
-          width: "100%",
-          mb: 2,
-          boxShadow: 0,
-          // background: "#1A2027",
-          borderRadius: 0,
-        }}
-      >
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+      <Grid container spacing={1}>
+        <Grid item xs>
+          <Paper sx={{ boxShadow: 0, borderRadius: 1 }}>
+            {loading ? (
+              <Grid
+                container
+                spacing={2}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  marginTop: 0,
+                  paddingBottom: 4,
+                  paddingTop: 2,
+                  paddingLeft: 2,
+                  paddingRight: 2,
+                }}
+              >
+                <Grid item xs={12}>
+                  <LinearProgress />
+                </Grid>
+              </Grid>
+            ) : (<Paper
+              sx={{
+                width: "100%",
+                mb: 2,
+                boxShadow: 0,
+                // background: "#1A2027",
+                borderRadius: 0,
+              }}
+            >
+              <EnhancedTableToolbar numSelected={selected.length} />
+              <TableContainer>
+                <Table
+                  sx={{ minWidth: 750 }}
+                  aria-labelledby="tableTitle"
+                  size={dense ? "small" : "medium"}
+                >
+                  <EnhancedTableHead
+                    numSelected={selected.length}
+                    order={order}
+                    orderBy={orderBy}
+                    onSelectAllClick={handleSelectAllClick}
+                    onRequestSort={handleRequestSort}
+                    rowCount={rows.length}
+                  />
+                  <TableBody>
+                    {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .slice()
-                .reverse()
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row._id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+                    {stableSort(rows, getComparator(order, orderBy))
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .slice()
+                      .reverse()
+                      .map((row, index) => {
+                        const isItemSelected = isSelected(row._id);
+                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row._id)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row._id}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          sx={{}}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                        sx={{
-                          overflow: "hidden",
-                          whiteSpace: "nowrap",
-                          maxWidth: "30ch",
-                          textOverflow: "ellipsis",
-                          // color: "#fff",
-                        }}
-                      >
-                        <Typography
-                          sx={{
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            maxWidth: "30ch",
-                            textOverflow: "ellipsis",
-                            // color: "#ffffff",
-                          }}
-                        >
-                          {row.fullname}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="left" sx={{}}>
-                        <Typography
-                          sx={{
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            maxWidth: "30ch",
-                            textOverflow: "ellipsis",
-                            // color: "#ffffff",
-                          }}
-                        >
-                          {row.username}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="left" sx={{}}>
-                        <Typography
-                          sx={{
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            maxWidth: "30ch",
-                            textOverflow: "ellipsis",
-                            // color: "#ffffff",
-                          }}
-                        >
-                          {row.email}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="left" sx={{}}>
-                        <Typography
-                          sx={{
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            maxWidth: "30ch",
-                            textOverflow: "ellipsis",
-                            // color: "#ffffff",
-                          }}
-                        >
-                          {row.role}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="left" sx={{}}>
-                        <Typography
-                          sx={{
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            maxWidth: "30ch",
-                            textOverflow: "ellipsis",
-                            // color: "#ffffff",
-                          }}
-                        >
-                          {row.phone}
-                        </Typography>
-                      </TableCell>
+                        return (
+                          <TableRow
+                            hover
+                            // onClick={(event) => handleClick(event, row._id)}
+                            // aria-checked={isItemSelected}
+                            // selected={isItemSelected}
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={row._id}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                color="primary"
+                                checked={isItemSelected}
+                                sx={{}}
+                              />
+                            </TableCell>
+                            <TableCell
+                              component="th"
+                              id={labelId}
+                              scope="row"
+                              padding="none"
+                              sx={{
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                maxWidth: "30ch",
+                                textOverflow: "ellipsis",
+                                // color: "#fff",
+                              }}
+                            >
+                              <Typography
+                                sx={{
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  maxWidth: "30ch",
+                                  textOverflow: "ellipsis",
+                                  // color: "#ffffff",
+                                }}
+                              >
+                                {row.fullName}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="left" sx={{}}>
+                              <Typography
+                                sx={{
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  maxWidth: "30ch",
+                                  textOverflow: "ellipsis",
+                                  // color: "#ffffff",
+                                }}
+                              >
+                                {row.username}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="left" sx={{}}>
+                              <Typography
+                                sx={{
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  maxWidth: "30ch",
+                                  textOverflow: "ellipsis",
+                                  // color: "#ffffff",
+                                }}
+                              >
+                                {row.email}
+                              </Typography>
+                            </TableCell>
 
-                      <TableCell align="left" sx={{}}>
-                        <Typography
-                          sx={{
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            maxWidth: "30ch",
-                            textOverflow: "ellipsis",
-                            // color: "#ffffff",
-                          }}
-                        >
-                          {row.createdAt.slice(0, 10)}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[15, 30, 40]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{}}
-        />
-      </Paper>
+                            <TableCell align="left" sx={{}}>
+                              <Typography
+                                sx={{
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  maxWidth: "30ch",
+                                  textOverflow: "ellipsis",
+                                  // color: "#ffffff",
+                                }}
+                              >
+                                {row.phone}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="left" sx={{}}>
+                              <Chip
+                                label={row.status || "active"}
+                                color={
+                                  row.status === "active" ||
+                                    row.status === undefined ||
+                                    row.status === ""
+                                    ? "success" : "error"}
+                                sx={{
+                                }}
+                              />
+                            </TableCell>
+
+
+                            <TableCell align="left" sx={{}}>
+                              <Stack direction={"row"} sx={{
+                                alignItems: "center",
+                                columnGap: "10px",
+                              }}>
+                                <AiOutlineEdit
+                                  onClick={() => handleEdit(row)}
+                                  size={20} />
+                                {isDeleting === row.id ?
+                                  <Loading height={33} width={33} />
+                                  :
+                                  <AiOutlineDelete title={`Delete ${row.fullname || row.email}`} onClick={() => handleDelete(row.id)} size={20} />
+                                }
+                                {blocking === row.id ? (
+                                  <Loading height={33} width={33} />
+                                ) :
+                                  row.status === "blacklist" ? (
+                                    <MdOutlineRemoveCircleOutline onClick={() => handleUnBlock(row.id)} title={`Unban ${row.fullname || row.email}`} size={20} />
+                                  ) : (
+                                    <IoBanOutline onClick={() => handleBlock(row.id)} title={`Ban ${row.fullname || row.email}`} size={20} />
+                                  )
+                                }
+                              </Stack>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[15, 30, 40]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                sx={{}}
+              />
+            </Paper>
+            )}
+          </Paper>
+        </Grid>
+      </Grid>
     </Box>
   );
 }

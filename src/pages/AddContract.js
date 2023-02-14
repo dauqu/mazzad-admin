@@ -1,7 +1,5 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,7 +9,6 @@ import { Divider } from "@mui/material";
 import axios from "axios";
 import Button from "@mui/material/Button";
 import { useNavigate, useParams } from "react-router-dom";
-import slugify from "slugify";
 import OutlinedInput from '@mui/material/OutlinedInput';
 
 export default function AddContract() {
@@ -63,8 +60,6 @@ export default function AddContract() {
                 console.log(e);
             });
     };
-
-
 
     return (
         <Box sx={{ flexGrow: 1, marginTop: 3 }}>

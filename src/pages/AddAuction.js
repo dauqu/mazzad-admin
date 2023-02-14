@@ -5,13 +5,12 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { Autocomplete, Chip, Divider, MenuItem, Select, TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import axios from "axios";
 import Button from "@mui/material/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Loading from "../components/Loading";
-import { Stack } from "@mui/system";
 
 
 // title: req.body.title,
@@ -197,7 +196,7 @@ export default function AddAuction() {
                         }}
                         label="Items"
                         defaultChecked={items}
-                        isOptionEqualToValue={(option, value) => value == option.id}
+                        isOptionEqualToValue={(option, value) => value === option.id}
                         id="tags-standard"
                         options={products}
                         size="small"

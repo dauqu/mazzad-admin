@@ -31,7 +31,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function FileManager() {
-  
+
   const [files, setFiles] = React.useState([]);
   const [server_alert, setAlert] = useState();
   const [open, setOpen] = React.useState(false);
@@ -39,11 +39,9 @@ export default function FileManager() {
   const [loading, setLoading] = useState(false);
 
   //Delete Post
-  function deleteOneFile(item) {
+  function deleteOneFile(filename) {
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/files/delete`, {
-        name: item.name,
-      })
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/storage/${filename}`)
       .then((res) => {
         setAlert("File successfully Deleted", res);
         setStatus("success");
@@ -51,8 +49,11 @@ export default function FileManager() {
       .catch((e) => {
         setAlert(e.response.data.message);
         setStatus(e.response.data.status);
-      });
-    setOpen(true);
+      }).finally(() => {
+        const removed = files.filter((item) => item.name !== filename);
+        setFiles(removed);
+        setOpen(true);
+      })
   }
 
 
@@ -71,26 +72,6 @@ export default function FileManager() {
       });
   }, []);
 
-  // Upload File
-  const uploadFile = (url, file) => {
-    let formData = new FormData();
-    formData.append("uploadedFile", file);
-    axios
-      .post(url, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((e) => {
-        setAlert("File successfully uploaded", e);
-        setStatus("success", e);
-        setOpen(true);
-      })
-      .catch((e) => {
-        setAlert(e.response.data.message);
-        setStatus(e.response.data.status);
-      });
-  };
 
   //Copy Link on Button Click
   const handleCopyClick = (item) => {
@@ -106,7 +87,7 @@ export default function FileManager() {
     if (newWindow) newWindow.opener = null;
   };
 
- 
+
 
 
   //Alert
@@ -181,6 +162,11 @@ export default function FileManager() {
         </AppBar>
       </Grid>
 
+      {files.length === 0 && (
+        <div className="py-4 flex items-center justify-center w-full h-[500px]">
+          No Files Found
+        </div>
+      )}
       <Grid item xs={12}>
         <Item sx={{ boxShadow: 0 }}>
           <ImageList
@@ -188,9 +174,7 @@ export default function FileManager() {
             cols={5}
             rowHeight={300}
           >
-            {files
-              .slice(0)
-              .reverse()
+            {files.length > 0 && files
               .map((item, idx) => (
                 <Card
                   sx={{
@@ -203,11 +187,11 @@ export default function FileManager() {
                   key={idx}
                 >
                   {item.file_extension === ".jpg" ||
-                  item.file_extension === ".gif" ||
-                  item.file_extension === ".png" ||
-                  item.file_extension === ".jpeg" ||
-                  item.file_extension === ".svg" ||
-                  item.file_extension === ".ico" ? (
+                    item.file_extension === ".gif" ||
+                    item.file_extension === ".png" ||
+                    item.file_extension === ".jpeg" ||
+                    item.file_extension === ".svg" ||
+                    item.file_extension === ".ico" ? (
                     <CardMedia component="img" height="150" image={item.path} />
                   ) : (
                     <Card
@@ -299,7 +283,7 @@ export default function FileManager() {
                           backgroundColor: "#00000021",
                           border: "1px solid #fff",
                         }}
-                        onClick={() => deleteOneFile(item)}
+                        onClick={() => deleteOneFile(item.name)}
                       >
                         <DeleteTwoToneIcon />
                       </IconButton>

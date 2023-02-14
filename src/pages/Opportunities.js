@@ -400,16 +400,6 @@ export default function Opportunities() {
     >
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={() => navigate("/new-product")}
-          >
-            {/* <CloseIcon /> */}
-            <AddIcon />
-          </IconButton>
           <Typography variant="h6" color="inherit" component="div">
             Manage Opportunities
           </Typography>
