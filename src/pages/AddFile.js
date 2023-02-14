@@ -121,7 +121,7 @@ const AddFile = () => {
     );
 
     return (
-        <div className='w-full py-4 flex flex-col items-center justify-center'>
+        <div className='w-full h-[90vh] py-4 flex flex-col items-center justify-center'>
             <Snackbar
                 open={open}
                 autoHideDuration={3000}

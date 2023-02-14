@@ -72,7 +72,6 @@ function App() {
   async function checkLogin() {
     setLoading(true);
     const token = localStorage.getItem("token");
-    console.log(token);
     if (!token) {
       navigate("/login");
     }
@@ -89,7 +88,6 @@ function App() {
         }
       })
       .catch((e) => {
-        console.log(e);
         navigate("/login");
       }).finally
       (() => {

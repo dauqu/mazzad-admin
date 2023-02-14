@@ -1,14 +1,28 @@
-import React, { } from 'react'
-import { Box, Button, OutlinedInput, Stack, Tab, Tabs, Typography } from "@mui/material";
+import React, { useEffect } from 'react'
+import { Box, Button, Stack, Tab, Tabs, Typography } from "@mui/material";
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
-function TabPanel({ value, index, data, ...other }) {
-  const [filteredData, setFilteredData] = React.useState(data)
+function TabPanel({ value, index, data, type, ...other }) {
+
+  const [initData, setInitData] = React.useState([])
+  const [filteredData, setFilteredData] = React.useState([])
+
+  useEffect(() => {
+    let selectType = type;
+    if (type === undefined || type === null || type === "") {
+      selectType = "user"
+    }
+    const curr = data.filter(item => item.type === selectType);
+    setInitData(curr)
+    setFilteredData(curr)
+  }, [data, type])
+
   const filterData = (value) => {
     const lowercasedValue = value.toLowerCase().trim();
-    if (lowercasedValue === "") setFilteredData(data);
+    if (lowercasedValue === "") setFilteredData(initData);
     else {
-      const filteredData = data.filter(item => {
+      const filteredData = initData.filter(item => {
         return Object.keys(item).some(key =>
           item[key].toString().toLowerCase().includes(lowercasedValue)
         );
@@ -45,7 +59,7 @@ function TabPanel({ value, index, data, ...other }) {
           {filteredData.map((item, index) => (
             <Stack
               direction="row"
-
+              key={index}
               sx={{
                 marginTop: "15px",
                 display: 'flex',
@@ -58,11 +72,11 @@ function TabPanel({ value, index, data, ...other }) {
                   {index + 1}
                 </Typography>
                 <Typography className='text-start' component="p">
-                  {item.name}
+                  {item.title}
                 </Typography>
               </div>
               <Typography component="p">
-                {item.time}
+                {item.createdAt}
               </Typography>
 
             </Stack>
@@ -86,49 +100,70 @@ function a11yProps(index) {
   };
 }
 
-const data = [
-  {
-    name: "lorem ipsum dolor sit amet consectetur adipisicing elit.",
-    time: "10:05:51T11:10:30"
-  },
-  {
-    name: "some text here for testing purpose only and nothing else to say.",
-    time: "10:05:51T11:10:80"
-  },
-  {
-    name: "big text here for testing purpose only and nothing else to say. orem ipsum dolor sit amet consectetur adipisicing elit. orem ipsum dolor sit amet consectetur adipisicing elit.orem ipsum dolor sit amet consectetur adipisicing elit.",
-    time: "10:05:51T11:10:30"
-  },
-]
-const data2 = [
-  {
-    name: "psum dolor sit amet consectetur adipisicing elit. orem ipsum dolor sit amet consectetur adipisicing elit.orem ipsum dolor sit amet consectetur adipisicing elit.",
-    time: "10:05:51T11:10:30"
-  },
-  {
-    name: "abc text here for testing purpose only and nothing else to say. orem ipsum dolor sit amet consectetur adipisicing elit. orem ipsum dolor sit amet consectetur adipisicing elit.orem ipsum dolor sit amet consectetur adipisicing elit.",
-    time: "10:05:51T11:10:30"
-  },
-  {
-    name: "big text here for testing purpose only and nothing else to say. orem ipsum dolor sit amet consectetur adipisicing elit. orem ipsum dolor sit amet consectetur adipisicing elit.orem ipsum dolor sit amet consectetur adipisicing elit.",
-    time: "10:05:51T11:10:30"
-  },
-  {
-    name: "sihy text here for testing purpose only and nothing else to say. orem ipsum dolor sit amet consectetur adipisicing elit. orem ipsum dolor sit amet consectetur adipisicing elit.orem ipsum dolor sit amet consectetur adipisicing elit.",
-    time: "10:05:51T11:10:30"
-  },
-  {
-    name: "big text here for testing purpose only and nothing else to say. orem ipsum dolor sit amet consectetur adipisicing elit. orem ipsum dolor sit amet consectetur adipisicing elit.orem ipsum dolor sit amet consectetur adipisicing elit.",
-    time: "10:05:51T11:10:30"
-  },
-]
+// const data = [
+//   {
+//     name: "Userdata: First text here for testing purpose only and nothing else to say.",
+//     time: "10:05:51T11:10:30",
+//     type: "user"
+//   },
+//   {
+//     name: "WalletData: some text here for testing purpose only and nothing else to say.",
+//     time: "10:05:51T11:10:80",
+//     type: "wallet"
+//   },
+//   {
+//     name: "big text here for testing purpose only and nothing else to say. orem ipsum dolor sit amet consectetur adipisicing elit. orem ipsum dolor sit amet consectetur adipisicing elit.orem ipsum dolor sit amet consectetur adipisicing elit.",
+//     time: "10:05:51T11:10:30",
+//     type: "deal"
+//   },
+//   {
+//     name: "psum dolor sit amet consectetur adipisicing elit. orem ipsum dolor sit amet consectetur adipisicing elit.orem ipsum dolor sit amet consectetur adipisicing elit.",
+//     time: "10:05:51T11:10:30",
+//     type: "blacklist"
+//   },
+//   {
+//     name: "abc text here for testing purpose only and nothing else to say. orem ipsum dolor sit amet consectetur adipisicing elit. orem ipsum dolor sit amet consectetur adipisicing elit.orem ipsum dolor sit amet consectetur adipisicing elit.",
+//     time: "10:05:51T11:10:30",
+//     type: "unfinished"
+//   },
+//   {
+//     name: "big text here for testing purpose only and nothing else to say. orem ipsum dolor sit amet consectetur adipisicing elit. orem ipsum dolor sit amet consectetur adipisicing elit.orem ipsum dolor sit amet consectetur adipisicing elit.",
+//     time: "10:05:51T11:10:30",
+//     type: "complaint"
+//   },
+//   {
+//     name: "sihy text here for testing purpose only and nothing else to say. orem ipsum dolor sit amet consectetur adipisicing elit. orem ipsum dolor sit amet consectetur adipisicing elit.orem ipsum dolor sit amet consectetur adipisicing elit.",
+//     time: "10:05:51T11:10:30",
+//     type: "refund"
+//   },
+//   {
+//     name: "big text here for testing purpose only and nothing else to say. orem ipsum dolor sit amet consectetur adipisicing elit. orem ipsum dolor sit amet consectetur adipisicing elit.orem ipsum dolor sit amet consectetur adipisicing elit.",
+//     time: "10:05:51T11:10:30",
+//     type: "user"
+//   },
+// ]
 
 export default function Logs() {
   const [value, setValue] = React.useState(0);
+  const [data, setData] = React.useState([])
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/logs`)
+    .then((res) => {
+      console.log(res.data)
+      setData([...res.data.logs])
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }, [])
+
+
+
 
   return (
     <div className="py-4">
@@ -146,14 +181,14 @@ export default function Logs() {
             <Tab label="Sales Log" {...a11yProps(7)} />
           </Tabs>
         </Box>
-        <TabPanel value={value} index={0} data={data} />
-        <TabPanel value={value} index={1} data={data2} />
-        <TabPanel value={value} index={2} data={data} />
-        <TabPanel value={value} index={3} data={data2} />
-        <TabPanel value={value} index={4} data={data} />
-        <TabPanel value={value} index={5} data={data2} />
-        <TabPanel value={value} index={6} data={data} />
-        <TabPanel value={value} index={7} data={data} />
+        <TabPanel value={value} index={0} data={data} type="user" />
+        <TabPanel value={value} index={1} data={data} type="wallet" />
+        <TabPanel value={value} index={2} data={data} type="deal" />
+        <TabPanel value={value} index={3} data={data} type="blacklist" />
+        <TabPanel value={value} index={4} data={data} type="unfinished" />
+        <TabPanel value={value} index={5} data={data} type="complaint" />
+        <TabPanel value={value} index={6} data={data} type="refund" />
+        <TabPanel value={value} index={7} data={data} type="sales" />
       </Box>
     </div>
   );

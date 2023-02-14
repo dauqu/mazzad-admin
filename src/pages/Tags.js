@@ -25,7 +25,7 @@ import Snackbar from "@mui/material/Snackbar";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Dialog, Divider, Button, TextField, Grid, LinearProgress } from "@mui/material";
+import { Dialog, Divider, Button, TextField, Grid, LinearProgress, DialogActions, DialogTitle, DialogContent, DialogContentText } from "@mui/material";
 
 import { Link as RouterLink } from "react-router-dom";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
@@ -281,6 +281,9 @@ export default function Tags() {
     description: "",
   });
 
+  // loading anim on add tag
+  const [isAdingTags, setIsAddingTags] = React.useState(false);
+
   // Alert
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -302,27 +305,27 @@ export default function Tags() {
     });
   }, []);
 
-
   const addTag = () => {
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/tags`, tagData, {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    }).then(
-      (res) => {
-        console.log(res.data);
+    setIsAddingTags(true);
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/tags`, tagData, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        setIsAddingTags(false);
         setOpen(false);
         setTags([...tags, res.data.tag]);
         setTagData({
           name: "",
           description: "",
         });
-
       })
       .catch((err) => {
+        setIsAddingTags(false);
         console.log(err);
-      }
-      );
+      });
   };
 
   const deleteTag = (id) => {
@@ -376,7 +379,71 @@ export default function Tags() {
         transition: "box-shadow 1s ease-in-out",
       }}
     >
-      <Dialog
+       <Dialog
+        open={open}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Add Tag"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <TextField
+              value={tagData.name}
+              onChange={(e) => setTagData({ ...tagData, name: e.target.value })}
+              size="small"
+              type="text"
+              placeholder="Tag"
+              sx={{ margin: "10px 0", width: "100%" }}
+            />
+
+            <TextField
+              value={tagData.description}
+              onChange={(e) =>
+                setTagData({ ...tagData, description: e.target.value })
+              }
+              multiline
+              type="text"
+              variant="outlined"
+              placeholder="Description.."
+              minRows={8}
+              sx={{ margin: "5px 0 20px 0", width: "100%" }}
+            />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            size="small"
+            color="error"
+            onClick={() => {
+              setOpen(false);
+              setTagData({
+                name: "",
+                description: "",
+              });
+            }}
+            sx={{
+              boxShadow: 0,
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            sx={{
+              boxShadow: 0,
+            }}
+            autoFocus
+            onClick={() => (isEdit ? updateTag() : addTag())}
+            color="success"
+            variant="contained"
+            size="small"
+            disabled={isAdingTags}
+          >
+            {isEdit ? "Update" : isAdingTags ? "Adding..." : "Add"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* <Dialog
         open={open}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -430,7 +497,7 @@ export default function Tags() {
             </Button>
           </Stack>
         </div>
-      </Dialog>
+      </Dialog> */}
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
           <IconButton
