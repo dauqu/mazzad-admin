@@ -24,7 +24,7 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import TablePagination from "@mui/material/TablePagination";
 
 //loading
-import Loading from '../components/Loading';
+import Loading from "../components/Loading";
 
 import LinearProgress from "@mui/material/LinearProgress";
 import AppBar from "@mui/material/AppBar";
@@ -229,29 +229,26 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 export default function Companies() {
-
   const [rows, setCompanies] = React.useState([]);
   const [loading, setLoading] = useState(true);
 
   const [deleting, setDeleting] = useState(false);
   const navigate = useNavigate();
 
-  //Get all comapnies
-  async function getCategoryData() {
-  }
-  
   React.useEffect(() => {
-    axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/companies`
-    ).then((res) => {
-      setCompanies(res.data);
-    }).catch((err) => {
-      console.log(err);
-    }).finally(() => {
-      setTimeout(() => {
-        setLoading(false);
-      }, 300);
-    });
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/companies`)
+      .then((res) => {
+        setCompanies(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setLoading(false);
+        }, 300);
+      });
   }, []);
 
   const [order, setOrder] = React.useState("asc");
@@ -275,24 +272,22 @@ export default function Companies() {
     setSelected([]);
   };
 
-
   const handleDelete = (id) => {
     setDeleting(true);
     axios
       .delete(`${process.env.REACT_APP_BACKEND_URL}/companies/${id}`)
-      .then((res) => {  
-        // remove this from company data 
+      .then((res) => {
+        // remove this from company data
         const newCompanies = rows.filter((company) => company.id !== id);
         setCompanies(newCompanies);
       })
       .catch((err) => {
         console.log(err);
-      }).finally(() => {
+      })
+      .finally(() => {
         setDeleting(false);
-      }
-      );
+      });
   };
-
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -324,7 +319,6 @@ export default function Companies() {
   };
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
-
 
   return (
     <Box sx={{ flexGrow: 1, marginTop: 3 }}>
@@ -403,9 +397,6 @@ export default function Companies() {
                               <TableRow
                                 hover
                                 role="checkbox"
-                                // onClick={(event) => handleClick(event, row.id)}
-                                // aria-checked={isItemSelected}
-                                // selected={isItemSelected}
                                 tabIndex={-1}
                                 key={row.id}
                                 sx={
@@ -469,7 +460,7 @@ export default function Companies() {
                                       // color: "#ffffff",
                                     }}
                                   >
-                                    {row.status.toUpperCase()}
+                                    {row && row.status ? "Active" : "Inactive"}
                                   </Typography>
                                 </TableCell>
 
@@ -483,13 +474,35 @@ export default function Companies() {
                                       // color: "#ffffff",
                                     }}
                                   >
-                                    {new Date(row.createdAt).toLocaleDateString()}
+                                    {row &&
+                                      new Date(
+                                        row.createdAt
+                                      ).toLocaleDateString()}
                                   </Typography>
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Stack direction={"row"} sx={{ display: "flex", alignItems: "center", columnGap: "10px"}} >
-                                    <AiOutlineEdit onClick={() => navigate(`/edit-company/${row.id}`)} size={22} />
-                                    {deleting ? <Loading height={40} width={40} /> : <AiOutlineDelete onClick={() => handleDelete(row.id)} size={22} />}
+                                  <Stack
+                                    direction={"row"}
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      columnGap: "10px",
+                                    }}
+                                  >
+                                    <AiOutlineEdit
+                                      onClick={() =>
+                                        navigate(`/edit-company/${row.id}`)
+                                      }
+                                      size={22}
+                                    />
+                                    {deleting ? (
+                                      <Loading height={40} width={40} />
+                                    ) : (
+                                      <AiOutlineDelete
+                                        onClick={() => handleDelete(row.id)}
+                                        size={22}
+                                      />
+                                    )}
                                   </Stack>
                                 </TableCell>
                               </TableRow>
