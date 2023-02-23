@@ -17,7 +17,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-import React, { } from "react";
+import React from "react";
 import axios from "axios";
 import ModeEditTwoToneIcon from "@mui/icons-material/ModeEditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
@@ -58,30 +58,35 @@ const headCells = [
     numeric: false,
     disablePadding: true,
     label: "Title",
+    arabic: "العنوان",
   },
   {
     id: "amount",
     numeric: false,
     disablePadding: false,
     label: "Amount",
+    arabic: "المبلغ",
   },
   {
     id: "desc",
     numeric: false,
     disablePadding: false,
     label: "Description",
+    arabic: "الوصف",
   },
   {
     id: "User",
     numeric: false,
     disablePadding: false,
     label: "User",
+    arabic: "المستخدم",
   },
   {
     id: "created",
     numeric: false,
     disablePadding: false,
     label: "Transaction Time",
+    arabic: "وقت العملية",
   },
 ];
 
@@ -123,7 +128,9 @@ function EnhancedTableHead(props) {
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              {localStorage.getItem("language") === "arabic"
+                ? headCell.arabic
+                : headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -188,7 +195,9 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Users List
+          {localStorage.getItem("language") === "arabic"
+            ? "تاريخ المعاملات"
+            : "Transaction History"}
         </Typography>
       )}
 
@@ -282,24 +291,35 @@ export default function TransactionHistory() {
 
   React.useEffect(() => {
     setLoading(true);
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/transactions`)
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/transactions`)
       .then((response) => {
         setUsers(response.data);
       })
       .catch((error) => {
         console.log(error);
-      }).finally(() => {
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, []);
 
-
   return (
-    <Box sx={{ width: "100%", marginTop: 3, boxShadow: 0 }}>
+    <Box
+      sx={{
+        width: "100%",
+        marginTop: 3,
+        boxShadow: 0,
+        direction:
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
+      }}
+    >
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
           <Typography variant="h6" color="inherit" component="div">
-            Blacklist Users
+            {localStorage.getItem("language") === "arabic"
+              ? "تاريخ المعاملات"
+              : "Transaction History"}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -325,152 +345,157 @@ export default function TransactionHistory() {
                   <LinearProgress />
                 </Grid>
               </Grid>
-            ) : (<Paper
-              sx={{
-                width: "100%",
-                mb: 2,
-                boxShadow: 0,
-                // background: "#1A2027",
-                borderRadius: 0,
-              }}
-            >
-              <EnhancedTableToolbar numSelected={selected.length} />
-              <TableContainer>
-                <Table
-                  sx={{ minWidth: 750 }}
-                  aria-labelledby="tableTitle"
-                  size={dense ? "small" : "medium"}
-                >
-                  <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
-                    onRequestSort={handleRequestSort}
-                    rowCount={rows.length}
-                  />
-                  <TableBody>
-                    {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+            ) : (
+              <Paper
+                sx={{
+                  width: "100%",
+                  mb: 2,
+                  boxShadow: 0,
+                  // background: "#1A2027",
+                  borderRadius: 0,
+                }}
+              >
+                <EnhancedTableToolbar numSelected={selected.length} />
+                <TableContainer>
+                  <Table
+                    sx={{ minWidth: 750 }}
+                    aria-labelledby="tableTitle"
+                    size={dense ? "small" : "medium"}
+                  >
+                    <EnhancedTableHead
+                      numSelected={selected.length}
+                      order={order}
+                      orderBy={orderBy}
+                      onSelectAllClick={handleSelectAllClick}
+                      onRequestSort={handleRequestSort}
+                      rowCount={rows.length}
+                    />
+                    <TableBody>
+                      {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-                    {stableSort(rows, getComparator(order, orderBy))
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .slice()
-                      .reverse()
-                      .map((row, index) => {
-                        const isItemSelected = isSelected(row._id);
-                        const labelId = `enhanced-table-checkbox-${index}`;
+                      {stableSort(rows, getComparator(order, orderBy))
+                        .slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                        .slice()
+                        .reverse()
+                        .map((row, index) => {
+                          const isItemSelected = isSelected(row._id);
+                          const labelId = `enhanced-table-checkbox-${index}`;
 
-                        return (
-                          <TableRow
-                            hover
-                            onClick={(event) => handleClick(event, row._id)}
-                            role="checkbox"
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={row._id}
-                            selected={isItemSelected}
-                          >
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                color="primary"
-                                checked={isItemSelected}
-                                sx={{}}
-                              />
-                            </TableCell>
-                            <TableCell
-                              component="th"
-                              id={labelId}
-                              scope="row"
-                              padding="none"
-                              sx={{
-                                overflow: "hidden",
-                                whiteSpace: "nowrap",
-                                maxWidth: "30ch",
-                                textOverflow: "ellipsis",
-                                // color: "#fff",
-                              }}
+                          return (
+                            <TableRow
+                              hover
+                              onClick={(event) => handleClick(event, row._id)}
+                              role="checkbox"
+                              aria-checked={isItemSelected}
+                              tabIndex={-1}
+                              key={row._id}
+                              selected={isItemSelected}
                             >
-                              <Typography
+                              <TableCell padding="checkbox">
+                                <Checkbox
+                                  color="primary"
+                                  checked={isItemSelected}
+                                  sx={{}}
+                                />
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                id={labelId}
+                                scope="row"
+                                padding="none"
                                 sx={{
                                   overflow: "hidden",
                                   whiteSpace: "nowrap",
                                   maxWidth: "30ch",
                                   textOverflow: "ellipsis",
-                                  // color: "#ffffff",
+                                  // color: "#fff",
                                 }}
                               >
-                                {row.title}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="left" sx={{}}>
-                              <Typography
-                                sx={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  maxWidth: "30ch",
-                                  textOverflow: "ellipsis",
-                                  // color: "#ffffff",
-                                }}
-                              >
-                                {row.amount}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="left" sx={{}}>
-                              <Typography
-                                sx={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  maxWidth: "30ch",
-                                  textOverflow: "ellipsis",
-                                  // color: "#ffffff",
-                                }}
-                              >
-                                {row.description}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="left" sx={{}}>
-                              <Typography
-                                sx={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  maxWidth: "30ch",
-                                  textOverflow: "ellipsis",
-                                  // color: "#ffffff",
-                                }}
-                              >
-                                {row.user}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="left" sx={{}}>
-                              <Typography
-                                sx={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  maxWidth: "30ch",
-                                  textOverflow: "ellipsis",
-                                  // color: "#ffffff",
-                                }}
-                              >
-                                {new Date(row.createdAt).toLocaleDateString()} {new Date(row.createdAt).toLocaleTimeString()}
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[15, 30, 40]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                sx={{}}
-              />
-            </Paper>
+                                <Typography
+                                  sx={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    maxWidth: "30ch",
+                                    textOverflow: "ellipsis",
+                                    // color: "#ffffff",
+                                  }}
+                                >
+                                  {row.title}
+                                </Typography>
+                              </TableCell>
+                              <TableCell align="left" sx={{}}>
+                                <Typography
+                                  sx={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    maxWidth: "30ch",
+                                    textOverflow: "ellipsis",
+                                    // color: "#ffffff",
+                                  }}
+                                >
+                                  {row.amount}
+                                </Typography>
+                              </TableCell>
+                              <TableCell align="left" sx={{}}>
+                                <Typography
+                                  sx={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    maxWidth: "30ch",
+                                    textOverflow: "ellipsis",
+                                    // color: "#ffffff",
+                                  }}
+                                >
+                                  {row.description}
+                                </Typography>
+                              </TableCell>
+                              <TableCell align="left" sx={{}}>
+                                <Typography
+                                  sx={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    maxWidth: "30ch",
+                                    textOverflow: "ellipsis",
+                                    // color: "#ffffff",
+                                  }}
+                                >
+                                  {row.user}
+                                </Typography>
+                              </TableCell>
+                              <TableCell align="left" sx={{}}>
+                                <Typography
+                                  sx={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    maxWidth: "30ch",
+                                    textOverflow: "ellipsis",
+                                    // color: "#ffffff",
+                                  }}
+                                >
+                                  {new Date(row.createdAt).toLocaleDateString()}{" "}
+                                  {new Date(row.createdAt).toLocaleTimeString()}
+                                </Typography>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[15, 30, 40]}
+                  component="div"
+                  count={rows.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  sx={{}}
+                />
+              </Paper>
             )}
           </Paper>
           {/* End Table */}

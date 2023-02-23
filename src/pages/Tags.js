@@ -25,14 +25,24 @@ import Snackbar from "@mui/material/Snackbar";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Dialog, Divider, Button, TextField, Grid, LinearProgress, DialogActions, DialogTitle, DialogContent, DialogContentText } from "@mui/material";
+import {
+  Dialog,
+  Divider,
+  Button,
+  TextField,
+  Grid,
+  LinearProgress,
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+} from "@mui/material";
 
 import { Link as RouterLink } from "react-router-dom";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { Stack } from "@mui/system";
 import axios from "axios";
 import Loading from "../components/Loading";
-
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -63,31 +73,34 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-
 const headCells = [
   {
     id: "1",
     numeric: false,
     disablePadding: true,
     label: "Name",
+    arabic: "الاسم",
   },
   {
     id: "2",
     numeric: false,
     disablePadding: true,
     label: "Description",
+    arabic: "الوصف",
   },
   {
     id: "3",
     numeric: false,
     disablePadding: false,
     label: "Published At",
+    arabic: "تاريخ النشر",
   },
   {
     id: "4",
     numeric: false,
     disablePadding: false,
     label: "Actions",
+    arabic: "الاجراءات",
   },
 ];
 
@@ -126,14 +139,16 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-          // sx={{ color: "white" }}
+            // sx={{ color: "white" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              {localStorage.getItem("language") === "arabic"
+                ? headCell.arabic
+                : headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -189,7 +204,9 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Tags Details
+          {localStorage.getItem("language") === "arabic"
+            ? "تفاصيل العلامات"
+            : "Tags Details"}
         </Typography>
       )}
 
@@ -212,7 +229,7 @@ const EnhancedTableToolbar = (props) => {
       {numSelected === 1 ? (
         <Tooltip
           title="Edit"
-        // sx={{ color: "#fff" }}
+          // sx={{ color: "#fff" }}
         >
           <IconButton
             to={`./../update-product/${window.selected}`}
@@ -248,14 +265,11 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function Tags() {
-
-
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("description");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(15);
-
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -289,20 +303,24 @@ export default function Tags() {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-  // load all tags 
+  // load all tags
   React.useEffect(() => {
     setLoading(true);
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/tags`).then((res) => {
-      setTags(res.data);
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/tags`)
+      .then((res) => {
+        setTags(res.data);
 
-      console.log(res.data);
-    }).catch((err) => {
-      console.log(err);
-    }).finally(() => {
-      setTimeout(() => {
-        setLoading(false);
-      }, 300);
-    });
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setLoading(false);
+        }, 300);
+      });
   }, []);
 
   const addTag = () => {
@@ -330,7 +348,8 @@ export default function Tags() {
 
   const deleteTag = (id) => {
     setDeleting(id);
-    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/tags/${id}`)
+    axios
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/tags/${id}`)
       .then((res) => {
         console.log(res.data);
         setTimeout(() => {
@@ -339,7 +358,8 @@ export default function Tags() {
       })
       .catch((err) => {
         console.log(err);
-      }).finally(() => {
+      })
+      .finally(() => {
         setTimeout(() => {
           setDeleting("");
         }, 400);
@@ -377,22 +397,44 @@ export default function Tags() {
         boxShadow: 0,
         animation: "fadeIn 0.5s ease-in-out",
         transition: "box-shadow 1s ease-in-out",
+        direction:
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
       }}
     >
-       <Dialog
+      <Dialog
         open={open}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        direction={
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr"
+        }
       >
-        <DialogTitle id="alert-dialog-title">{"Add Tag"}</DialogTitle>
-        <DialogContent>
+        <DialogTitle
+          id="alert-dialog-title"
+          direction={
+            localStorage.getItem("language") === "arabic" ? "rtl" : "ltr"
+          }
+        >
+          {localStorage.getItem("language") === "arabic"
+            ? "إضافة علامة"
+            : "Add Tag"}
+        </DialogTitle>
+        <DialogContent
+          direction={
+            localStorage.getItem("language") === "arabic" ? "rtl" : "ltr"
+          }
+        >
           <DialogContentText id="alert-dialog-description">
             <TextField
               value={tagData.name}
               onChange={(e) => setTagData({ ...tagData, name: e.target.value })}
               size="small"
               type="text"
-              placeholder="Tag"
+              placeholder={
+                localStorage.getItem("language") === "arabic"
+                  ? "إضافة علامة"
+                  : "Tag"
+              }
               sx={{ margin: "10px 0", width: "100%" }}
             />
 
@@ -404,9 +446,13 @@ export default function Tags() {
               multiline
               type="text"
               variant="outlined"
-              placeholder="Description.."
               minRows={8}
               sx={{ margin: "5px 0 20px 0", width: "100%" }}
+              placeholder={
+                localStorage.getItem("language") === "arabic"
+                  ? "وصف"
+                  : "Description"
+              }
             />
           </DialogContentText>
         </DialogContent>
@@ -443,77 +489,25 @@ export default function Tags() {
           </Button>
         </DialogActions>
       </Dialog>
-      {/* <Dialog
-        open={open}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <div className="p-[20px] flex flex-col">
-          <TextField
-            value={tagData.name}
-            onChange={(e) => setTagData({ ...tagData, name: e.target.value })}
-            size="small"
-            type="text"
-            placeholder="Tag"
-            className="w-[500px] my-2 outline-none border-[1px]"
-            sx={{ margin: "10px 0" }}
-          />
-          <TextField
-            value={tagData.description}
-            onChange={(e) => setTagData({ ...tagData, description: e.target.value })}
-            multiline
-            type="text"
-            variant="outlined"
-            placeholder="Description.."
-            className=" p-2 my-2 w-[500px] outline-none border-[1px] resize-none"
-            minRows={8}
-            sx={{ margin: "5px 0 20px 0" }}
-          />
-          <Stack direction="row" spacing={1}>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => {
-                setOpen(false)
-                setTagData({
-                  name: "",
-                  description: "",
-                })
-              }}
-            >
-              Close
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                background: "#333",
-                color: "#fff",
-                elevation: 0,
-              }}
 
-              onClick={() => isEdit ? updateTag() : addTag()}
-            >
-              {isEdit ? "Update" : "Submit"}
-            </Button>
-          </Stack>
-        </div>
-      </Dialog> */}
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
           <IconButton
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            sx={{ mr: 2, ml: 3 }}
             onClick={() => {
-              setOpen(true)
-              setIsEdit(false)
+              setOpen(true);
+              setIsEdit(false);
             }}
           >
             <AddIcon />
           </IconButton>
           <Typography variant="h6" color="inherit" component="div">
-            Manage Tags
+            {localStorage.getItem("language") === "arabic"
+              ? "إدارة العلامات"
+              : "Manage Tags"}
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
@@ -550,112 +544,121 @@ export default function Tags() {
                 <LinearProgress />
               </Grid>
             </Grid>
-          ) : (<Paper
-            sx={{
-              width: "100%",
-              mb: 2,
-              boxShadow: 0,
-              overflow: "scroll",
-            }}
-          >
-            <EnhancedTableToolbar />
-            <TableContainer>
-              <Table
-                sx={{ minWidth: 750 }}
-                aria-labelledby="tableTitle"
-                size="small"
-              >
-                <EnhancedTableHead />
-                <TableBody>
-                  {stableSort(tags, getComparator(order, orderBy))
-                    .slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
-                    .map((row, index) => {
-                      const isItemSelected = isSelected(row._id);
-                      const labelId = `enhanced-table-checkbox-${index}`;
+          ) : (
+            <Paper
+              sx={{
+                width: "100%",
+                mb: 2,
+                boxShadow: 0,
+                overflow: "scroll",
+              }}
+            >
+              <EnhancedTableToolbar />
+              <TableContainer>
+                <Table
+                  sx={{ minWidth: 750 }}
+                  aria-labelledby="tableTitle"
+                  size="small"
+                >
+                  <EnhancedTableHead />
+                  <TableBody>
+                    {stableSort(tags, getComparator(order, orderBy))
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row, index) => {
+                        const isItemSelected = isSelected(row._id);
+                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          sx={{ color: "#fff" }}
-                          key={row.id}
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox color="primary" />
-                          </TableCell>
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            sx={{ color: "#fff" }}
+                            key={row.id}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox color="primary" />
+                            </TableCell>
 
-                          <TableCell scope="row" padding="none">
-                            <Typography
-                              size="small"
+                            <TableCell scope="row" padding="none">
+                              <Typography
+                                size="small"
+                                sx={{
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  maxWidth: "20ch",
+                                  textOverflow: "ellipsis",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                {row.name}
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              padding="none"
                               sx={{
                                 overflow: "hidden",
                                 whiteSpace: "nowrap",
                                 maxWidth: "20ch",
+                                minWidth: "15ch",
                                 textOverflow: "ellipsis",
-                                cursor: "pointer",
                               }}
                             >
-                              {row.name}
-                            </Typography>
-                          </TableCell>
-
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            padding="none"
-                            sx={{
-                              overflow: "hidden",
-                              whiteSpace: "nowrap",
-                              maxWidth: "20ch",
-                              minWidth: "15ch",
-                              textOverflow: "ellipsis",
-                            }}
-                          >
-                            {row.description}
-                          </TableCell>
-                          <TableCell align="left" sx={{}}>
-                            {new Date(row.createdAt).toLocaleDateString()}
-                          </TableCell>
-                          <TableCell align="left" sx={{}} style={{}}>
-                            <Stack direction={"row"} sx={{
-                              columnGap: "10px",
-                              alignItems: "center"
-                            }}>
-                              <AiOutlineEdit size="18" onClick={() => {
-                                setOpen(true);
-                                setTagData(row);
-                                setIsEdit(true);
-                              }} />
-                              {deleting === row.id ?
-                                <Loading height={30} width={30} />
-                                : (
-                                  <AiOutlineDelete size="18" onClick={() => deleteTag(row.id)} />
+                              {row.description}
+                            </TableCell>
+                            <TableCell align="left" sx={{}}>
+                              {new Date(row.createdAt).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell align="left" sx={{}} style={{}}>
+                              <Stack
+                                direction={"row"}
+                                sx={{
+                                  columnGap: "10px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <AiOutlineEdit
+                                  size="18"
+                                  onClick={() => {
+                                    setOpen(true);
+                                    setTagData(row);
+                                    setIsEdit(true);
+                                  }}
+                                />
+                                {deleting === row.id ? (
+                                  <Loading height={30} width={30} />
+                                ) : (
+                                  <AiOutlineDelete
+                                    size="18"
+                                    onClick={() => deleteTag(row.id)}
+                                  />
                                 )}
-                            </Stack>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[15, 30, 40]}
-              component="div"
-              count={tags.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              sx={{}}
-            />
-          </Paper>
+                              </Stack>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[15, 30, 40]}
+                component="div"
+                count={tags.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                sx={{}}
+              />
+            </Paper>
           )}
-
         </Paper>
       </Grid>
     </Box>

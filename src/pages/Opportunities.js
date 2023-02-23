@@ -89,24 +89,28 @@ const headCells = [
     numeric: false,
     disablePadding: true,
     label: "Title",
+    arabic: "العنوان",
   },
   {
     id: "2",
     numeric: false,
     disablePadding: true,
     label: "Description",
+    arabic: "الوصف",
   },
   {
     id: "3",
     numeric: false,
     disablePadding: false,
     label: "Created At",
+    arabic: "تاريخ الإنشاء",
   },
   {
     id: "4",
     numeric: false,
     disablePadding: false,
     label: "Status",
+    arabic: "الحالة",
   },
 ];
 
@@ -145,14 +149,16 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-          // sx={{ color: "white" }}
+            // sx={{ color: "white" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              {localStorage.getItem("language") === "arabic"
+                ? headCell.arabic
+                : headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -208,7 +214,9 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Opportunities List
+          {localStorage.getItem("language") === "arabic"
+            ? "قائمة الفرص"
+            : "  Opportunities List"}
         </Typography>
       )}
 
@@ -231,7 +239,7 @@ const EnhancedTableToolbar = (props) => {
       {numSelected === 1 ? (
         <Tooltip
           title="Edit"
-        // sx={{ color: "#fff" }}
+          // sx={{ color: "#fff" }}
         >
           <IconButton
             to={`./../update-product/${window.selected}`}
@@ -354,14 +362,13 @@ export default function Opportunities() {
       })
       .catch((err) => {
         console.log(err);
-      }).finally(() => {
+      })
+      .finally(() => {
         setTimeout(() => {
           setLoading(false);
         }, 300);
       });
   }, []);
-
-
 
   const alertHandleClose = (reason) => {
     if (reason === "clickaway") {
@@ -396,12 +403,16 @@ export default function Opportunities() {
         boxShadow: 0,
         animation: "fadeIn 0.5s ease-in-out",
         transition: "box-shadow 1s ease-in-out",
+        direction:
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
       }}
     >
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
           <Typography variant="h6" color="inherit" component="div">
-            Manage Opportunities
+            {localStorage.getItem("language") === "arabic"
+              ? "الفرص"
+              : "Opportunities"}
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
@@ -446,7 +457,9 @@ export default function Opportunities() {
               <Grid item xs={12}>
                 <LinearProgress />
               </Grid>
-            </Grid>) : (<Paper
+            </Grid>
+          ) : (
+            <Paper
               sx={{
                 width: "100%",
                 mb: 2,
@@ -473,7 +486,10 @@ export default function Opportunities() {
                   />
                   <TableBody>
                     {stableSort(rows, getComparator(order, orderBy))
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
                       .reverse()
                       .map((row, index) => {
                         const isItemSelected = isSelected(row.slug);
@@ -494,7 +510,7 @@ export default function Opportunities() {
                               <Checkbox
                                 color="primary"
                                 checked={isItemSelected}
-                              // sx={{ color: "#fff" }}
+                                // sx={{ color: "#fff" }}
                               />
                             </TableCell>
 
@@ -524,7 +540,9 @@ export default function Opportunities() {
                               <Chip
                                 label={row.status}
                                 size="small"
-                                color={row.status === "active" ? "success" : "error"}
+                                color={
+                                  row.status === "active" ? "success" : "error"
+                                }
                                 sx={{ width: 80 }}
                               />
                             </TableCell>
@@ -542,7 +560,7 @@ export default function Opportunities() {
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-              // sx={{ color: "#fff" }}
+                // sx={{ color: "#fff" }}
               />
             </Paper>
           )}

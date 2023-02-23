@@ -32,7 +32,7 @@ import Snackbar from "@mui/material/Snackbar";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 
-import { Button, Divider, Grid, LinearProgress, } from "@mui/material";
+import { Button, Divider, Grid, LinearProgress } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Stack } from "@mui/system";
 
@@ -90,24 +90,28 @@ const headCells = [
     numeric: false,
     disablePadding: true,
     label: "Image",
+    arabic: "صورة",
   },
   {
     id: "2",
     numeric: false,
     disablePadding: true,
     label: "Title",
+    arabic: "عنوان",
   },
   {
     id: "3",
     numeric: false,
     disablePadding: false,
     label: "Created At",
+    arabic: "تاريخ الإنشاء",
   },
   {
     id: "4",
     numeric: false,
     disablePadding: false,
     label: "status",
+    arabic: "الحالة",
   },
 
   {
@@ -115,6 +119,7 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: "action",
+    arabic: "الإجراء",
   },
 ];
 
@@ -149,14 +154,16 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-          // sx={{ color: "white" }}
+            // sx={{ color: "white" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              {localStorage.getItem("language") === "arabic"
+                ? headCell.arabic
+                : headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -212,7 +219,9 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          List of Advertisement
+          {localStorage.getItem("language") === "arabic"
+            ? "قائمة الإعلانات"
+            : "List of Advertisement"}
         </Typography>
       )}
 
@@ -233,8 +242,9 @@ const EnhancedTableToolbar = (props) => {
 
       {/* Edit Product */}
       {numSelected === 1 ? (
-        <Tooltip title="Edit"
-        // sx={{ color: "#fff" }}
+        <Tooltip
+          title="Edit"
+          // sx={{ color: "#fff" }}
         >
           <IconButton
             to={`./../update-product/${window.selected}`}
@@ -352,15 +362,16 @@ export default function AdsManagement() {
       .get(`${process.env.REACT_APP_BACKEND_URL}/ads`)
       .then((response) => {
         setAds(response.data);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.log(error);
-      }).finally(() => {
+      })
+      .finally(() => {
         setTimeout(() => {
           setLoading(false);
         }, 300);
       });
   }, []);
-
 
   const alertHandleClose = (reason) => {
     if (reason === "clickaway") {
@@ -414,7 +425,6 @@ export default function AdsManagement() {
       });
   };
 
-
   return (
     <Box
       sx={{
@@ -423,12 +433,16 @@ export default function AdsManagement() {
         boxShadow: 0,
         animation: "fadeIn 0.5s ease-in-out",
         transition: "box-shadow 1s ease-in-out",
+        direction:
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
       }}
     >
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
           <Typography variant="h6" color="inherit" component="div">
-            Manage Ads
+            {localStorage.getItem("language") === "arabic"
+              ? "إدارة الإعلانات"
+              : "Ads Management"}
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
@@ -451,7 +465,6 @@ export default function AdsManagement() {
           {server_alert}
         </Alert>
       </Snackbar>
-
 
       {/*  */}
       <Grid item xs>
@@ -504,7 +517,10 @@ export default function AdsManagement() {
                     {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  ads.slice().sort(getComparator(order, orderBy)) */}
                     {stableSort(ads, getComparator(order, orderBy))
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
                       .reverse()
                       .map((row, index) => {
                         const isItemSelected = isSelected(row.slug);
@@ -525,14 +541,14 @@ export default function AdsManagement() {
                               <Checkbox
                                 color="primary"
                                 checked={isItemSelected}
-                              // sx={{ color: "#fff" }}
+                                // sx={{ color: "#fff" }}
                               />
                             </TableCell>
 
                             <TableCell
                               scope="row"
                               padding="none"
-                            // sx={{ color: "#fff" }}
+                              // sx={{ color: "#fff" }}
                             >
                               <HtmlTooltip
                                 placement="right"
@@ -587,22 +603,29 @@ export default function AdsManagement() {
                               <Chip
                                 label={row.status}
                                 size="small"
-                                color={row.status === "active" ? "success" : "error"}
+                                color={
+                                  row.status === "active" ? "success" : "error"
+                                }
                                 sx={{ width: 80 }}
                               />
                             </TableCell>
                             <TableCell align="left">
-                              <Stack direction={"row"} sx={{
-                                alignItems: "center",
-                                columnGap: "10px",
-                              }}>
+                              <Stack
+                                direction={"row"}
+                                sx={{
+                                  alignItems: "center",
+                                  columnGap: "10px",
+                                }}
+                              >
                                 <Button
                                   variant="contained"
                                   color="primary"
                                   size="small"
                                   onClick={() => approveAd(row.id)}
                                 >
-                                  Approve
+                                 {
+                                    localStorage.getItem("language") === "arabic" ? "يعتمد" : "Approve"
+                                 }
                                 </Button>
                                 <Button
                                   variant="contained"
@@ -610,9 +633,10 @@ export default function AdsManagement() {
                                   size="small"
                                   onClick={() => rejectAd(row.id)}
                                 >
-                                  Reject
+                                 {
+                                    localStorage.getItem("language") === "arabic" ? "رفض" : "Reject"
+                                 }
                                 </Button>
-
                               </Stack>
                             </TableCell>
                           </TableRow>
@@ -629,7 +653,7 @@ export default function AdsManagement() {
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-              // sx={{ color: "#fff" }}
+                // sx={{ color: "#fff" }}
               />
             </Paper>
           )}

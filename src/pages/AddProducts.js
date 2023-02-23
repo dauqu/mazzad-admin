@@ -13,9 +13,7 @@ import axios from "axios";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import slugify from "slugify";
-import TextField from '@mui/material/TextField';
-
-
+import TextField from "@mui/material/TextField";
 
 const Item = styled(Paper)(({ theme }) => ({
   // backgroundColor: "#1A2027",
@@ -63,14 +61,21 @@ export default function AddProduct() {
   });
 
   return (
-    <Box sx={{ flexGrow: 1, marginTop: 3 }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        marginTop: 3,
+        direction:
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
+      }}
+    >
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333" }}>
           <IconButton
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            sx={{ mr: 2,ml:3 }}
             onClick={() => navigate("/products")}
           >
             <CloseIcon />
@@ -79,7 +84,11 @@ export default function AddProduct() {
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter Page Title"
+            placeholder={
+              localStorage.getItem("language") === "arabic"
+                ? "أدخل عنوان الصفحة"
+                : "Enter Page Title"
+            }
             style={{
               width: "60%",
               height: "35px",
@@ -118,10 +127,23 @@ export default function AddProduct() {
             }}
           >
             {/* Product Content */}
-            <TextField id="outlined-basic"
-              placeholder="Product description..."
-              label="Product Description"
-              focused={true} multiline={true} minRows={6} variant="filled" sx={{
+            <TextField
+              id="outlined-basic"
+              placeholder={
+                localStorage.getItem("language") === "arabic"
+                  ? "وصف"
+                  : "Description"
+              }
+              label={
+                localStorage.getItem("language") === "arabic"
+                  ? "وصف"
+                  : "Description"
+              }
+              focused={true}
+              multiline={true}
+              minRows={6}
+              variant="filled"
+              sx={{
                 width: "100%",
                 color: "#fff",
                 backgroundColor: "#fff",
@@ -129,24 +151,43 @@ export default function AddProduct() {
                 border: "none",
                 fontSize: "1.2rem",
                 placeholderColor: "#fff",
-              }} />
+              }}
+            />
 
             {/* Category */}
-            <TextField id="outlined-basic" placeholder="254" label="Price" focused={true} variant="filled" size="small" sx={{
-              width: "100%",
-              color: "#fff",
-              backgroundColor: "#fff",
-              outline: "none",
-              border: "none",
-              fontSize: "1rem",
-              placeholderColor: "#fff",
-              marginTop: 1,
-            }} />
+            <TextField
+              id="outlined-basic"
+              placeholder="254"
+              label={
+                localStorage.getItem("language") === "arabic" ? "سعر" : "Price"
+              }
+              focused={true}
+              variant="filled"
+              size="small"
+              sx={{
+                width: "100%",
+                color: "#fff",
+                backgroundColor: "#fff",
+                outline: "none",
+                border: "none",
+                fontSize: "1rem",
+                placeholderColor: "#fff",
+                marginTop: 1,
+              }}
+            />
 
             <TextField
               id="outlined-basic"
               placeholder="254"
-              label="Vendor" focused={true} variant="filled" size="small" sx={{
+              label={
+                localStorage.getItem("language") === "arabic"
+                  ? "بائع"
+                  : "Vendor"
+              }
+              focused={true}
+              variant="filled"
+              size="small"
+              sx={{
                 width: "100%",
                 color: "#fff",
                 backgroundColor: "#fff",
@@ -155,14 +196,20 @@ export default function AddProduct() {
                 fontSize: "1rem",
                 placeholderColor: "#fff",
                 marginTop: 1,
-              }} />
-
+              }}
+            />
 
             {/* Category */}
-            <TextField id="outlined-basic"
+            <TextField
+              id="outlined-basic"
               placeholder="https://google.com/image.png"
-              label="Product Image"
-              focused={true} variant="filled" size="small" sx={{
+              label={
+                localStorage.getItem("language") === "arabic" ? "صورة" : "Image"
+              }
+              focused={true}
+              variant="filled"
+              size="small"
+              sx={{
                 width: "100%",
                 color: "#fff",
                 backgroundColor: "#fff",
@@ -171,14 +218,25 @@ export default function AddProduct() {
                 fontSize: "1rem",
                 placeholderColor: "#fff",
                 marginTop: 1,
-              }} />
-
+              }}
+            />
 
             <TextField
               id="outlined-basic"
-              placeholder="Active"
-              label="Status"
-              focused={true} variant="filled" size="small" sx={{
+              placeholder={
+                localStorage.getItem("language") === "arabic"
+                  ? "حالة"
+                  : "Status"
+              }
+              label={
+                localStorage.getItem("language") === "arabic"
+                  ? "حالة"
+                  : "Status"
+              }
+              focused={true}
+              variant="filled"
+              size="small"
+              sx={{
                 width: "100%",
                 color: "#fff",
                 backgroundColor: "#fff",
@@ -187,25 +245,22 @@ export default function AddProduct() {
                 fontSize: "1rem",
                 placeholderColor: "#fff",
                 marginTop: 1,
-              }} />
-
-
-            {/* Category */}
-            <TextField id="outlined-basic" placeholder="Type.." label="Product Type" focused={true} variant="filled" size="small" sx={{
-              width: "100%",
-              color: "#fff",
-              backgroundColor: "#fff",
-              outline: "none",
-              border: "none",
-              fontSize: "1rem",
-              placeholderColor: "#fff",
-              marginTop: 1,
-            }} />
+              }}
+            />
 
             {/* Category */}
-            <TextField id="outlined-basic"
-              placeholder="Featured"
-              label="Featured" focused={true} variant="filled" size="small" sx={{
+            <TextField
+              id="outlined-basic"
+              placeholder={
+                localStorage.getItem("language") === "arabic" ? "نوع" : "Type"
+              }
+              label={
+                localStorage.getItem("language") === "arabic" ? "نوع" : "Type"
+              }
+              focused={true}
+              variant="filled"
+              size="small"
+              sx={{
                 width: "100%",
                 color: "#fff",
                 backgroundColor: "#fff",
@@ -214,13 +269,26 @@ export default function AddProduct() {
                 fontSize: "1rem",
                 placeholderColor: "#fff",
                 marginTop: 1,
-              }} />
+              }}
+            />
 
             {/* Category */}
-            <TextField id="outlined-basic"
-              placeholder="Language"
-              label="language"
-              focused={true} variant="filled" size="small" sx={{
+            <TextField
+              id="outlined-basic"
+              placeholder={
+                localStorage.getItem("language") === "arabic"
+                  ? "ميزة"
+                  : "Featured"
+              }
+              label={
+                localStorage.getItem("language") === "arabic"
+                  ? "ميزة"
+                  : "Featured"
+              }
+              focused={true}
+              variant="filled"
+              size="small"
+              sx={{
                 width: "100%",
                 color: "#fff",
                 backgroundColor: "#fff",
@@ -229,8 +297,36 @@ export default function AddProduct() {
                 fontSize: "1rem",
                 placeholderColor: "#fff",
                 marginTop: 1,
-              }} />
+              }}
+            />
 
+            {/* Category */}
+            <TextField
+              id="outlined-basic"
+              placeholder={
+                localStorage.getItem("language") === "arabic"
+                  ? "لغة"
+                  : "Language"
+              }
+              label={
+                localStorage.getItem("language") === "arabic"
+                  ? "لغة"
+                  : "Language"
+              }
+              focused={true}
+              variant="filled"
+              size="small"
+              sx={{
+                width: "100%",
+                color: "#fff",
+                backgroundColor: "#fff",
+                outline: "none",
+                border: "none",
+                fontSize: "1rem",
+                placeholderColor: "#fff",
+                marginTop: 1,
+              }}
+            />
           </Item>
         </Grid>
       </Grid>

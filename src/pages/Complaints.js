@@ -27,7 +27,7 @@ import Chip from "@mui/material/Chip";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Divider, Grid, LinearProgress, } from "@mui/material";
+import { Divider, Grid, LinearProgress } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { Stack } from "@mui/system";
@@ -86,32 +86,36 @@ const headCells = [
     numeric: false,
     disablePadding: true,
     label: "Title",
+    arabic: "العنوان",
   },
   {
     id: "2",
     numeric: false,
     disablePadding: true,
     label: "Description",
+    arabic: "الوصف",
   },
   {
     id: "3",
     numeric: false,
     disablePadding: false,
     label: "Created At",
+    arabic: "تاريخ الإنشاء",
   },
   {
     id: "4",
     numeric: false,
     disablePadding: false,
     label: "Status",
+    arabic: "الحالة",
   },
   {
     id: "5",
     numeric: false,
     disablePadding: false,
     label: "Actions",
+    arabic: "الإجراءات",
   },
-
 ];
 
 function EnhancedTableHead(props) {
@@ -136,9 +140,11 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            sx={{
-              // color: "white" 
-            }}
+            sx={
+              {
+                // color: "white"
+              }
+            }
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -147,14 +153,16 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-          // sx={{ color: "white" }}
+            // sx={{ color: "white" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              {localStorage.getItem("language") === "arabic"
+                ? headCell.arabic
+                : headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -210,7 +218,9 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          List of Refund
+          {localStorage.getItem("language") === "arabic"
+            ? "قائمة الاسترداد "
+            : " List of Refund"}
         </Typography>
       )}
 
@@ -231,8 +241,9 @@ const EnhancedTableToolbar = (props) => {
 
       {/* Edit Product */}
       {numSelected === 1 ? (
-        <Tooltip title="Edit"
-        // sx={{ color: "#fff" }}
+        <Tooltip
+          title="Edit"
+          // sx={{ color: "#fff" }}
         >
           <IconButton
             to={`./../update-product/${window.selected}`}
@@ -266,8 +277,6 @@ const EnhancedTableToolbar = (props) => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
-
-
 
 export default function Complaints() {
   const [order, setOrder] = React.useState("asc");
@@ -314,19 +323,20 @@ export default function Complaints() {
       .get(`${process.env.REACT_APP_BACKEND_URL}/complaints`)
       .then((response) => {
         setComplaints([...response.data]);
-      }).catch((error) => {
-        console.log(error)
-      }).finally(() => {
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
         setTimeout(() => {
           setLoading(false);
-        }, 300)
-      })
+        }, 300);
+      });
   };
 
   React.useEffect(() => {
     getProducts();
   }, []);
-
 
   const getChipColor = (status) => {
     if (status === "pending") {
@@ -341,7 +351,6 @@ export default function Complaints() {
 
   const deleteComplaints = (id) => {
     try {
-
       axios
         .delete(`${process.env.REACT_APP_BACKEND_URL}/complaints/${id}`)
         .then((response) => {
@@ -352,8 +361,7 @@ export default function Complaints() {
     } catch (error) {
       console.log("Error in deleting complaints: ", error.message);
     }
-  }
-
+  };
 
   return (
     <Box
@@ -363,148 +371,161 @@ export default function Complaints() {
         boxShadow: 0,
         animation: "fadeIn 0.5s ease-in-out",
         transition: "box-shadow 1s ease-in-out",
+        direction:
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
       }}
     >
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
           <Typography variant="h6" color="inherit" component="div">
-            Manage Complaints
+            {localStorage.getItem("language") === "arabic"
+              ? "إدارة الشكاوي"
+              : "Manage Complaints"}
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
       </AppBar>
 
-
       <Grid item xs>
-          <Paper sx={{ boxShadow: 0, borderRadius: 1 }}>
-            {loading ? (
-              <Grid
-                container
-                spacing={2}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  marginTop: 0,
-                  paddingBottom: 4,
-                  paddingTop: 2,
-                  paddingLeft: 2,
-                  paddingRight: 2,
-                }}
-              >
-                <Grid item xs={12}>
-                  <LinearProgress />
-                </Grid>
+        <Paper sx={{ boxShadow: 0, borderRadius: 1 }}>
+          {loading ? (
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                width: "100%",
+                height: "100%",
+                marginTop: 0,
+                paddingBottom: 4,
+                paddingTop: 2,
+                paddingLeft: 2,
+                paddingRight: 2,
+              }}
+            >
+              <Grid item xs={12}>
+                <LinearProgress />
               </Grid>
-            ) : ( <Paper
-        sx={{
-          width: "100%",
-          mb: 2,
-          boxShadow: 0,
-          overflow: "scroll",
-        }}
-      >
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size="small"
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.slug);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+            </Grid>
+          ) : (
+            <Paper
+              sx={{
+                width: "100%",
+                mb: 2,
+                boxShadow: 0,
+                overflow: "scroll",
+              }}
+            >
+              <EnhancedTableToolbar numSelected={selected.length} />
+              <TableContainer>
+                <Table
+                  sx={{ minWidth: 750 }}
+                  aria-labelledby="tableTitle"
+                  size="small"
+                >
+                  <EnhancedTableHead
+                    numSelected={selected.length}
+                    order={order}
+                    orderBy={orderBy}
+                    onSelectAllClick={handleSelectAllClick}
+                    onRequestSort={handleRequestSort}
+                    rowCount={rows.length}
+                  />
+                  <TableBody>
+                    {stableSort(rows, getComparator(order, orderBy))
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row, index) => {
+                        const isItemSelected = isSelected(row.slug);
+                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      // onClick={(event) => handleClick(event, row.slug)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isItemSelected}
-                      sx={{ color: "#fff" }}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                        // sx={{ color: "#fff" }}
-                        />
-                      </TableCell>
+                        return (
+                          <TableRow
+                            hover
+                            // onClick={(event) => handleClick(event, row.slug)}
+                            role="checkbox"
+                            aria-checked={isItemSelected}
+                            tabIndex={-1}
+                            key={row.id}
+                            selected={isItemSelected}
+                            sx={{ color: "#fff" }}
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                color="primary"
+                                checked={isItemSelected}
+                                // sx={{ color: "#fff" }}
+                              />
+                            </TableCell>
 
-                      <TableCell
-                        scope="row"
-                        padding="none"
-                      // sx={{ color: "#fff" }}
-                      >
+                            <TableCell
+                              scope="row"
+                              padding="none"
+                              // sx={{ color: "#fff" }}
+                            >
+                              {row.title}
+                            </TableCell>
 
-                        {row.title}
-                      </TableCell>
-
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                        sx={{
-                          overflow: "hidden",
-                          whiteSpace: "nowrap",
-                          maxWidth: "20ch",
-                          minWidth: "15ch",
-                          textOverflow: "ellipsis",
-                          // color: "#fff",
-                        }}
-                      >
-                        {row.description}
-                      </TableCell>
-                      <TableCell sx={{}}>
-                        {new Date(row.createAt).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>
-                        <Chip
-                          label={row.status}
-                          color={getChipColor(row.status)}
-                          size="small"
-                        />
-                      </TableCell>
-                      <TableCell sx={{}}>
-                        <Stack direction="row" spacing={1}>
-                          <AiOutlineEdit onClick={() => navigate(`/edit-complaint/${row.id}`)} size={22} />
-                          <AiOutlineDelete size={22} onClick={() => deleteComplaints(row.id)} />
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[15, 30, 40]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        // sx={{ color: "#fff" }}
-        />
-      </Paper>
-      )}
-
-      </Paper>
+                            <TableCell
+                              component="th"
+                              id={labelId}
+                              scope="row"
+                              padding="none"
+                              sx={{
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                maxWidth: "20ch",
+                                minWidth: "15ch",
+                                textOverflow: "ellipsis",
+                                // color: "#fff",
+                              }}
+                            >
+                              {row.description}
+                            </TableCell>
+                            <TableCell sx={{}}>
+                              {new Date(row.createAt).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell>
+                              <Chip
+                                label={row.status}
+                                color={getChipColor(row.status)}
+                                size="small"
+                              />
+                            </TableCell>
+                            <TableCell sx={{}}>
+                              <Stack direction="row" spacing={1}>
+                                <AiOutlineEdit
+                                  onClick={() =>
+                                    navigate(`/edit-complaint/${row.id}`)
+                                  }
+                                  size={22}
+                                />
+                                <AiOutlineDelete
+                                  size={22}
+                                  onClick={() => deleteComplaints(row.id)}
+                                />
+                              </Stack>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[15, 30, 40]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                // sx={{ color: "#fff" }}
+              />
+            </Paper>
+          )}
+        </Paper>
       </Grid>
     </Box>
   );

@@ -32,7 +32,7 @@ import Snackbar from "@mui/material/Snackbar";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Divider, Grid, LinearProgress, } from "@mui/material";
+import { Divider, Grid, LinearProgress } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 //Html Tooltip
@@ -89,18 +89,21 @@ const headCells = [
     numeric: false,
     disablePadding: true,
     label: "title",
+    arabic: "العنوان",
   },
   {
     id: "2",
     numeric: false,
     disablePadding: true,
     label: "description",
+    arabic: "الوصف",
   },
   {
     id: "3",
     numeric: false,
     disablePadding: false,
     label: "Status",
+    arabic: "الحالة",
   },
 ];
 
@@ -126,9 +129,11 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            sx={{
-              // color: "white" 
-            }}
+            sx={
+              {
+                // color: "white"
+              }
+            }
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -137,14 +142,16 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-          // sx={{ color: "white" }}
+            // sx={{ color: "white" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              {localStorage.getItem("language") === "arabic"
+                ? headCell.arabic
+                : headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -200,7 +207,9 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          List of all Rates and Reviews
+          {localStorage.getItem("language") === "arabic"
+            ? "   قائمة بجميع الأسعار والمراجعات        "
+            : "List of all Rates and Reviews"}
         </Typography>
       )}
 
@@ -221,8 +230,9 @@ const EnhancedTableToolbar = (props) => {
 
       {/* Edit Product */}
       {numSelected === 1 ? (
-        <Tooltip title="Edit"
-        // sx={{ color: "#fff" }}
+        <Tooltip
+          title="Edit"
+          // sx={{ color: "#fff" }}
         >
           <IconButton
             to={`./../update-product/${window.selected}`}
@@ -340,15 +350,16 @@ export default function RateManagement() {
       .get(`${process.env.REACT_APP_BACKEND_URL}/rate`)
       .then((response) => {
         setProducts(response.data);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.log(error);
-      }).finally(() => {
+      })
+      .finally(() => {
         setTimeout(() => {
           setLoading(false);
         }, 300);
       });
   }, []);
-
 
   const alertHandleClose = (reason) => {
     if (reason === "clickaway") {
@@ -383,6 +394,8 @@ export default function RateManagement() {
         boxShadow: 0,
         animation: "fadeIn 0.5s ease-in-out",
         transition: "box-shadow 1s ease-in-out",
+        direction:
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
       }}
     >
       <AppBar position="static">
@@ -397,7 +410,9 @@ export default function RateManagement() {
             <AddIcon />
           </IconButton> */}
           <Typography variant="h6" color="inherit" component="div">
-            Manage Rates
+            {localStorage.getItem("language") === "arabic"
+              ? "إدارة الأسعار"
+              : "Rate Management"}
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
@@ -421,7 +436,6 @@ export default function RateManagement() {
         </Alert>
       </Snackbar>
 
-
       {/*  */}
 
       <Grid item xs>
@@ -444,111 +458,114 @@ export default function RateManagement() {
                 <LinearProgress />
               </Grid>
             </Grid>
-          ) : (<Paper
-            sx={{
-              width: "100%",
-              mb: 2,
-              boxShadow: 0,
-              // background: "#1A2027",
-              // color: "#fff",
-              overflow: "scroll",
-            }}
-          >
-            <EnhancedTableToolbar numSelected={selected.length} />
-            <TableContainer>
-              <Table
-                sx={{ minWidth: 750 }}
-                aria-labelledby="tableTitle"
-                size="small"
-              >
-                <EnhancedTableHead
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
-                  onSelectAllClick={handleSelectAllClick}
-                  onRequestSort={handleRequestSort}
-                  rowCount={rows.length}
-                />
-                <TableBody>
-                  {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+          ) : (
+            <Paper
+              sx={{
+                width: "100%",
+                mb: 2,
+                boxShadow: 0,
+                // background: "#1A2027",
+                // color: "#fff",
+                overflow: "scroll",
+              }}
+            >
+              <EnhancedTableToolbar numSelected={selected.length} />
+              <TableContainer>
+                <Table
+                  sx={{ minWidth: 750 }}
+                  aria-labelledby="tableTitle"
+                  size="small"
+                >
+                  <EnhancedTableHead
+                    numSelected={selected.length}
+                    order={order}
+                    orderBy={orderBy}
+                    onSelectAllClick={handleSelectAllClick}
+                    onRequestSort={handleRequestSort}
+                    rowCount={rows.length}
+                  />
+                  <TableBody>
+                    {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-                  {stableSort(rows, getComparator(order, orderBy))
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .reverse()
-                    .map((row, index) => {
-                      const isItemSelected = isSelected(row.slug);
-                      const labelId = `enhanced-table-checkbox-${index}`;
+                    {stableSort(rows, getComparator(order, orderBy))
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .reverse()
+                      .map((row, index) => {
+                        const isItemSelected = isSelected(row.slug);
+                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                      return (
-                        <TableRow
-                          hover
-                          onClick={(event) => handleClick(event, row.slug)}
-                          role="checkbox"
-                          aria-checked={isItemSelected}
-                          tabIndex={-1}
-                          key={row.slug}
-                          selected={isItemSelected}
-                          sx={{ color: "#fff" }}
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              color="primary"
-                              checked={isItemSelected}
-                            // sx={{ color: "#fff" }}
-                            />
-                          </TableCell>
-
-                          <TableCell
-                            component="th"
-                            id={labelId}
-                            scope="row"
-                            padding="none"
-                            sx={{
-                              overflow: "hidden",
-                              whiteSpace: "nowrap",
-                              maxWidth: "20ch",
-                              minWidth: "15ch",
-                              textOverflow: "ellipsis",
-                              // color: "#fff",
-                            }}
+                        return (
+                          <TableRow
+                            hover
+                            onClick={(event) => handleClick(event, row.slug)}
+                            role="checkbox"
+                            aria-checked={isItemSelected}
+                            tabIndex={-1}
+                            key={row.slug}
+                            selected={isItemSelected}
+                            sx={{ color: "#fff" }}
                           >
-                            {row.title}
-                          </TableCell>
-                          <TableCell align="left" sx={{}}>
-                            {row.description}
-                          </TableCell>
-                          <TableCell align="left">
-                            <Rating
-                              name="half-rating-read"
-                              // value={row.all_reviews.rating}
-                              precision={0.5}
-                              readOnly
-                            />
-                          </TableCell>
-                          <TableCell align="left" sx={{ width: 400 }}>
-                            {row.status}
-                          </TableCell>
-                          <TableCell align="left" sx={{}}>
-                            {new Date(row.createdAt).toLocaleDateString()}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[15, 30, 40]}
-              component="div"
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            // sx={{ color: "#fff" }}
-            />
-          </Paper>
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                color="primary"
+                                checked={isItemSelected}
+                                // sx={{ color: "#fff" }}
+                              />
+                            </TableCell>
 
+                            <TableCell
+                              component="th"
+                              id={labelId}
+                              scope="row"
+                              padding="none"
+                              sx={{
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                maxWidth: "20ch",
+                                minWidth: "15ch",
+                                textOverflow: "ellipsis",
+                                // color: "#fff",
+                              }}
+                            >
+                              {row.title}
+                            </TableCell>
+                            <TableCell align="left" sx={{}}>
+                              {row.description}
+                            </TableCell>
+                            <TableCell align="left">
+                              <Rating
+                                name="half-rating-read"
+                                // value={row.all_reviews.rating}
+                                precision={0.5}
+                                readOnly
+                              />
+                            </TableCell>
+                            <TableCell align="left" sx={{ width: 400 }}>
+                              {row.status}
+                            </TableCell>
+                            <TableCell align="left" sx={{}}>
+                              {new Date(row.createdAt).toLocaleDateString()}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[15, 30, 40]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                // sx={{ color: "#fff" }}
+              />
+            </Paper>
           )}
         </Paper>
       </Grid>

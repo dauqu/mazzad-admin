@@ -6,7 +6,7 @@ import List from "@mui/material/List";
 import Paper from "@mui/material/Paper";
 import TabUnstyled from "@mui/base/TabUnstyled";
 import Button from "@mui/material/Button";
-import { Grid } from "@mui/material";
+import { Grid, MenuItem, Select } from "@mui/material";
 import MarkEmailUnreadTwoToneIcon from "@mui/icons-material/MarkEmailUnreadTwoTone";
 import PaymentTwoToneIcon from "@mui/icons-material/PaymentTwoTone";
 // import SMTP from "./settings/SMTP";
@@ -24,7 +24,9 @@ import DnsTwoToneIcon from "@mui/icons-material/DnsTwoTone";
 // import ServerDetails from "./settings/ServerDetails";
 // import EmailTemplate from "./settings/EmailTemplate";
 // import CORS from "./settings/CORS";
+import TranslateIcon from "@mui/icons-material/Translate";
 import TabsListUnstyled from "@mui/base/TabsListUnstyled";
+import { toast } from "react-toastify";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -69,8 +71,31 @@ export default function CustomizedList() {
     setValue(newValue);
   };
 
+  const [language, setLanguage] = React.useState();
+  const handleLanguageChange = (event) => {
+    setLanguage(event.target.value);
+    // console.log(event.target.value);
+  };
+
+  const changeLanguage = (event) => {
+    console.log(event.target.value);
+    localStorage.setItem("language", language);
+    toast.success("Language Changed Successfully");
+    setTimeout(() => {
+      window.location.reload();
+    }, [1000]);
+  };
+
   return (
-    <Box sx={{ width: "100%", marginTop: 3, boxShadow: 0 }}>
+    <Box
+      sx={{
+        width: "100%",
+        marginTop: 3,
+        boxShadow: 0,
+        direction:
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
+      }}
+    >
       <TabsUnstyled defaultValue={0}>
         <TabsListUnstyled>
           <Grid container spacing={1} sx={{ marginBottom: 1 }}>
@@ -103,21 +128,29 @@ export default function CustomizedList() {
                     centered
                     allowScrollButtonsMobile
                   >
-                    <Tab sx={{ }}>
+                    <Tab sx={{}}>
                       <MarkEmailUnreadTwoToneIcon sx={{ marginRight: 1 }} />
                       SMTP
                     </Tab>
-                    <Tab sx={{ }}>
-                      <InsertPageBreakTwoToneIcon sx={{ marginRight: 1 }} />
-                      Email Template
+                    <Tab sx={{}}>
+                      <InsertPageBreakTwoToneIcon
+                        sx={{ marginRight: 1, ml: 2 }}
+                      />
+                      {localStorage.getItem("language") === "arabic"
+                        ? "نموذج البريد الإلكتروني"
+                        : "Email Template  "}
                     </Tab>
-                    <Tab sx={{ }}>
+                    <Tab sx={{}}>
                       <PaymentTwoToneIcon sx={{ marginRight: 1 }} />
-                      Payment
+                      {localStorage.getItem("language") === "arabic"
+                        ? "قسط"
+                        : "Payment  "}
                     </Tab>
                     <Tab sx={{}}>
                       <VpnLockTwoToneIcon sx={{ marginRight: 1 }} />
-                      CORS & keys
+                      {localStorage.getItem("language") === "arabic"
+                        ? "مفاتيح ومفاتيح"
+                        : "CORS"}
                     </Tab>
                     {/* <Tab sx={{ color: "#fff", background: "#1A2027" }}>
                       <AccessTimeTwoToneIcon sx={{ marginRight: 1 }} />
@@ -129,7 +162,15 @@ export default function CustomizedList() {
                     </Tab> */}
                     <Tab sx={{}}>
                       <DnsTwoToneIcon sx={{ marginRight: 1 }} />
-                      Server Details
+                      {localStorage.getItem("language") === "arabic"
+                        ? "تفاصيل الخادم"
+                        : "Server Details"}
+                    </Tab>
+                    <Tab sx={{}}>
+                      <TranslateIcon sx={{ marginRight: 1 }} />
+                      {localStorage.getItem("language") === "arabic"
+                        ? "تغيير اللغة"
+                        : "Change Language"}
                     </Tab>
                   </Tabs>
                 </FireNav>
@@ -137,10 +178,12 @@ export default function CustomizedList() {
             </Grid>
             <Grid item xs={10}>
               {/* Tabs Panel */}
-              <Item sx={{ boxShadow: 0, }}>
+              <Item sx={{ boxShadow: 0 }}>
                 <TabPanelUnstyled value={0}>
                   {/* <SMTP /> */}
-                  <h1>Hello </h1>
+                  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    Mail
+                  </Typography>
                 </TabPanelUnstyled>
                 <TabPanelUnstyled value={1}>
                   {/* <EmailTemplate /> */}
@@ -148,12 +191,64 @@ export default function CustomizedList() {
                 <TabPanelUnstyled value={2}>
                   {/* <Payment /> */}
                 </TabPanelUnstyled>
-                <TabPanelUnstyled value={3}>
-                  {/* <CORS /> */}
-                </TabPanelUnstyled>
+                <TabPanelUnstyled value={3}>{/* <CORS /> */}</TabPanelUnstyled>
                 <TabPanelUnstyled value={4}>
                   {/* <ServerDetails /> */}
                 </TabPanelUnstyled>
+                <form onSubmit={() => changeLanguage()}>
+                  <TabPanelUnstyled value={5}>
+                    {/* language select drop down */}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: "15px 0px",
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        component="div"
+                        sx={{
+                          flexGrow: 1,
+                          textAlign:
+                            localStorage.getItem("language") === "arabic"
+                              ? "right"
+                              : "left",
+                        }}
+                      >
+                        {localStorage.getItem("language") === "arabic"
+                          ? "تغيير اللغة"
+                          : "Change Language"}
+                      </Typography>
+
+                      <div>
+                        <Button
+                          variant="contained"
+                          size="small"
+                          sx={{ mr: 2, boxShadow: 0 }}
+                          onClick={changeLanguage}
+                        >
+                          Save
+                        </Button>
+                      </div>
+                    </div>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={language}
+                      label="Language"
+                      size="small"
+                      onChange={handleLanguageChange}
+                      style={{
+                        width: "100%",
+                      }}
+                    >
+                      <MenuItem value={"english"}>English</MenuItem>
+                      <MenuItem value={"arabic"}>عربي</MenuItem>
+                    </Select>
+                  </TabPanelUnstyled>
+                </form>
               </Item>
             </Grid>
           </Grid>

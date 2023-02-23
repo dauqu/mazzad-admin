@@ -32,7 +32,7 @@ import Snackbar from "@mui/material/Snackbar";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import AppBar from "@mui/material/AppBar";
 import AddIcon from "@mui/icons-material/Add";
-import { Divider,  } from "@mui/material";
+import { Divider } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 //Html Tooltip
@@ -89,48 +89,56 @@ const headCells = [
     numeric: false,
     disablePadding: true,
     label: "Image",
+    arabic: "صورة",
   },
   {
     id: "2",
     numeric: false,
     disablePadding: true,
     label: "Products Name",
+    arabic: "اسم المنتج",
   },
   {
     id: "3",
     numeric: false,
     disablePadding: false,
     label: "Price",
+    arabic: "السعر",
   },
   {
     id: "4",
     numeric: false,
     disablePadding: false,
     label: "Rating",
+    arabic: "التقييم",
   },
   {
     id: "5",
     numeric: false,
     disablePadding: false,
     label: "Tags",
+    arabic: "العلامات",
   },
   {
     id: "6",
     numeric: false,
     disablePadding: false,
     label: "Categories",
+    arabic: "التصنيفات",
   },
   {
     id: "7",
     numeric: false,
     disablePadding: false,
     label: "Published At",
+    arabic: "تاريخ النشر",
   },
   {
     id: "8",
     numeric: false,
     disablePadding: false,
     label: "Status",
+    arabic: "الحالة",
   },
 ];
 
@@ -156,9 +164,11 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            sx={{
-              // color: "white" 
-            }}
+            sx={
+              {
+                // color: "white"
+              }
+            }
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -167,14 +177,16 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-          // sx={{ color: "white" }}
+            // sx={{ color: "white" }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              {localStorage.getItem("language") === "arabic"
+                ? headCell.arabic
+                : headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -230,7 +242,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Sales
+          {localStorage.getItem("language") === "arabic" ? "مبيعات" : "Sales"}
         </Typography>
       )}
 
@@ -251,8 +263,9 @@ const EnhancedTableToolbar = (props) => {
 
       {/* Edit Product */}
       {numSelected === 1 ? (
-        <Tooltip title="Edit"
-        // sx={{ color: "#fff" }}
+        <Tooltip
+          title="Edit"
+          // sx={{ color: "#fff" }}
         >
           <IconButton
             to={`./../update-product/${window.selected}`}
@@ -358,17 +371,13 @@ export default function Sales() {
 
   const [open, setOpen] = React.useState(false);
 
-
   // Get Category
   const [category, setCategory] = React.useState([]);
   React.useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/blog`)
-      .then((response) => {
-        setCategory(response.data);
-      });
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/blog`).then((response) => {
+      setCategory(response.data);
+    });
   }, []);
-
 
   const theme = useTheme();
 
@@ -393,7 +402,6 @@ export default function Sales() {
   const [alertOpen, setAlertOpen] = React.useState(false);
 
   const [rows, setProducts] = React.useState([]);
-
 
   // Set Featured Image
   const featuredImageHandleChange = (e) => {
@@ -448,7 +456,6 @@ export default function Sales() {
   React.useEffect(() => {
     getProducts();
   }, []);
-
 
   //Delete Product
   window.deleteProduct = () => {
@@ -525,6 +532,8 @@ export default function Sales() {
         boxShadow: 0,
         animation: "fadeIn 0.5s ease-in-out",
         transition: "box-shadow 1s ease-in-out",
+        direction:
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
       }}
     >
       <AppBar position="static">
@@ -533,14 +542,16 @@ export default function Sales() {
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            sx={{ mr: 2 ,ml:3}}
             onClick={() => navigate("/new-product")}
           >
             {/* <CloseIcon /> */}
             <AddIcon />
           </IconButton>
           <Typography variant="h6" color="inherit" component="div">
-            Manage Sales   
+            {localStorage.getItem("language") === "arabic"
+              ? "إدارة المبيعات"
+              : "Manage Sales"}
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
@@ -563,7 +574,6 @@ export default function Sales() {
           {server_alert}
         </Alert>
       </Snackbar>
-
 
       {/*  */}
 
@@ -617,14 +627,14 @@ export default function Sales() {
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
-                        // sx={{ color: "#fff" }}
+                          // sx={{ color: "#fff" }}
                         />
                       </TableCell>
 
                       <TableCell
                         scope="row"
                         padding="none"
-                      // sx={{ color: "#fff" }}
+                        // sx={{ color: "#fff" }}
                       >
                         <HtmlTooltip
                           placement="right"
@@ -722,7 +732,7 @@ export default function Sales() {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        // sx={{ color: "#fff" }}
+          // sx={{ color: "#fff" }}
         />
       </Paper>
     </Box>

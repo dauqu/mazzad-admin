@@ -31,7 +31,6 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function FileManager() {
-
   const [files, setFiles] = React.useState([]);
   const [server_alert, setAlert] = useState();
   const [open, setOpen] = React.useState(false);
@@ -49,13 +48,13 @@ export default function FileManager() {
       .catch((e) => {
         setAlert(e.response.data.message);
         setStatus(e.response.data.status);
-      }).finally(() => {
+      })
+      .finally(() => {
         const removed = files.filter((item) => item.name !== filename);
         setFiles(removed);
         setOpen(true);
-      })
+      });
   }
-
 
   //get directory data path
   React.useEffect(() => {
@@ -63,15 +62,16 @@ export default function FileManager() {
       .get(`${process.env.REACT_APP_BACKEND_URL}/storage`)
       .then((response) => {
         setFiles(response.data.files);
-      }).catch((e) => {
+      })
+      .catch((e) => {
         setAlert("Error while fetching files");
         setStatus("info");
         setOpen(true);
-      }).finally(() => {
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, []);
-
 
   //Copy Link on Button Click
   const handleCopyClick = (item) => {
@@ -86,9 +86,6 @@ export default function FileManager() {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
     if (newWindow) newWindow.opener = null;
   };
-
-
-
 
   //Alert
   const handleClose = (reason) => {
@@ -116,7 +113,16 @@ export default function FileManager() {
   });
 
   return (
-    <Grid container spacing={1} sx={{ marginBottom: 1, marginTop: 1 }}>
+    <Grid
+      container
+      spacing={1}
+      sx={{
+        marginBottom: 1,
+        marginTop: 1,
+        direction:
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
+      }}
+    >
       <Snackbar
         open={open}
         autoHideDuration={3000}
@@ -155,7 +161,9 @@ export default function FileManager() {
               <Add />
             </IconButton> */}
             <Typography variant="h6" color="inherit" component="div">
-              File Manager
+              {
+                localStorage.getItem("language") === "arabic" ? "مدير الملفات" : "File Manager"
+              }
             </Typography>
             <Divider sx={{ flexGrow: 1 }} />
           </Toolbar>
@@ -174,8 +182,8 @@ export default function FileManager() {
             cols={5}
             rowHeight={300}
           >
-            {files.length > 0 && files
-              .map((item, idx) => (
+            {files.length > 0 &&
+              files.map((item, idx) => (
                 <Card
                   sx={{
                     height: 230,
@@ -187,11 +195,11 @@ export default function FileManager() {
                   key={idx}
                 >
                   {item.file_extension === ".jpg" ||
-                    item.file_extension === ".gif" ||
-                    item.file_extension === ".png" ||
-                    item.file_extension === ".jpeg" ||
-                    item.file_extension === ".svg" ||
-                    item.file_extension === ".ico" ? (
+                  item.file_extension === ".gif" ||
+                  item.file_extension === ".png" ||
+                  item.file_extension === ".jpeg" ||
+                  item.file_extension === ".svg" ||
+                  item.file_extension === ".ico" ? (
                     <CardMedia component="img" height="150" image={item.path} />
                   ) : (
                     <Card

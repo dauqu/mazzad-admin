@@ -76,30 +76,35 @@ const headCells = [
     numeric: false,
     disablePadding: true,
     label: "Title",
+    arabic: "العنوان",
   },
   {
     id: "Value",
     numeric: false,
     disablePadding: false,
     label: "Value",
+    arabic: "القيمة",
   },
   {
     id: "Description",
     numeric: false,
     disablePadding: false,
     label: "Description",
+    arabic: "الوصف",
   },
   {
     id: "Currency",
     numeric: false,
     disablePadding: false,
     label: "Currency",
+    arabic: "العملة",
   },
   {
     id: "Actions",
     numeric: false,
     disablePadding: false,
     label: "Actions",
+    arabic: "العمليات",
   },
 ];
 
@@ -145,7 +150,9 @@ function EnhancedTableHead(props) {
               onClick={createSortHandler(headCell.id)}
               sx={{}}
             >
-              {headCell.label}
+              {localStorage.getItem("language") === "arabic"
+                ? headCell.arabic
+                : headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -189,7 +196,7 @@ const EnhancedTableToolbar = (props) => {
     >
       {numSelected > 0 ? (
         <Typography
-          sx={{ flex: "1 1 100%", }}
+          sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
           component="div"
@@ -198,12 +205,20 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: "1 1 100%", }}
+          sx={{
+            display: "flex",
+            direction:
+              localStorage.getItem("language") === "arabic"
+                ? "row-reverse"
+                : "row",
+          }}
           variant="h6"
           id="tableTitle"
           component="div"
         >
-          Auctions List
+  {
+    localStorage.getItem("language") === "arabic"  ? "قائمة الشركات" : "Auctions List"
+  }
         </Typography>
       )}
 
@@ -228,7 +243,6 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 export default function Auctions() {
-
   const [rows, setCategories] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = useState(true);
@@ -238,19 +252,20 @@ export default function Auctions() {
 
   React.useEffect(() => {
     setLoading(true);
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/auctions`)
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/auctions`)
       .then((res) => {
         setCategories(res.data);
       })
       .catch((err) => {
         console.log(err);
-      }).finally(() => {
+      })
+      .finally(() => {
         setTimeout(() => {
           setLoading(false);
         }, 300);
       });
   }, []);
-
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("description");
@@ -277,8 +292,6 @@ export default function Auctions() {
     }
     setSelected([]);
   };
-
-
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -307,7 +320,8 @@ export default function Auctions() {
         setAlert("Error deleting bid. Check your internet connection.");
         setOpen(true);
         setStatus("error");
-      }).finally(() => {
+      })
+      .finally(() => {
         setDeleting("");
       });
   };
@@ -318,7 +332,6 @@ export default function Auctions() {
     }
     setOpen(false);
   };
-
 
   const action = (
     <React.Fragment>
@@ -334,11 +347,20 @@ export default function Auctions() {
   );
 
   return (
-    <Box sx={{ flexGrow: 1, marginTop: 3 }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        marginTop: 3,
+        direction:
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
+      }}
+    >
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
           <Typography variant="h6" color="inherit" component="div">
-            Auctions
+            {localStorage.getItem("language") === "arabic"
+              ? "المزادات"
+              : "Auctions"}
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
@@ -383,9 +405,7 @@ export default function Auctions() {
                 </Grid>
               </Grid>
             ) : (
-              <Item
-                sx={{ boxShadow: 0, borderRadius: 1, }}
-              >
+              <Item sx={{ boxShadow: 0, borderRadius: 1 }}>
                 <Paper
                   sx={{
                     width: "100%",
@@ -396,9 +416,7 @@ export default function Auctions() {
                   }}
                 >
                   <EnhancedTableToolbar numSelected={selected.length} />
-                  <TableContainer
-                    sx={{}}
-                  >
+                  <TableContainer sx={{}}>
                     <Table
                       sx={{ minWidth: 750 }}
                       aria-labelledby="tableTitle"
@@ -507,9 +525,27 @@ export default function Auctions() {
                                   </Typography>
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Stack direction={"row"} sx={{ columnGap: "10px", alignItems: "center" }} >
-                                    <AiOutlineEdit onClick={() => navigate(`/edit-auction/${row.id}`)} size={22} />
-                                    {deleting === row.id ? <Loading height={30} width={30} /> : <AiOutlineDelete onClick={() => handleDelete(row.id)} size={22} />}
+                                  <Stack
+                                    direction={"row"}
+                                    sx={{
+                                      columnGap: "10px",
+                                      alignItems: "center",
+                                    }}
+                                  >
+                                    <AiOutlineEdit
+                                      onClick={() =>
+                                        navigate(`/edit-auction/${row.id}`)
+                                      }
+                                      size={22}
+                                    />
+                                    {deleting === row.id ? (
+                                      <Loading height={30} width={30} />
+                                    ) : (
+                                      <AiOutlineDelete
+                                        onClick={() => handleDelete(row.id)}
+                                        size={22}
+                                      />
+                                    )}
                                   </Stack>
                                 </TableCell>
                               </TableRow>

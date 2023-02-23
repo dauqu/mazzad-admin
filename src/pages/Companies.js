@@ -77,30 +77,35 @@ const headCells = [
     numeric: false,
     disablePadding: true,
     label: "Company Name",
+    arabic: "اسم الشركة",
   },
   {
     id: "description",
     numeric: false,
     disablePadding: false,
     label: "Description",
+    arabic: "الوصف",
   },
   {
     id: "status",
     numeric: false,
     disablePadding: false,
     label: "Status",
+    arabic: "الحالة",
   },
   {
     id: "published",
     numeric: false,
     disablePadding: false,
     label: "Published At",
+    arabic: "تاريخ النشر",
   },
   {
     id: "actions",
     numeric: false,
     disablePadding: false,
     label: "Actions",
+    arabic: "الاجراءات",
   },
 ];
 
@@ -146,7 +151,9 @@ function EnhancedTableHead(props) {
               onClick={createSortHandler(headCell.id)}
               sx={{}}
             >
-              {headCell.label}
+              {localStorage.getItem("language") === "arabic"
+                ? headCell.arabic
+                : headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -184,6 +191,7 @@ const EnhancedTableToolbar = (props) => {
               theme.palette.action.activatedOpacity
             ),
         }),
+
         // backgroundColor: "#1A2027",
         // color: "#ffffff",
       }}
@@ -199,12 +207,20 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: "1 1 100%" }}
+          sx={{
+            display: "flex",
+            direction:
+              localStorage.getItem("language") === "arabic"
+                ? "row-reverse"
+                : "row",
+          }}
           variant="h6"
           id="tableTitle"
           component="div"
         >
-          List of Companies
+          {localStorage.getItem("language") === "arabic"
+            ? "قائمة الشركات"
+            : "List of Companies"}
         </Typography>
       )}
 
@@ -321,11 +337,20 @@ export default function Companies() {
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
   return (
-    <Box sx={{ flexGrow: 1, marginTop: 3 }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        marginTop: 3,
+        direction:
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
+      }}
+    >
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
           <Typography variant="h6" color="inherit" component="div">
-            Companies
+            {localStorage.getItem("language") === "arabic"
+              ? "الشركات"
+              : "Companies"}
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>

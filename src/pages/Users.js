@@ -42,7 +42,6 @@ import { IoBanOutline } from "react-icons/io5";
 import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 import Loading from "../components/Loading";
 
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -77,36 +76,42 @@ const headCells = [
     numeric: false,
     disablePadding: true,
     label: "Full Name",
+    arabic: "الاسم الكامل",
   },
   {
     id: "username",
     numeric: false,
     disablePadding: false,
     label: "@username",
+    arabic: "اسم المستخدم",
   },
   {
     id: "email",
     numeric: false,
     disablePadding: false,
     label: "Email address",
+    arabic: "البريد الالكتروني",
   },
   {
     id: "phone",
     numeric: false,
     disablePadding: false,
     label: "Phone Number",
+    arabic: "رقم الهاتف",
   },
   {
     id: "Status",
     numeric: false,
     disablePadding: false,
     label: "Status",
+    arabic: "الحالة",
   },
   {
     id: "Action",
     numeric: false,
     disablePadding: false,
     label: "Action",
+    arabic: "الاجراء",
   },
 ];
 
@@ -148,7 +153,9 @@ function EnhancedTableHead(props) {
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              {localStorage.getItem("language") === "arabic"
+                ? headCell.arabic
+                : headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -213,7 +220,9 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Users List
+          {localStorage.getItem("language") === "arabic"
+            ? "المستخدمين"
+            : "Users"}
         </Typography>
       )}
 
@@ -256,7 +265,7 @@ export default function Users() {
   const [dense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(15);
 
-  // open modal 
+  // open modal
   const [open, setOpen] = React.useState(false);
 
   const handleRequestSort = (property) => {
@@ -285,12 +294,8 @@ export default function Users() {
 
   const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
-
-
-
   const [server_alert, setAlert] = useState();
   const [status, setStatus] = useState();
-
 
   const [userdata, setUserdata] = useState({
     fullName: "",
@@ -300,7 +305,6 @@ export default function Users() {
     password: "",
     phone: "",
   });
-
 
   const [openalert, setOpenAlert] = useState(false);
   const [rows, setUsers] = React.useState([]);
@@ -313,16 +317,20 @@ export default function Users() {
   // load all users
   React.useEffect(() => {
     setLoading(true);
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/users`).then((response) => {
-      setUsers(response.data);
-    }).catch((e) => {
-      console.log(e);
-    }).finally(() => {
-      setLoading(false);
-    });
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/users`)
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
-  // to delete a user 
+  // to delete a user
   const handleDelete = (id) => {
     setIsDeleting(id);
     axios
@@ -345,7 +353,7 @@ export default function Users() {
       });
   };
 
-  // to block user 
+  // to block user
   const handleBlock = (id) => {
     setBlocking(id);
     axios
@@ -405,7 +413,7 @@ export default function Users() {
 
   // to add user
   const createPost = (e) => {
-    setAddingUser(true)
+    setAddingUser(true);
     e.preventDefault();
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/register`, userdata)
@@ -417,7 +425,8 @@ export default function Users() {
       .catch((e) => {
         setAlert(e.response.data.message);
         setStatus(e.response.data.status);
-      }).finally(() => {
+      })
+      .finally(() => {
         setTimeout(() => {
           setOpenAlert(true);
           setAddingUser(false);
@@ -428,9 +437,12 @@ export default function Users() {
 
   const updatePost = (e) => {
     e.preventDefault();
-    setAddingUser(true)
+    setAddingUser(true);
     axios
-      .put(`${process.env.REACT_APP_BACKEND_URL}/users/${userdata.id}`, userdata)
+      .put(
+        `${process.env.REACT_APP_BACKEND_URL}/users/${userdata.id}`,
+        userdata
+      )
       .then((res) => {
         setAlert("User successfully updated");
         setStatus("success");
@@ -445,7 +457,8 @@ export default function Users() {
       .catch((e) => {
         setAlert(e.response.data.message);
         setStatus(e.response.data.status);
-      }).finally(() => {
+      })
+      .finally(() => {
         setTimeout(() => {
           setOpenAlert(true);
           setOpen(false);
@@ -453,7 +466,6 @@ export default function Users() {
         }, 500);
       });
   };
-
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -477,7 +489,7 @@ export default function Users() {
   const handleEdit = (user) => {
     setUserdata(user);
     setOpen(true);
-    setIsEditing(true)
+    setIsEditing(true);
   };
 
   const Alert = React.forwardRef(function Alert(props, ref) {
@@ -506,21 +518,31 @@ export default function Users() {
   );
 
   return (
-    <Box sx={{ width: "100%", marginTop: 3, boxShadow: 0 }}>
+    <Box
+      sx={{
+        width: "100%",
+        marginTop: 3,
+        boxShadow: 0,
+        direction:
+          localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
+      }}
+    >
       <AppBar position="static">
         <Toolbar variant="dense" sx={{ background: "#333", color: "#fff" }}>
           <IconButton
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            sx={{ mr: 2, ml: 3 }}
             onClick={handleClickOpen}
           >
             {/* <CloseIcon /> */}
             <AddIcon />
           </IconButton>
           <Typography variant="h6" color="inherit" component="div">
-            Users
+            {localStorage.getItem("language") === "arabic"
+              ? "المستخدمين"
+              : "Users"}
           </Typography>
           <Divider sx={{ flexGrow: 1 }} />
         </Toolbar>
@@ -546,13 +568,24 @@ export default function Users() {
         </Snackbar>
       </Stack>
 
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} 
+        style={{
+          direction: localStorage.getItem("language") === "arabic" ? "rtl" : "ltr",
+        }}
+      >
         <form>
-          <DialogTitle>Add New User</DialogTitle>
+          <DialogTitle
+            
+          >
+            {localStorage.getItem("language") === "arabic"
+              ? "إضافة مستخدم جديد"
+              : "Add New User"}
+          </DialogTitle>
           <DialogContent>
             <DialogContentText>
-              To subscribe to this website, please enter your email address
-              here. We will send updates occasionally.
+              {localStorage.getItem("language") === "arabic"
+                ? "للاشتراك في هذا الموقع ، يرجى إدخال عنوان بريدك الإلكتروني هنا. سوف نرسل التحديثات من حين لآخر."
+                : " To subscribe to this website, please enter your email address here. We will send updates occasionally."}{" "}
             </DialogContentText>
 
             <TextField
@@ -560,39 +593,51 @@ export default function Users() {
               value={userdata.fullName}
               variant="filled"
               size="small"
-              onChange={(e) => setUserdata({
-                ...userdata,
-                fullName: e.target.value
-              })}
+              onChange={(e) =>
+                setUserdata({
+                  ...userdata,
+                  fullName: e.target.value,
+                })
+              }
               margin="dense"
               sx={{ width: "100%" }}
-              placeholder="Full Name"
+              placeholder={
+                localStorage.getItem("language") === "arabic" ? "الاسم" : "Name"
+              }
             />
             <TextField
               hiddenLabel
               value={userdata.username}
               variant="filled"
               size="small"
-              onChange={(e) => setUserdata({
-                ...userdata,
-                username: e.target.value
-              })}
+              onChange={(e) =>
+                setUserdata({
+                  ...userdata,
+                  username: e.target.value,
+                })
+              }
               margin="dense"
               sx={{ width: "100%" }}
-              placeholder="Username"
+              placeholder={
+                localStorage.getItem("language") === "arabic" ? "اسم المستخدم" : "Username"
+              }
             />
             <TextField
               hiddenLabel
               value={userdata.email}
               variant="filled"
               size="small"
-              onChange={(e) => setUserdata({
-                ...userdata,
-                email: e.target.value
-              })}
+              onChange={(e) =>
+                setUserdata({
+                  ...userdata,
+                  email: e.target.value,
+                })
+              }
               margin="dense"
               sx={{ width: "100%" }}
-              placeholder="Email"
+              placeholder={
+                localStorage.getItem("language") === "arabic" ? "البريد الإلكتروني" : "Email"
+              }
             />
             <Select
               size="small"
@@ -602,39 +647,51 @@ export default function Users() {
               id="demo-select-small"
               hiddenLabel
               value={userdata.role}
-              onChange={(e) => setUserdata({
-                ...userdata,
-                role: e.target.value
-              })}
+              onChange={(e) =>
+                setUserdata({
+                  ...userdata,
+                  role: e.target.value,
+                })
+              }
             >
               <MenuItem value={"user"}>user</MenuItem>
               <MenuItem value={"vendor"}>vendor</MenuItem>
             </Select>
-            {!isEditing && <TextField
-              hiddenLabel
-              value={userdata.password}
-              variant="filled"
-              size="small"
-              onChange={(e) => setUserdata({
-                ...userdata,
-                password: e.target.value
-              })}
-              margin="dense"
-              sx={{ width: "100%" }}
-              placeholder="Password"
-            />}
+            {!isEditing && (
+              <TextField
+                hiddenLabel
+                value={userdata.password}
+                variant="filled"
+                size="small"
+                onChange={(e) =>
+                  setUserdata({
+                    ...userdata,
+                    password: e.target.value,
+                  })
+                }
+                margin="dense"
+                sx={{ width: "100%" }}
+                placeholder={
+                  localStorage.getItem("language") === "arabic" ? "كلمه السر" : "Password"
+                }
+              />
+            )}
             <TextField
               hiddenLabel
               value={userdata.phone}
               variant="filled"
               size="small"
-              onChange={(e) => setUserdata({
-                ...userdata,
-                phone: e.target.value
-              })}
+              onChange={(e) =>
+                setUserdata({
+                  ...userdata,
+                  phone: e.target.value,
+                })
+              }
               margin="dense"
               sx={{ width: "100%" }}
-              placeholder="Phone Number"
+              placeholder={
+                localStorage.getItem("language") === "arabic" ? "رقم الهاتف" : "Phone"
+              }
             />
           </DialogContent>
 
@@ -652,7 +709,6 @@ export default function Users() {
               >
                 {isEditing ? "Update" : " Submit"}
               </Button>
-
             )}
           </DialogActions>
         </form>
@@ -679,178 +735,200 @@ export default function Users() {
                   <LinearProgress />
                 </Grid>
               </Grid>
-            ) : (<Paper
-              sx={{
-                width: "100%",
-                mb: 2,
-                boxShadow: 0,
-                // background: "#1A2027",
-                borderRadius: 0,
-              }}
-            >
-              <EnhancedTableToolbar numSelected={selected.length} />
-              <TableContainer>
-                <Table
-                  sx={{ minWidth: 750 }}
-                  aria-labelledby="tableTitle"
-                  size={dense ? "small" : "medium"}
-                >
-                  <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
-                    onRequestSort={handleRequestSort}
-                    rowCount={rows.length}
-                  />
-                  <TableBody>
-                    {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+            ) : (
+              <Paper
+                sx={{
+                  width: "100%",
+                  mb: 2,
+                  boxShadow: 0,
+                  // background: "#1A2027",
+                  borderRadius: 0,
+                }}
+              >
+                <EnhancedTableToolbar numSelected={selected.length} />
+                <TableContainer>
+                  <Table
+                    sx={{ minWidth: 750 }}
+                    aria-labelledby="tableTitle"
+                    size={dense ? "small" : "medium"}
+                  >
+                    <EnhancedTableHead
+                      numSelected={selected.length}
+                      order={order}
+                      orderBy={orderBy}
+                      onSelectAllClick={handleSelectAllClick}
+                      onRequestSort={handleRequestSort}
+                      rowCount={rows.length}
+                    />
+                    <TableBody>
+                      {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-                    {stableSort(rows, getComparator(order, orderBy))
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .slice()
-                      .reverse()
-                      .map((row, index) => {
-                        const isItemSelected = isSelected(row._id);
-                        const labelId = `enhanced-table-checkbox-${index}`;
+                      {stableSort(rows, getComparator(order, orderBy))
+                        .slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                        .slice()
+                        .reverse()
+                        .map((row, index) => {
+                          const isItemSelected = isSelected(row._id);
+                          const labelId = `enhanced-table-checkbox-${index}`;
 
-                        return (
-                          <TableRow
-                            hover
-                            // onClick={(event) => handleClick(event, row._id)}
-                            // aria-checked={isItemSelected}
-                            // selected={isItemSelected}
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={row._id}
-                          >
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                color="primary"
-                                checked={isItemSelected}
-                                sx={{}}
-                              />
-                            </TableCell>
-                            <TableCell
-                              component="th"
-                              id={labelId}
-                              scope="row"
-                              padding="none"
-                              sx={{
-                                overflow: "hidden",
-                                whiteSpace: "nowrap",
-                                maxWidth: "30ch",
-                                textOverflow: "ellipsis",
-                                // color: "#fff",
-                              }}
+                          return (
+                            <TableRow
+                              hover
+                              // onClick={(event) => handleClick(event, row._id)}
+                              // aria-checked={isItemSelected}
+                              // selected={isItemSelected}
+                              role="checkbox"
+                              tabIndex={-1}
+                              key={row._id}
                             >
-                              <Typography
+                              <TableCell padding="checkbox">
+                                <Checkbox
+                                  color="primary"
+                                  checked={isItemSelected}
+                                  sx={{}}
+                                />
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                id={labelId}
+                                scope="row"
+                                padding="none"
                                 sx={{
                                   overflow: "hidden",
                                   whiteSpace: "nowrap",
                                   maxWidth: "30ch",
                                   textOverflow: "ellipsis",
-                                  // color: "#ffffff",
+                                  // color: "#fff",
                                 }}
                               >
-                                {row.fullName}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="left" sx={{}}>
-                              <Typography
-                                sx={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  maxWidth: "30ch",
-                                  textOverflow: "ellipsis",
-                                  // color: "#ffffff",
-                                }}
-                              >
-                                {row.username}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="left" sx={{}}>
-                              <Typography
-                                sx={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  maxWidth: "30ch",
-                                  textOverflow: "ellipsis",
-                                  // color: "#ffffff",
-                                }}
-                              >
-                                {row.email}
-                              </Typography>
-                            </TableCell>
+                                <Typography
+                                  sx={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    maxWidth: "30ch",
+                                    textOverflow: "ellipsis",
+                                    // color: "#ffffff",
+                                  }}
+                                >
+                                  {row.fullName}
+                                </Typography>
+                              </TableCell>
+                              <TableCell align="left" sx={{}}>
+                                <Typography
+                                  sx={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    maxWidth: "30ch",
+                                    textOverflow: "ellipsis",
+                                    // color: "#ffffff",
+                                  }}
+                                >
+                                  {row.username}
+                                </Typography>
+                              </TableCell>
+                              <TableCell align="left" sx={{}}>
+                                <Typography
+                                  sx={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    maxWidth: "30ch",
+                                    textOverflow: "ellipsis",
+                                    // color: "#ffffff",
+                                  }}
+                                >
+                                  {row.email}
+                                </Typography>
+                              </TableCell>
 
-                            <TableCell align="left" sx={{}}>
-                              <Typography
-                                sx={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  maxWidth: "30ch",
-                                  textOverflow: "ellipsis",
-                                  // color: "#ffffff",
-                                }}
-                              >
-                                {row.phone}
-                              </Typography>
-                            </TableCell>
-                            <TableCell align="left" sx={{}}>
-                              <Chip
-                                label={row.status || "active"}
-                                color={
-                                  row.status === "active" ||
+                              <TableCell align="left" sx={{}}>
+                                <Typography
+                                  sx={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    maxWidth: "30ch",
+                                    textOverflow: "ellipsis",
+                                    // color: "#ffffff",
+                                  }}
+                                >
+                                  {row.phone}
+                                </Typography>
+                              </TableCell>
+                              <TableCell align="left" sx={{}}>
+                                <Chip
+                                  label={row.status || "active"}
+                                  color={
+                                    row.status === "active" ||
                                     row.status === undefined ||
                                     row.status === ""
-                                    ? "success" : "error"}
-                                sx={{
-                                }}
-                              />
-                            </TableCell>
+                                      ? "success"
+                                      : "error"
+                                  }
+                                  sx={{}}
+                                />
+                              </TableCell>
 
-
-                            <TableCell align="left" sx={{}}>
-                              <Stack direction={"row"} sx={{
-                                alignItems: "center",
-                                columnGap: "10px",
-                              }}>
-                                <AiOutlineEdit
-                                  onClick={() => handleEdit(row)}
-                                  size={20} />
-                                {isDeleting === row.id ?
-                                  <Loading height={33} width={33} />
-                                  :
-                                  <AiOutlineDelete title={`Delete ${row.fullname || row.email}`} onClick={() => handleDelete(row.id)} size={20} />
-                                }
-                                {blocking === row.id ? (
-                                  <Loading height={33} width={33} />
-                                ) :
-                                  row.status === "blacklist" ? (
-                                    <MdOutlineRemoveCircleOutline onClick={() => handleUnBlock(row.id)} title={`Unban ${row.fullname || row.email}`} size={20} />
+                              <TableCell align="left" sx={{}}>
+                                <Stack
+                                  direction={"row"}
+                                  sx={{
+                                    alignItems: "center",
+                                    columnGap: "10px",
+                                  }}
+                                >
+                                  <AiOutlineEdit
+                                    onClick={() => handleEdit(row)}
+                                    size={20}
+                                  />
+                                  {isDeleting === row.id ? (
+                                    <Loading height={33} width={33} />
                                   ) : (
-                                    <IoBanOutline onClick={() => handleBlock(row.id)} title={`Ban ${row.fullname || row.email}`} size={20} />
-                                  )
-                                }
-                              </Stack>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[15, 30, 40]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                sx={{}}
-              />
-            </Paper>
+                                    <AiOutlineDelete
+                                      title={`Delete ${
+                                        row.fullname || row.email
+                                      }`}
+                                      onClick={() => handleDelete(row.id)}
+                                      size={20}
+                                    />
+                                  )}
+                                  {blocking === row.id ? (
+                                    <Loading height={33} width={33} />
+                                  ) : row.status === "blacklist" ? (
+                                    <MdOutlineRemoveCircleOutline
+                                      onClick={() => handleUnBlock(row.id)}
+                                      title={`Unban ${
+                                        row.fullname || row.email
+                                      }`}
+                                      size={20}
+                                    />
+                                  ) : (
+                                    <IoBanOutline
+                                      onClick={() => handleBlock(row.id)}
+                                      title={`Ban ${row.fullname || row.email}`}
+                                      size={20}
+                                    />
+                                  )}
+                                </Stack>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[15, 30, 40]}
+                  component="div"
+                  count={rows.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  sx={{}}
+                />
+              </Paper>
             )}
           </Paper>
         </Grid>
