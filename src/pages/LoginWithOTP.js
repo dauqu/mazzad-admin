@@ -21,7 +21,9 @@ import Snackbar from "@mui/material/Snackbar";
 
 const theme = createTheme();
 
-export default function Login() {
+export default function LoginWithOTP() {
+  const [checkOtp, setCheckOtp] = React.useState("");
+
   const [isLoading, setIsLoading] = React.useState(false);
 
   const [username, setUserName] = React.useState("");
@@ -31,23 +33,56 @@ export default function Login() {
   const [open, setOpen] = React.useState(false);
   const [erroralert, setErroralert] = React.useState(false);
   const [errorOpen, setErrorOpen] = React.useState(false);
+  const [email, setEmail] = React.useState("");
+  const [otp, setOtp] = React.useState("");
+  const handleCheckOtp = () => {
+    if (email === "") {
+      setErroralert("Please enter email ");
+      setErrorOpen(true);
+      return;
+    }
+
+    if (!email.match(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/)) {
+      setErroralert("Please enter valid email");
+      setErrorOpen(true);
+      return;
+    }
+
+    // code for otp
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/login/otp`, {
+        email: email,
+      })
+      .then((res) => {
+        // console.log(res.status);
+        setCheckOtp(res.status);
+        setAlert(res.data.message, res);
+        setStatus(res.data.status);
+        setOpen(true);
+      })
+      .catch((e) => {
+        setErroralert(e.response.data.message);
+        setErrorOpen(true);
+        console.log(e.response.data.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   const navigate = useNavigate();
-
-  const handleOTPPagenavigate = () => {
-    navigate("/loginwithotp");
-  };
 
   // login
   const handleLogin = (e) => {
     setIsLoading(true);
     e.preventDefault();
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
-        email: username,
-        password: password,
+      .post(`${process.env.REACT_APP_BACKEND_URL}/login/otplogin`, {
+        email: email,
+        otp: otp,
       })
       .then((res) => {
+        console.log(res.data.token);
         localStorage.setItem("token", res.data.token);
 
         setAlert(res.data.message, res);
@@ -151,14 +186,16 @@ export default function Login() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Login
+              Login With OTP
             </Typography>
-            <Box
-              component="form"
-              onSubmit={handleLogin}
-              noValidate
-              sx={{ mt: 1 }}
+            <p
+              style={{
+                marginTop: "10px",
+              }}
             >
+              Enter your email to get OTP
+            </p>
+            <Box sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -168,64 +205,64 @@ export default function Login() {
                 name="email"
                 autoComplete="email"
                 autoFocus
-                onChange={(e) => setUserName(e.target.value)}
-                value={username}
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
               />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-              />
-
-              <Button
-                fullWidth
-                variant="contained"
-                type="submit"
-                color="primary"
-                sx={{
-                  marginTop: "20px",
-                  boxShadow: "none",
-                  borderRadius: "50px",
-                  border: "1px solid #d6d4d4",
-                  cursor: "pointer",
-                }}
-                onClick={(e) => handleLogin(e)}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <CircularProgress size={24} color="secondary" />
-                ) : (
-                  "Login  "
-                )}
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item xs>
-                  <h4 href="#" variant="body2">
-                    OR
-                  </h4>
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item xs>
-                  <Button onClick={handleOTPPagenavigate} variant="body2">
-                    Login With OTP
-                  </Button>
-                </Grid>
-              </Grid>
+              {/* textfield for Otp */}
+              {checkOtp === 200 ? (
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="otp"
+                  label="OTP"
+                  name="otp"
+                  autoComplete="otp"
+                  autoFocus
+                  onChange={(e) => setOtp(e.target.value)}
+                  value={otp}
+                />
+              ) : null}
+              {checkOtp !== 200 ? (
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    marginTop: "20px",
+                    boxShadow: "none",
+                    borderRadius: "50px",
+                    border: "1px solid #d6d4d4",
+                    cursor: "pointer",
+                  }}
+                  onClick={(e) => handleCheckOtp(e)}
+                  disabled={isLoading}
+                >
+                  Get OTP
+                </Button>
+              ) : (
+                <Button
+                  fullWidth
+                  variant="contained"
+                  type="submit"
+                  color="primary"
+                  sx={{
+                    marginTop: "20px",
+                    boxShadow: "none",
+                    borderRadius: "50px",
+                    border: "1px solid #d6d4d4",
+                    cursor: "pointer",
+                  }}
+                  onClick={(e) => handleLogin(e)}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <CircularProgress size={24} color="secondary" />
+                  ) : (
+                    "Login"
+                  )}
+                </Button>
+              )}
             </Box>
           </Box>
         </Box>

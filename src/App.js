@@ -43,7 +43,7 @@ import Logs from "./pages/Logs";
 import AddCompany from "./pages/AddCompany";
 import AddAuction from "./pages/AddAuction";
 import AddComplaints from "./pages/AddComplaints";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -60,6 +60,7 @@ import BlackList from "./pages/BlackList";
 import Loading from "./components/Loading";
 import AddFile from "./pages/AddFile";
 import { ToastContainer } from "react-toastify";
+import LoginWithOTP from "./pages/LoginWithOTP";
 
 //Axios allow auth
 // axios.defaults.withCredentials = true;
@@ -116,6 +117,7 @@ function App() {
         <>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/loginwithotp" element={<LoginWithOTP />} />
             <Route path="/register" element={<Register />} />
 
             <Route path="/" element={<MiniDrawer />}>

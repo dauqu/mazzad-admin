@@ -23,6 +23,7 @@
     "react-toastify": "^9.1.1",
     "slugify": "^1.6.5",
     "styled-components": "^5.3.5",
+    "urway.js": "^1.2.1",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
