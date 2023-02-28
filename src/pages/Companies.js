@@ -485,7 +485,7 @@ export default function Companies() {
                                       // color: "#ffffff",
                                     }}
                                   >
-                                    {row && row.status ? "Active" : "Inactive"}
+                                    {row.status}
                                   </Typography>
                                 </TableCell>
 
